@@ -99,9 +99,11 @@ jobs:
           cp "$APK" dist/hisbat-mughtarib.apk
           (cd www && zip -qr ../dist/www.zip .)
           # ملف صغير يقرأه زر التحديث (بدون حد طلبات واجهة GitHub البرمجية)
+          # minNative: أقل نسخة أصلية تشتغل عليها حزمة الواجهة (تحديث سريع بدون تنزيل APK)
+          MIN_NATIVE=$(tr -d '[:space:]' < min-native-version.txt 2>/dev/null || echo "$NATIVE_VERSION")
           BASE="https://github.com/${GITHUB_REPOSITORY}/releases/download/v${WEB_VERSION}"
-          printf '{"web": %s, "native": %s, "apk": "%s/hisbat-mughtarib.apk", "www": "%s/www.zip"}\n' \
-            "$WEB_VERSION" "$NATIVE_VERSION" "$BASE" "$BASE" > dist/update.json
+          printf '{"web": %s, "native": %s, "minNative": %s, "apk": "%s/hisbat-mughtarib.apk", "www": "%s/www.zip"}\n' \
+            "$WEB_VERSION" "$NATIVE_VERSION" "${MIN_NATIVE:-$NATIVE_VERSION}" "$BASE" "$BASE" > dist/update.json
           cat dist/update.json
           ls -la dist
 

@@ -403,6 +403,11 @@
               <p class="text-[11px] text-stone-600 leading-relaxed">لا نطلب تسجيل دخول ولا نرسل راتبك أو مصاريفك لأي خادم خارجي. جميع بياناتك تبقى داخل جهازك وتعمل بدون إنترنت.</p>
             </div>
           </div>
+
+          <button type="button" onclick="openRestoreModal()"
+                  class="w-full py-3 rounded-2xl bg-white border border-dashed border-emerald-300 text-[#0A4D39] text-xs font-extrabold active:scale-[0.99] transition">
+            عندك بيانات من نسخة سابقة؟ استعدها
+          </button>
         </div>
 
         <!-- الخطوة 2: التحويل للبلاد -->
@@ -1205,6 +1210,25 @@
     <!-- ======================================================================
          النافذة 3: التخصيص الكامل والملف الشخصي (Settings / Customize)
          ====================================================================== -->
+    <!-- نافذة استعادة البيانات (من نص منسوخ أو ملف) -->
+    <div id="modal-restore" class="hidden fixed inset-0 z-[75] bg-stone-950/60 backdrop-blur-xs flex items-end justify-center">
+      <div class="bg-[#F6F7F5] w-full max-w-[460px] rounded-t-[30px] p-5 shadow-2xl border-t border-stone-200 animate-sheet space-y-3" style="padding-bottom: max(1.75rem, env(safe-area-inset-bottom));">
+        <div class="w-10 h-1.5 bg-stone-300 rounded-full mx-auto"></div>
+        <div class="flex items-center justify-between">
+          <h3 class="thmanyah-display text-lg font-black text-stone-900">استعادة بياناتك</h3>
+          <button type="button" onclick="closeModal('modal-restore')" class="p-2 rounded-xl bg-stone-200/70 text-stone-600" aria-label="إغلاق">✕</button>
+        </div>
+        <p class="text-[11px] text-stone-600 leading-relaxed">الصق النص اللي نسخته من زر «نسخ بياناتك»، أو اختر ملف النسخة الاحتياطية.</p>
+        <textarea id="restore-text" rows="6" dir="ltr" placeholder='{"profile": ...}'
+                  class="w-full rounded-2xl bg-white border border-stone-200 px-3 py-2.5 text-[11px] font-mono text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]"></textarea>
+        <div class="grid grid-cols-2 gap-2">
+          <button type="button" onclick="restoreFromPaste()" class="py-3 rounded-2xl bg-[#0F6A4F] text-white text-xs font-extrabold active:scale-[0.99] transition">استعادة من النص</button>
+          <button type="button" onclick="document.getElementById('import-backup-file').click()" class="py-3 rounded-2xl bg-white border border-stone-200 text-stone-700 text-xs font-extrabold active:scale-[0.99] transition">اختيار ملف</button>
+        </div>
+        <input id="import-backup-file" type="file" accept="application/json,.json,text/plain" class="hidden" onchange="importLocalBackup(event)" />
+      </div>
+    </div>
+
     <!-- نافذة تأكيد استبدال خطة الوجبات والمقاضي الحالية -->
     <div id="modal-plan-confirm" class="hidden fixed inset-0 z-[70] bg-stone-950/60 backdrop-blur-xs flex items-center justify-center p-5">
       <div class="bg-[#F6F7F5] w-full max-w-[400px] rounded-3xl p-5 shadow-2xl border border-stone-200 space-y-4">
@@ -1308,16 +1332,22 @@
           </div>
 
           <div class="grid grid-cols-2 gap-2">
-            <button type="button" onclick="exportLocalBackup()"
+            <button type="button" onclick="copyBackupToClipboard()"
                     class="py-2.5 px-3 rounded-xl bg-white hover:bg-stone-50 border border-emerald-300 text-[#0A4D39] text-[11px] font-extrabold active:scale-95 transition">
-              ⬇️ حفظ نسخة على جهازك
+              نسخ بياناتك
             </button>
-            <button type="button" onclick="document.getElementById('import-backup-file').click()"
+            <button type="button" onclick="openRestoreModal()"
                     class="py-2.5 px-3 rounded-xl bg-[#0F6A4F] hover:bg-[#0A4D39] text-white text-[11px] font-extrabold active:scale-95 transition">
-              ⬆️ استعادة نسخة
+              استعادة بياناتك
             </button>
-            <input id="import-backup-file" type="file" accept="application/json,.json" class="hidden" onchange="importLocalBackup(event)" />
+            <button type="button" id="export-file-btn" onclick="exportLocalBackup()"
+                    class="col-span-2 py-2 px-3 rounded-xl bg-white/70 hover:bg-white border border-emerald-200 text-[#0A4D39] text-[10px] font-bold active:scale-95 transition">
+              حفظ النسخة كملف
+            </button>
           </div>
+          <p class="text-[10px] text-stone-600 leading-relaxed">
+            التحديثات تحافظ على بياناتك تلقائياً، ونحفظ نسخة داخل جهازك قبل كل تحديث. انسخ بياناتك واحتفظ فيها إذا بتحذف التطبيق.
+          </p>
         </div>
 
         <!-- تذكيرات الجوال (إشعارات محلية من الجهاز بدون إنترنت) -->
@@ -1848,28 +1878,73 @@
     let toastTimer = null;
 
     // ==================== التخزين المحلي ====================
+    // ==================== توافق البيانات بين الإصدارات ====================
+    // نفس مفتاح التخزين في كل الإصدارات، وأي حقل جديد يأخذ قيمة افتراضية بدون ما يمس بياناتك
+    const STATE_SCHEMA_VERSION = 4;
+    const SNAPSHOT_KEY = STORAGE_KEY + '_before_update';
+    const LAST_VERSION_KEY = 'hisbat_last_web_version';
+
+    function migrateState(parsed) {
+      const base = getInitialState();
+      const src = parsed && typeof parsed === 'object' ? parsed : {};
+      const asArray = (value, fallback = []) => (Array.isArray(value) ? value : fallback);
+      const merged = {
+        ...base,
+        ...src,
+        profile: {
+          ...base.profile,
+          ...(src.profile || {}),
+          customRates: { ...base.profile.customRates, ...((src.profile && src.profile.customRates) || {}) }
+        },
+        meals: { ...createEmptyMeals(), ...(src.meals && typeof src.meals === 'object' ? src.meals : {}) },
+        notifPrefs: { ...base.notifPrefs, ...(src.notifPrefs || {}) },
+        fixedObligations: asArray(src.fixedObligations, base.fixedObligations),
+        transactions: asArray(src.transactions),
+        distribution: asArray(src.distribution, base.distribution),
+        obligations: asArray(src.obligations, base.obligations),
+        groceries: asArray(src.groceries),
+        dailyTasks: asArray(src.dailyTasks)
+      };
+      WEEK_DAYS.forEach(d => {
+        if (!Array.isArray(merged.meals[d.key])) merged.meals[d.key] = [];
+      });
+      delete merged.backupApp;
+      delete merged.backupDate;
+      merged.schemaVersion = STATE_SCHEMA_VERSION;
+      return merged;
+    }
+
+    function readStoredState(key) {
+      const raw = localStorage.getItem(key);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      return parsed && typeof parsed === 'object' ? parsed : null;
+    }
+
     function loadState() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          const base = getInitialState();
-          state = {
-            ...base,
-            ...parsed,
-            profile: {
-              ...base.profile,
-              ...(parsed.profile || {}),
-              customRates: { ...base.profile.customRates, ...((parsed.profile && parsed.profile.customRates) || {}) }
-            },
-            meals: { ...createEmptyMeals(), ...(parsed.meals || {}) }
-          };
-          lastSmartPlanMeta = state.lastSmartPlanMeta || null;
-        }
-      } catch (e) {
+      let parsed = null;
+      try { parsed = readStoredState(STORAGE_KEY); } catch (e) { parsed = null; }
+      if (!parsed) {
+        // استعادة تلقائية من النسخة المحفوظة قبل آخر تحديث إذا تلفت البيانات الأساسية
+        try { parsed = readStoredState(SNAPSHOT_KEY); } catch (e) { parsed = null; }
+      }
+      if (parsed) {
+        state = migrateState(parsed);
+        lastSmartPlanMeta = state.lastSmartPlanMeta || null;
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+      } else {
         state = getInitialState();
         lastSmartPlanMeta = null;
       }
+    }
+
+    function saveSnapshotBeforeUpdate() {
+      try {
+        state.lastSmartPlanMeta = lastSmartPlanMeta;
+        const data = JSON.stringify(state);
+        localStorage.setItem(STORAGE_KEY, data);
+        localStorage.setItem(SNAPSHOT_KEY, data);
+      } catch (e) {}
     }
 
     function saveState() {
@@ -1893,11 +1968,87 @@
       }
     }
 
-    // تصدير نسخة احتياطية كاملة كملف JSON على جهاز المستخدم
+    // ==================== النسخ الاحتياطي ====================
+    function backupText() {
+      saveState();
+      return JSON.stringify({ ...state, backupApp: 'hisbat-mughtarib', backupDate: todayISO() });
+    }
+
+    function isNativeApp() {
+      return !!getNativePlugin('App');
+    }
+
+    async function copyTextToClipboard(text) {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          return true;
+        }
+      } catch (e) {}
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, text.length);
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        return ok;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    // ينسخ كل بياناتك كنص، تلصقه في الملاحظات أو ترسله لنفسك (يعمل على الجوال والمتصفح)
+    async function copyBackupToClipboard() {
+      const ok = await copyTextToClipboard(backupText());
+      showToast(ok ? 'تم نسخ بياناتك، الصقها في الملاحظات أو أرسلها لنفسك' : 'تعذر النسخ، جرّب مرة ثانية', ok ? 'success' : 'warn');
+    }
+
+    function openRestoreModal() {
+      document.getElementById('restore-text').value = '';
+      document.getElementById('modal-restore').classList.remove('hidden');
+    }
+
+    function restoreFromBackupText(text) {
+      let parsed;
+      try {
+        parsed = JSON.parse(String(text || '').trim());
+      } catch (e) {
+        showToast('النص الملصوق غير صالح، تأكد أنك نسخته كاملاً');
+        return false;
+      }
+      if (!parsed || typeof parsed !== 'object' || !parsed.profile) {
+        showToast('النسخة غير صالحة');
+        return false;
+      }
+      state = migrateState({ ...parsed, onboarded: true });
+      lastSmartPlanMeta = state.lastSmartPlanMeta || null;
+      saveState();
+      document.getElementById('onboarding-screen').classList.add('hidden');
+      closeModal('modal-restore');
+      closeModal('modal-settings');
+      renderAll();
+      showToast('تمت استعادة بياناتك بنجاح');
+      return true;
+    }
+
+    function restoreFromPaste() {
+      restoreFromBackupText(document.getElementById('restore-text').value);
+    }
+
+    // تصدير نسخة احتياطية كملف JSON (في المتصفح). داخل تطبيق الجوال ننسخ البيانات بدلاً من ذلك
     function exportLocalBackup() {
+      if (isNativeApp()) {
+        copyBackupToClipboard();
+        return;
+      }
       try {
         saveState();
-        const dataStr = JSON.stringify(state, null, 2);
+        const dataStr = backupText();
         const blob = new Blob([dataStr], { type: 'application/json;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -1920,29 +2071,7 @@
       const reader = new FileReader();
       reader.onload = () => {
         try {
-          const parsed = JSON.parse(String(reader.result || ''));
-          if (!parsed || typeof parsed !== 'object' || !parsed.profile) {
-            showToast('الملف المختار غير صالح');
-            return;
-          }
-          const base = getInitialState();
-          state = {
-            ...base,
-            ...parsed,
-            onboarded: true,
-            profile: {
-              ...base.profile,
-              ...(parsed.profile || {}),
-              customRates: { ...base.profile.customRates, ...((parsed.profile && parsed.profile.customRates) || {}) }
-            },
-            meals: { ...createEmptyMeals(), ...(parsed.meals || {}) }
-          };
-          lastSmartPlanMeta = state.lastSmartPlanMeta || null;
-          saveState();
-          document.getElementById('onboarding-screen').classList.add('hidden');
-          closeModal('modal-settings');
-          renderAll();
-          showToast('تمت استعادة بياناتك من جهازك بنجاح ✓');
+          restoreFromBackupText(String(reader.result || ''));
         } catch (e) {
           showToast('تعذر قراءة ملف النسخة الاحتياطية');
         } finally {
@@ -3047,6 +3176,8 @@
       renderSettingsFixedList();
       updateLocalStorageInfo();
       renderNotifSettings();
+      // داخل تطبيق الجوال حفظ الملف غير مدعوم، فنكتفي بنسخ البيانات
+      document.getElementById('export-file-btn').classList.toggle('hidden', isNativeApp());
       document.getElementById('modal-settings').classList.remove('hidden');
     }
 
@@ -3368,10 +3499,15 @@
         const localNative = await getLocalNativeVersion();
         renderVersionLabel();
 
-        if (remoteNative > localNative && manifest.apk) {
-          pendingUpdate = { kind: 'apk', url: manifest.apk, version: remoteWeb };
-        } else if (remoteWeb > parseInt(APP_WEB_VERSION, 10) && manifest.www) {
+        // أقل نسخة أصلية تشتغل عليها حزمة الواجهة الجديدة (لو ما وُجدت نفترض نفس النسخة الأصلية)
+        const minNative = parseInt(manifest.minNative, 10) || remoteNative;
+        const webIsNewer = remoteWeb > parseInt(APP_WEB_VERSION, 10);
+
+        if (webIsNewer && manifest.www && localNative >= minNative) {
+          // تحديث سريع داخل التطبيق: نفس البيانات ونفس التطبيق
           pendingUpdate = { kind: 'web', url: manifest.www, version: String(remoteWeb) };
+        } else if (remoteNative > localNative && manifest.apk) {
+          pendingUpdate = { kind: 'apk', url: manifest.apk, version: remoteWeb };
         } else {
           pendingUpdate = null;
         }
@@ -3400,7 +3536,7 @@
         switchTab('home');
         showToast('فيه تحديث جديد، اضغط زر "تحديث" بالأعلى', 'success');
       } else if (result.status === 'latest') {
-        showToast(`تم التحقق: أنت على آخر إصدار (${APP_WEB_VERSION})`, 'success');
+        showToast(`لا توجد تحديثات، أنت على آخر إصدار (${APP_WEB_VERSION})`, 'success');
       } else {
         showToast(`تعذر التحقق من التحديثات: ${result.message || 'خطأ غير معروف'}`, 'warn');
       }
@@ -3411,6 +3547,8 @@
       const btn = document.getElementById('update-btn');
 
       if (pendingUpdate.kind === 'apk') {
+        saveSnapshotBeforeUpdate();
+        document.getElementById('update-banner-sub').textContent = 'بعد اكتمال التنزيل افتح الملف من الإشعارات واضغط تثبيت';
         showToast('جارٍ تنزيل النسخة الجديدة، ثبّتها بعد اكتمال التنزيل', 'info');
         window.location.href = pendingUpdate.url;
         return;
@@ -3421,7 +3559,7 @@
       btn.disabled = true;
       btn.textContent = 'جارٍ التحديث...';
       try {
-        saveState();
+        saveSnapshotBeforeUpdate(); // نسخة من بياناتك قبل التحديث
         const bundle = await updater.download({ url: pendingUpdate.url, version: pendingUpdate.version });
         await updater.set({ id: bundle.id }); // يعيد تشغيل الواجهة بالإصدار الجديد
       } catch (e) {
@@ -3439,6 +3577,19 @@
       }
       await getLocalNativeVersion();
       renderVersionLabel();
+
+      // رسالة تأكيد بعد نجاح التحديث
+      if (isBuiltApp()) {
+        try {
+          const previous = parseInt(localStorage.getItem(LAST_VERSION_KEY) || '0', 10);
+          const current = parseInt(APP_WEB_VERSION, 10);
+          if (previous && current > previous) {
+            setTimeout(() => showToast(`تم التحديث إلى الإصدار ${current}، وبياناتك كما هي`, 'success'), 700);
+          }
+          localStorage.setItem(LAST_VERSION_KEY, String(current));
+        } catch (e) {}
+      }
+
       checkForUpdate(true);
       window.addEventListener('online', () => checkForUpdate(true));
     }
