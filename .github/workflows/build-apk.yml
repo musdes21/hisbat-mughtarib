@@ -52,6 +52,9 @@ jobs:
           # إضافة التحديث تطلب androidx.work 2.10 (يحتاج compileSdk 35)، وقالب Capacitor 6 يستخدم 34،
           # فنثبّت إصداراً متوافقاً مع 34 لكل الوحدات
           printf '\nsubprojects {\n    configurations.all {\n        resolutionStrategy.force "androidx.work:work-runtime:2.9.1"\n    }\n}\n' >> android/build.gradle
+          # إضافة التحديث تتطلب Android 6.0 (minSdk 23) كحد أدنى
+          sed -i "s/minSdkVersion = [0-9]\+/minSdkVersion = 23/" android/variables.gradle
+          grep -E "minSdkVersion|compileSdkVersion" android/variables.gradle
           sed -i "s/versionCode [0-9]\+/versionCode ${NATIVE_VERSION}/; s/versionName \"[^\"]*\"/versionName \"1.${NATIVE_VERSION}.${WEB_VERSION}\"/" android/app/build.gradle
           grep -E "versionCode|versionName" android/app/build.gradle
           npx @capacitor/assets generate --android --assetPath resources \
