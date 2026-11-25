@@ -20,6 +20,10 @@
       "splashFullScreen": true,
       "splashImmersive": true
     },
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_hisbat",
+      "iconColor": "#0F6A4F"
+    },
     "CapacitorUpdater": {
       "autoUpdate": false,
       "statsUrl": "",

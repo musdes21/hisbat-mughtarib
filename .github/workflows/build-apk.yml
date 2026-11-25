@@ -55,6 +55,9 @@ jobs:
           # إضافة التحديث تتطلب Android 6.0 (minSdk 23) كحد أدنى
           sed -i "s/minSdkVersion = [0-9]\+/minSdkVersion = 23/" android/variables.gradle
           grep -E "minSdkVersion|compileSdkVersion" android/variables.gradle
+          # أيقونة الإشعارات الصغيرة الخاصة بالتطبيق
+          mkdir -p android/app/src/main/res/drawable
+          cp resources/android/ic_stat_hisbat.xml android/app/src/main/res/drawable/
           sed -i "s/versionCode [0-9]\+/versionCode ${NATIVE_VERSION}/; s/versionName \"[^\"]*\"/versionName \"1.${NATIVE_VERSION}.${WEB_VERSION}\"/" android/app/build.gradle
           grep -E "versionCode|versionName" android/app/build.gradle
           npx @capacitor/assets generate --android --assetPath resources \

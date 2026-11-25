@@ -302,6 +302,32 @@
     .toast.success .toast-ic { background: #10B981; }
     .toast.warn .toast-ic { background: #F59E0B; }
     .toast.info .toast-ic { background: #0F6A4F; }
+
+    /* ==========================================================================
+       6. مفتاح التشغيل (Switch) لإعدادات التذكيرات
+       ========================================================================== */
+    .switch {
+      position: relative;
+      width: 46px;
+      height: 27px;
+      border-radius: 999px;
+      background: #d6d3d1;
+      flex-shrink: 0;
+      transition: background-color 0.22s ease;
+    }
+    .switch span {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 21px;
+      height: 21px;
+      border-radius: 999px;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .switch.on { background: #0F6A4F; }
+    .switch.on span { transform: translateX(-19px); }
   </style>
 </head>
 <body class="min-h-screen flex justify-center items-start sm:items-center sm:py-4">
@@ -1294,6 +1320,51 @@
           </div>
         </div>
 
+        <!-- تذكيرات الجوال (إشعارات محلية من الجهاز بدون إنترنت) -->
+        <div class="bg-white rounded-2xl p-4 border border-stone-200/80 space-y-3">
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-start gap-2.5 min-w-0">
+              <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path stroke-linecap="round" stroke-linejoin="round" d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs font-extrabold text-[#0F6A4F]">تذكيرات الجوال</p>
+                <p class="text-[10px] text-stone-500 leading-relaxed">تنبيهات تطلع في شريط إشعارات جوالك، من جهازك وبدون إنترنت</p>
+              </div>
+            </div>
+            <button type="button" id="notif-master" onclick="toggleNotifications()" role="switch" aria-checked="false" aria-label="تشغيل تذكيرات الجوال" class="switch"><span></span></button>
+          </div>
+
+          <div id="notif-options" class="space-y-2.5 pt-2 border-t border-stone-100">
+            <label class="flex items-center justify-between gap-3 text-[11px] font-bold text-stone-700">
+              <span class="flex items-center gap-2">
+                <input id="notif-daily" type="checkbox" onchange="updateNotifPref('daily', this.checked)" class="w-4 h-4 accent-[#0F6A4F]" />
+                <span>تذكير يومي لتسجيل المصاريف والمهام</span>
+              </span>
+              <select id="notif-daily-hour" onchange="updateNotifPref('dailyHour', Number(this.value))" class="thmanyah-num rounded-lg bg-[#F6F7F5] border border-stone-200 px-2 py-1 text-[11px] font-bold text-stone-800 focus:outline-none">
+                <option value="19">7 م</option>
+                <option value="20">8 م</option>
+                <option value="21">9 م</option>
+                <option value="22">10 م</option>
+                <option value="23">11 م</option>
+              </select>
+            </label>
+            <label class="flex items-center gap-2 text-[11px] font-bold text-stone-700">
+              <input id="notif-payday" type="checkbox" onchange="updateNotifPref('payday', this.checked)" class="w-4 h-4 accent-[#0F6A4F]" />
+              <span>قبل يوم الراتب بيوم، وصباح يوم الراتب</span>
+            </label>
+            <label class="flex items-center gap-2 text-[11px] font-bold text-stone-700">
+              <input id="notif-obligations" type="checkbox" onchange="updateNotifPref('obligations', this.checked)" class="w-4 h-4 accent-[#0F6A4F]" />
+              <span>قبل الالتزامات بـ 3 أيام، وفي يوم الاستحقاق</span>
+            </label>
+          </div>
+
+          <button type="button" onclick="sendTestNotification()"
+                  class="w-full py-2.5 rounded-xl bg-[#E7F3EE] hover:bg-emerald-100 text-[#0A4D39] text-[11px] font-extrabold active:scale-[0.99] transition">
+            إرسال إشعار تجريبي
+          </button>
+        </div>
+
         <p id="app-version-label" class="thmanyah-num text-center text-[10px] font-bold text-stone-400">الإصدار التجريبي</p>
 
         <!-- إعادة ضبط البيانات بتأكيد مزدوج داخل الواجهة -->
@@ -1748,7 +1819,14 @@
         groceries: [],
         lastSmartPlanMeta: null,
         dailyTasks: [],
-        tasksDay: ''
+        tasksDay: '',
+        notifPrefs: {
+          enabled: false,
+          daily: true,
+          dailyHour: 21,
+          payday: true,
+          obligations: true
+        }
       };
     }
 
@@ -1793,6 +1871,7 @@
         state.lastSmartPlanMeta = lastSmartPlanMeta;
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       } catch (e) {}
+      queueReminderSync();
     }
 
     function updateLocalStorageInfo() {
@@ -2961,6 +3040,7 @@
       showResetConfirm(false);
       renderSettingsFixedList();
       updateLocalStorageInfo();
+      renderNotifSettings();
       document.getElementById('modal-settings').classList.remove('hidden');
     }
 
@@ -3273,6 +3353,225 @@
       window.addEventListener('online', () => checkForUpdate(true));
     }
 
+    // ==================== تذكيرات الجوال (إشعارات محلية) ====================
+    // كل التذكيرات تُجدول على الجهاز نفسه، وتعمل بدون إنترنت وبدون أي خادم
+    const NOTIF_IDS = { test: 999, daily: 1000, paydayEve: 1100, payday: 1101, obligationsBase: 2000 };
+    const MAX_OBLIGATION_REMINDERS = 20;
+    let reminderSyncTimer = null;
+
+    function getNotifPrefs() {
+      const base = getInitialState().notifPrefs;
+      state.notifPrefs = { ...base, ...(state.notifPrefs || {}) };
+      return state.notifPrefs;
+    }
+
+    function queueReminderSync() {
+      clearTimeout(reminderSyncTimer);
+      reminderSyncTimer = setTimeout(syncReminders, 1200);
+    }
+
+    function atTime(dateISO, hour, minute = 0) {
+      const [y, m, d] = String(dateISO).split('-').map(Number);
+      return new Date(y, (m || 1) - 1, d || 1, hour, minute, 0);
+    }
+
+    function nextPaydayDate() {
+      const now = new Date();
+      const wanted = Math.min(31, Math.max(1, Number(state.profile.payday || 27)));
+      const build = (year, month) => {
+        const lastDay = new Date(year, month + 1, 0).getDate();
+        return new Date(year, month, Math.min(wanted, lastDay), 10, 0, 0);
+      };
+      let target = build(now.getFullYear(), now.getMonth());
+      if (target <= now) target = build(now.getFullYear(), now.getMonth() + 1);
+      return target;
+    }
+
+    function buildReminderList() {
+      const prefs = getNotifPrefs();
+      const now = new Date();
+      const list = [];
+
+      if (prefs.daily) {
+        list.push({
+          id: NOTIF_IDS.daily,
+          title: 'حِسبة مغترب',
+          body: 'سجّلت مصاريف اليوم؟ خذ دقيقة وراجع مهامك',
+          schedule: { on: { hour: Number(prefs.dailyHour) || 21, minute: 0 }, allowWhileIdle: true },
+          extra: { tab: 'important' }
+        });
+      }
+
+      if (prefs.payday) {
+        const payday = nextPaydayDate();
+        const eve = new Date(payday);
+        eve.setDate(eve.getDate() - 1);
+        eve.setHours(20, 0, 0, 0);
+        if (eve > now) {
+          list.push({
+            id: NOTIF_IDS.paydayEve,
+            title: 'بكرة يوم الراتب',
+            body: 'جهّز خطة الشهر: الالتزامات، التحويل للأهل، وميزانية الأكل.',
+            schedule: { at: eve, allowWhileIdle: true },
+            extra: { tab: 'home' }
+          });
+        }
+        list.push({
+          id: NOTIF_IDS.payday,
+          title: 'اليوم يوم الراتب',
+          body: 'ابدأ الشهر صح: حوّل للأهل وثبّت ميزانية الأكل الأسبوعية.',
+          schedule: { at: payday, allowWhileIdle: true },
+          extra: { tab: 'remittance' }
+        });
+      }
+
+      if (prefs.obligations) {
+        const upcoming = state.obligations
+          .filter(o => !o.completed && o.dueDate)
+          .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+          .slice(0, MAX_OBLIGATION_REMINDERS);
+        upcoming.forEach((ob, idx) => {
+          const due = atTime(ob.dueDate, 10);
+          const before = new Date(due);
+          before.setDate(before.getDate() - 3);
+          const amountText = `المبلغ المطلوب ${formatNum(ob.amount)} ر.س`;
+          if (before > now) {
+            list.push({
+              id: NOTIF_IDS.obligationsBase + idx * 2,
+              title: `باقي 3 أيام: ${ob.title}`,
+              body: amountText,
+              schedule: { at: before, allowWhileIdle: true },
+              extra: { tab: 'important' }
+            });
+          }
+          if (due > now) {
+            list.push({
+              id: NOTIF_IDS.obligationsBase + idx * 2 + 1,
+              title: `اليوم موعد: ${ob.title}`,
+              body: amountText,
+              schedule: { at: due, allowWhileIdle: true },
+              extra: { tab: 'important' }
+            });
+          }
+        });
+      }
+
+      return list;
+    }
+
+    // يلغي التذكيرات القديمة ويعيد جدولتها حسب آخر بياناتك
+    async function syncReminders() {
+      const LN = getNativePlugin('LocalNotifications');
+      if (!LN) return;
+      try {
+        const pending = await LN.getPending();
+        const toCancel = (pending.notifications || [])
+          .filter(n => n.id !== NOTIF_IDS.test)
+          .map(n => ({ id: n.id }));
+        if (toCancel.length) await LN.cancel({ notifications: toCancel });
+
+        if (!getNotifPrefs().enabled) return;
+        const perm = await LN.checkPermissions();
+        if (perm.display !== 'granted') return;
+
+        const list = buildReminderList();
+        if (list.length) await LN.schedule({ notifications: list });
+      } catch (e) {
+        // نتجاهل الخطأ بهدوء حتى لا يتعطل التطبيق
+      }
+    }
+
+    async function ensureNotificationPermission() {
+      const LN = getNativePlugin('LocalNotifications');
+      if (!LN) return false;
+      try {
+        let perm = await LN.checkPermissions();
+        if (perm.display !== 'granted') perm = await LN.requestPermissions();
+        return perm.display === 'granted';
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function renderNotifSettings() {
+      const prefs = getNotifPrefs();
+      const master = document.getElementById('notif-master');
+      master.classList.toggle('on', !!prefs.enabled);
+      master.setAttribute('aria-checked', prefs.enabled ? 'true' : 'false');
+      document.getElementById('notif-options').classList.toggle('opacity-50', !prefs.enabled);
+      document.getElementById('notif-daily').checked = !!prefs.daily;
+      document.getElementById('notif-daily-hour').value = String(prefs.dailyHour || 21);
+      document.getElementById('notif-payday').checked = !!prefs.payday;
+      document.getElementById('notif-obligations').checked = !!prefs.obligations;
+    }
+
+    async function toggleNotifications() {
+      const prefs = getNotifPrefs();
+      if (!getNativePlugin('LocalNotifications')) {
+        showToast('تذكيرات الجوال تشتغل داخل تطبيق الجوال فقط', 'info');
+        return;
+      }
+      if (!prefs.enabled) {
+        const granted = await ensureNotificationPermission();
+        if (!granted) {
+          showToast('فعّل إشعارات التطبيق من إعدادات الجوال أولاً', 'warn');
+          return;
+        }
+        prefs.enabled = true;
+        showToast('تم تشغيل تذكيرات الجوال');
+      } else {
+        prefs.enabled = false;
+        showToast('تم إيقاف تذكيرات الجوال', 'info');
+      }
+      saveState();
+      renderNotifSettings();
+    }
+
+    function updateNotifPref(key, value) {
+      const prefs = getNotifPrefs();
+      prefs[key] = value;
+      saveState();
+      renderNotifSettings();
+    }
+
+    async function sendTestNotification() {
+      const LN = getNativePlugin('LocalNotifications');
+      if (!LN) {
+        showToast('الإشعار التجريبي يشتغل داخل تطبيق الجوال فقط', 'info');
+        return;
+      }
+      const granted = await ensureNotificationPermission();
+      if (!granted) {
+        showToast('فعّل إشعارات التطبيق من إعدادات الجوال أولاً', 'warn');
+        return;
+      }
+      try {
+        await LN.schedule({
+          notifications: [{
+            id: NOTIF_IDS.test,
+            title: 'حِسبة مغترب',
+            body: 'التذكيرات شغّالة، هذا إشعار تجريبي',
+            schedule: { at: new Date(Date.now() + 5000), allowWhileIdle: true },
+            extra: { tab: 'home' }
+          }]
+        });
+        showToast('بيوصلك إشعار تجريبي خلال 5 ثوانٍ، تقدر تطلع من التطبيق', 'success');
+      } catch (e) {
+        showToast('تعذر إرسال الإشعار التجريبي');
+      }
+    }
+
+    function initReminders() {
+      const LN = getNativePlugin('LocalNotifications');
+      if (!LN) return;
+      // الضغط على الإشعار يفتح القسم المناسب
+      LN.addListener('localNotificationActionPerformed', action => {
+        const tab = action && action.notification && action.notification.extra && action.notification.extra.tab;
+        if (tab) switchTab(tab);
+      });
+      syncReminders();
+    }
+
     // ==================== التنقل والنوافذ ====================
     function switchTab(tabName) {
       ['home', 'food', 'remittance', 'important'].forEach(t => {
@@ -3299,6 +3598,7 @@
         openOnboarding();
       }
       initUpdater();
+      initReminders();
       // عند الرجوع للتطبيق: تحديث مهام اليوم وفحص التحديثات
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) return;
