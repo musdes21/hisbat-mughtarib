@@ -1,6 +1,6 @@
 ﻿node_modules/
-android/
-dist/
+/android/
+/dist/
 *.log
 # مفتاح التوقيع وكلمات المرور: لا تُرفع أبداً
 signing/
