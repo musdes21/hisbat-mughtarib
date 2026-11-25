@@ -12,8 +12,10 @@
   },
   "dependencies": {
     "@capacitor/android": "^6.1.2",
+    "@capacitor/app": "^6.0.3",
     "@capacitor/core": "^6.1.2",
-    "@capacitor/splash-screen": "^6.0.2"
+    "@capacitor/splash-screen": "^6.0.2",
+    "@capgo/capacitor-updater": "^6.53.0"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",

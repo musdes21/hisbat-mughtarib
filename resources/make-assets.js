@@ -1,59 +1,90 @@
-// يولّد أيقونة التطبيق وشاشة البداية كملفات PNG بدون مكتبات خارجية.
-// التصميم: خلفية خضراء (#0F6A4F) مع دائرة عنبرية في المنتصف.
-// يمكنك استبدال resources/icon.png و resources/splash.png بتصميمك الخاص في أي وقت.
-const fs = require('fs');
+// يولّد أيقونة التطبيق وشاشة البداية من تصميم SVG (يحتاج sharp، ويأتي مع @capacitor/assets)
+// الفكرة: عملة ذهبية (الراتب والحسبة) يخرج منها سهم منحني للأعلى (التحويل للأهل)، على خلفية خضراء.
+// المخرجات في resources/ بالأسماء التي يقرأها @capacitor/assets:
+//   icon-only.png, icon-foreground.png, icon-background.png, splash.png, splash-dark.png
 const path = require('path');
-const zlib = require('zlib');
+const sharp = require('sharp');
 
-function crc32(buf) {
-  let c, crc = 0xffffffff;
-  for (let n = 0; n < buf.length; n++) {
-    c = (crc ^ buf[n]) & 0xff;
-    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
-    crc = (crc >>> 8) ^ c;
-  }
-  return (crc ^ 0xffffffff) >>> 0;
+const OUT = __dirname;
+
+const BG_DEFS = `
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#13805F"/>
+    <stop offset="0.5" stop-color="#0F6A4F"/>
+    <stop offset="1" stop-color="#094231"/>
+  </linearGradient>
+  <radialGradient id="glow" cx="0.25" cy="0.2" r="0.6">
+    <stop offset="0" stop-color="#FBBF24" stop-opacity="0.22"/>
+    <stop offset="1" stop-color="#FBBF24" stop-opacity="0"/>
+  </radialGradient>
+  <pattern id="stripes" width="44" height="44" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+    <rect width="6" height="44" fill="#ffffff" fill-opacity="0.035"/>
+  </pattern>`;
+
+const MARK_DEFS = `
+  <linearGradient id="coin" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#FCD34D"/>
+    <stop offset="0.55" stop-color="#F59E0B"/>
+    <stop offset="1" stop-color="#C2410C"/>
+  </linearGradient>
+  <linearGradient id="coinInner" x1="1" y1="1" x2="0" y2="0">
+    <stop offset="0" stop-color="#FDE68A"/>
+    <stop offset="1" stop-color="#D97706"/>
+  </linearGradient>
+  <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#052e22" flood-opacity="0.45"/>
+  </filter>`;
+
+// الشعار مرسوم داخل مربع 1024 ومتمركز
+const MARK = `
+  <g filter="url(#shadow)">
+    <!-- العملة -->
+    <circle cx="448" cy="585" r="235" fill="url(#coin)"/>
+    <circle cx="448" cy="585" r="182" fill="none" stroke="#FFFBEB" stroke-opacity="0.55" stroke-width="14"/>
+    <circle cx="448" cy="585" r="150" fill="url(#coinInner)" fill-opacity="0.55"/>
+    <!-- خطوط الحسبة داخل العملة -->
+    <rect x="365" y="530" width="166" height="26" rx="13" fill="#FFFBEB" fill-opacity="0.92"/>
+    <rect x="409" y="580" width="122" height="26" rx="13" fill="#FFFBEB" fill-opacity="0.75"/>
+    <rect x="453" y="630" width="78" height="26" rx="13" fill="#FFFBEB" fill-opacity="0.6"/>
+    <!-- سهم التحويل المنحني -->
+    <path d="M585 445 C 640 360, 700 300, 785 262" fill="none" stroke="#FFFFFF" stroke-width="58" stroke-linecap="round"/>
+    <path d="M688 236 L 806 252 L 760 362" fill="none" stroke="#FFFFFF" stroke-width="58" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- لمعة صغيرة -->
+    <path d="M820 470 l 16 40 l 40 16 l -40 16 l -16 40 l -16 -40 l -40 -16 l 40 -16 z" fill="#FDE68A"/>
+  </g>`;
+
+function background(size) {
+  return `
+    <rect width="${size}" height="${size}" fill="url(#bg)"/>
+    <rect width="${size}" height="${size}" fill="url(#stripes)"/>
+    <rect width="${size}" height="${size}" fill="url(#glow)"/>`;
 }
 
-function chunk(type, data) {
-  const len = Buffer.alloc(4);
-  len.writeUInt32BE(data.length);
-  const td = Buffer.concat([Buffer.from(type, 'ascii'), data]);
-  const crc = Buffer.alloc(4);
-  crc.writeUInt32BE(crc32(td));
-  return Buffer.concat([len, td, crc]);
+function svg(size, inner) {
+  return Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><defs>${BG_DEFS}${MARK_DEFS}</defs>${inner}</svg>`);
 }
 
-function makePng(size, bg, fg) {
-  const raw = Buffer.alloc((size * 3 + 1) * size);
-  const cx = size / 2, cy = size / 2, r = size * 0.28;
-  let p = 0;
-  for (let y = 0; y < size; y++) {
-    raw[p++] = 0; // filter: none
-    for (let x = 0; x < size; x++) {
-      const dx = x - cx, dy = y - cy;
-      const inside = dx * dx + dy * dy <= r * r;
-      const c = inside ? fg : bg;
-      raw[p++] = c[0]; raw[p++] = c[1]; raw[p++] = c[2];
-    }
-  }
-  const ihdr = Buffer.alloc(13);
-  ihdr.writeUInt32BE(size, 0);
-  ihdr.writeUInt32BE(size, 4);
-  ihdr[8] = 8; // bit depth
-  ihdr[9] = 2; // RGB
-  ihdr[10] = 0; ihdr[11] = 0; ihdr[12] = 0;
-  return Buffer.concat([
-    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
-    chunk('IHDR', ihdr),
-    chunk('IDAT', zlib.deflateSync(raw, { level: 9 })),
-    chunk('IEND', Buffer.alloc(0)),
-  ]);
+// يضع الشعار بحجم markSize في منتصف لوحة size
+function centeredMark(size, markSize) {
+  const scale = markSize / 1024;
+  const offset = (size - markSize) / 2;
+  return `<g transform="translate(${offset} ${offset}) scale(${scale})">${MARK}</g>`;
 }
 
-const GREEN = [0x0f, 0x6a, 0x4f];
-const AMBER = [0xd9, 0x77, 0x06];
-const outDir = path.join(__dirname);
-fs.writeFileSync(path.join(outDir, 'icon.png'), makePng(1024, GREEN, AMBER));
-fs.writeFileSync(path.join(outDir, 'splash.png'), makePng(2732, GREEN, AMBER));
-console.log('تم توليد resources/icon.png و resources/splash.png');
+async function main() {
+  // أيقونة كاملة (للأجهزة القديمة)
+  await sharp(svg(1024, background(1024) + MARK)).png().toFile(path.join(OUT, 'icon-only.png'));
+  // أيقونة تكيّفية: الشعار داخل المنطقة الآمنة (حوالي 62% من المساحة)
+  await sharp(svg(1024, centeredMark(1024, 640))).png().toFile(path.join(OUT, 'icon-foreground.png'));
+  await sharp(svg(1024, background(1024))).png().toFile(path.join(OUT, 'icon-background.png'));
+  // شاشة البداية
+  const splash = svg(2732, background(2732) + centeredMark(2732, 900));
+  await sharp(splash).png().toFile(path.join(OUT, 'splash.png'));
+  await sharp(splash).png().toFile(path.join(OUT, 'splash-dark.png'));
+  console.log('تم توليد الأيقونة وشاشة البداية في resources/');
+}
+
+main().catch(err => {
+  console.error(err);
+  process.exit(1);
+});

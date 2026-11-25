@@ -203,21 +203,121 @@
     input, select, textarea {
       user-select: text;
     }
+
+    /* ==========================================================================
+       3. الترويسة بنقشة هندسية خفيفة
+       ========================================================================== */
+    .hero-pattern {
+      background-color: #0F6A4F;
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(251, 191, 36, 0.16) 0, rgba(251, 191, 36, 0) 34%),
+        radial-gradient(circle at 92% 110%, rgba(255, 255, 255, 0.10) 0, rgba(255, 255, 255, 0) 42%),
+        repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.035) 0 2px, transparent 2px 14px),
+        linear-gradient(160deg, #11775A 0%, #0F6A4F 45%, #0A4D39 100%);
+    }
+
+    /* ==========================================================================
+       4. شريط التنقل السفلي وزر الإضافة المركزي
+       ========================================================================== */
+    .bottom-nav {
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 -10px 30px -18px rgba(15, 106, 79, 0.35);
+    }
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 6px 0 4px;
+      color: #a8a29e;
+      font-size: 10px;
+      font-weight: 700;
+      transition: color 0.2s ease;
+    }
+    .nav-btn .nav-ic {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      height: 28px;
+      border-radius: 999px;
+      transition: background-color 0.25s ease, transform 0.25s ease;
+    }
+    .nav-btn.active { color: #0F6A4F; font-weight: 800; }
+    .nav-btn.active .nav-ic { background: #E7F3EE; transform: translateY(-1px); }
+    .fab-center {
+      width: 52px;
+      height: 52px;
+      margin-top: -26px;
+      border-radius: 999px;
+      background: linear-gradient(160deg, #F59E0B 0%, #D97706 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 22px -8px rgba(217, 119, 6, 0.65), 0 0 0 5px #F6F7F5;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .fab-center:active { transform: scale(0.92); }
+
+    /* ==========================================================================
+       5. الإشعارات العائمة (Toast)
+       ========================================================================== */
+    .toast {
+      position: fixed;
+      left: 50%;
+      top: calc(env(safe-area-inset-top) + 14px);
+      transform: translate(-50%, -150%);
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: max-content;
+      max-width: min(420px, calc(100% - 32px));
+      padding: 10px 14px 10px 12px;
+      border-radius: 16px;
+      background: rgba(24, 24, 27, 0.94);
+      backdrop-filter: blur(12px);
+      color: #fff;
+      font-size: 12.5px;
+      font-weight: 700;
+      line-height: 1.6;
+      box-shadow: 0 16px 36px -14px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+    }
+    .toast.show { transform: translate(-50%, 0); opacity: 1; }
+    .toast-ic {
+      width: 26px;
+      height: 26px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #fff;
+    }
+    .toast.success .toast-ic { background: #10B981; }
+    .toast.warn .toast-ic { background: #F59E0B; }
+    .toast.info .toast-ic { background: #0F6A4F; }
   </style>
 </head>
-<body class="min-h-screen flex justify-center items-start sm:py-4">
+<body class="min-h-screen flex justify-center items-start sm:items-center sm:py-4">
 
   <!-- ========================================================================
        إطار التطبيق المحمول (عرض كامل على الجوال، وإطار هاتف أنيق على سطح المكتب)
+       الارتفاع ثابت بحجم الشاشة حتى يبقى الشريط السفلي ثابتاً ويتمرر المحتوى فقط
        ======================================================================== -->
-  <div id="app-shell" class="w-full max-w-[460px] min-h-screen sm:min-h-[840px] sm:max-h-[94vh] bg-[#F6F7F5] sm:rounded-[34px] sm:shadow-2xl sm:border sm:border-stone-300/80 flex flex-col relative overflow-hidden">
+  <div id="app-shell" class="w-full max-w-[460px] h-[100dvh] sm:h-[860px] sm:max-h-[94vh] bg-[#F6F7F5] sm:rounded-[34px] sm:shadow-2xl sm:border sm:border-stone-300/80 flex flex-col relative overflow-hidden">
 
     <!-- ======================================================================
          1. معالج التسجيل والتخصيص لأول مرة (4 خطوات)
          ====================================================================== -->
     <div id="onboarding-screen" class="hidden absolute inset-0 z-50 bg-[#F6F7F5] flex flex-col overflow-hidden">
       <!-- ترويسة المعالج -->
-      <div class="bg-[#0F6A4F] text-white px-6 pt-8 pb-6 rounded-b-[32px] shadow-md shrink-0 relative overflow-hidden">
+      <div class="hero-pattern text-white px-6 pt-8 pb-6 rounded-b-[32px] shadow-md shrink-0 relative overflow-hidden" style="padding-top: max(2rem, env(safe-area-inset-top));">
         <div class="absolute -left-10 -top-10 w-36 h-36 rounded-full bg-amber-400/15 blur-2xl pointer-events-none"></div>
         <div class="relative flex items-center justify-between mb-4">
           <div class="flex items-center gap-2.5">
@@ -408,7 +508,7 @@
     <!-- ======================================================================
          2. الشريط العلوي للتطبيق الرئيسي
          ====================================================================== -->
-    <header class="bg-[#0F6A4F] text-white px-5 pt-5 pb-4 rounded-b-[28px] shadow-md z-20 shrink-0 relative overflow-hidden">
+    <header class="hero-pattern text-white px-5 pt-5 pb-5 rounded-b-[28px] shadow-md z-20 shrink-0 relative overflow-hidden" style="padding-top: max(1.25rem, env(safe-area-inset-top));">
       <div class="absolute -left-10 -top-10 w-36 h-36 rounded-full bg-amber-400/15 blur-2xl pointer-events-none"></div>
       <div class="relative flex items-center justify-between gap-2">
         <div class="min-w-0">
@@ -434,7 +534,21 @@
     <!-- ======================================================================
          3. المحتوى الرئيسي القابل للتمرير
          ====================================================================== -->
-    <main class="flex-1 overflow-y-auto no-scrollbar px-4 pt-4 pb-28 space-y-4">
+    <main class="flex-1 overflow-y-auto no-scrollbar px-4 pt-4 pb-8 space-y-4">
+
+      <!-- شريط التحديث (يظهر فقط عند الاتصال بالإنترنت وتوفر إصدار أحدث) -->
+      <div id="update-banner" class="hidden bg-white rounded-2xl p-3 border border-emerald-200 shadow-xs flex items-center justify-between gap-3 animate-fade">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div class="w-9 h-9 rounded-xl bg-[#0F6A4F] text-amber-300 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>
+          </div>
+          <div class="min-w-0">
+            <p class="text-xs font-black text-stone-900">تحديث جديد متوفر</p>
+            <p id="update-banner-sub" class="text-[10px] text-stone-500 truncate">حدّث التطبيق للحصول على آخر التحسينات</p>
+          </div>
+        </div>
+        <button id="update-btn" type="button" onclick="applyUpdate()" class="px-4 py-2 rounded-xl bg-[#0F6A4F] text-white text-xs font-extrabold active:scale-95 transition shrink-0">تحديث</button>
+      </div>
 
       <!-- ====================================================================
            التبويب 1: الرئيسية (Home)
@@ -529,6 +643,20 @@
             </div>
           </div>
           <span id="home-next-obligation-days" class="thmanyah-num text-[10px] font-extrabold bg-amber-100 text-amber-900 px-2.5 py-1 rounded-xl shrink-0">—</span>
+        </button>
+
+        <!-- بطاقة مهام اليوم المختصرة -->
+        <button type="button" onclick="switchTab('important')" class="w-full bg-white rounded-2xl p-3.5 shadow-xs border border-stone-200/80 flex items-center justify-between gap-3 text-right active:scale-[0.99] transition">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-9 h-9 rounded-xl bg-[#E7F3EE] text-[#0F6A4F] flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m9 11 3 3L22 4"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </div>
+            <div class="min-w-0">
+              <p class="text-[10px] font-bold text-stone-400">مهام اليوم</p>
+              <p id="home-tasks-next" class="text-xs font-extrabold text-stone-900 truncate">أضف أول مهمة ليومك</p>
+            </div>
+          </div>
+          <span id="home-tasks-count" class="thmanyah-num text-[10px] font-extrabold bg-[#E7F3EE] text-[#0F6A4F] px-2.5 py-1 rounded-xl shrink-0">0/0</span>
         </button>
 
         <!-- سجل آخر العمليات -->
@@ -760,7 +888,7 @@
             <div class="flex items-center justify-between">
               <div>
                 <h3 class="thmanyah-display text-base font-black text-stone-900">قائـمة الأسـبوع</h3>
-                <p class="text-[10px] text-stone-400">يمكنك التأشير على الصنف أو تعديل سعره مباشرة</p>
+                <p class="text-[10px] text-stone-400">الأسعار متوسط تقديري من السوق السعودي، وتقدر تعدّلها حسب محلك</p>
               </div>
               <button type="button" onclick="clearBoughtGroceries()" class="text-[11px] font-bold text-stone-400 hover:text-rose-600 transition">مسح المكتمل</button>
             </div>
@@ -867,6 +995,38 @@
            التبويب 4: المهمة (رادار الالتزامات والمواعيد)
            ==================================================================== -->
       <section id="tab-important" class="hidden space-y-4 animate-fade">
+
+        <!-- مهام اليوم -->
+        <div class="bg-white rounded-3xl p-5 shadow-xs border border-stone-200/80 space-y-4">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h2 class="thmanyah-display text-lg font-black text-stone-900">مهـام اليـوم</h2>
+              <p id="tasks-subtitle" class="thmanyah-serif-text text-xs text-stone-500">رتّب يومك وخلّك على خطتك</p>
+            </div>
+            <div class="relative w-14 h-14 shrink-0">
+              <svg viewBox="0 0 36 36" class="w-14 h-14 -rotate-90">
+                <circle cx="18" cy="18" r="15.5" fill="none" stroke="#E7F3EE" stroke-width="4"/>
+                <circle id="tasks-ring" cx="18" cy="18" r="15.5" fill="none" stroke="#0F6A4F" stroke-width="4" stroke-linecap="round" stroke-dasharray="97.4" stroke-dashoffset="97.4" style="transition: stroke-dashoffset 0.4s ease"/>
+              </svg>
+              <span id="tasks-ring-label" class="thmanyah-num absolute inset-0 flex items-center justify-center text-[11px] font-black text-[#0A4D39]">0/0</span>
+            </div>
+          </div>
+
+          <form onsubmit="addDailyTask(event)" class="space-y-2">
+            <div class="flex gap-2">
+              <input id="task-title-input" type="text" required maxlength="80" placeholder="أضف مهمة لليوم..."
+                     class="flex-1 rounded-xl bg-[#F6F7F5] border border-stone-200 px-3 py-2.5 text-xs font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+              <button type="submit" class="px-4 py-2.5 rounded-xl bg-[#0F6A4F] text-white text-xs font-extrabold active:scale-95 transition">إضافة</button>
+            </div>
+            <label class="inline-flex items-center gap-2 text-[11px] font-bold text-stone-600 cursor-pointer select-none">
+              <input id="task-repeat-input" type="checkbox" class="w-4 h-4 accent-[#0F6A4F]" />
+              <span>تتكرر كل يوم</span>
+            </label>
+          </form>
+
+          <div id="task-quick-chips" class="flex flex-wrap gap-2"></div>
+          <div id="daily-tasks-list" class="space-y-2"></div>
+        </div>
         <div class="bg-white rounded-3xl p-5 shadow-xs border border-stone-200/80">
           <div class="flex items-center justify-between mb-4">
             <div>
@@ -885,40 +1045,46 @@
     </main>
 
     <!-- ======================================================================
-         4. الزر العائم (+) لإضافة مصروف سريع في 3 ثوانٍ
+         4. شريط التنقل السفلي الثابت مع زر الإضافة السريعة في المنتصف
          ====================================================================== -->
-    <button onclick="openExpenseModal()"
-            class="fixed sm:absolute bottom-20 left-4 z-30 w-14 h-14 rounded-2xl bg-[#D97706] hover:bg-amber-700 active:scale-95 transition text-white shadow-xl shadow-amber-900/25 flex items-center justify-center border-2 border-amber-300/40"
-            title="إضافة مصروف سريع">
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/></svg>
-    </button>
-
-    <!-- ======================================================================
-         5. شريط التنقل السفلي الثابت (4 تبويبات)
-         ====================================================================== -->
-    <nav class="bg-white/95 backdrop-blur-md border-t border-stone-200/90 px-2 pt-2 safe-bottom grid grid-cols-4 gap-1 shrink-0 z-20">
-      <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center gap-1 py-1.5 rounded-2xl text-[#0F6A4F] bg-[#E7F3EE] font-extrabold transition">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        <span class="text-[10px]">الرئيسية</span>
-      </button>
-      <button onclick="switchTab('food')" id="nav-food" class="flex flex-col items-center gap-1 py-1.5 rounded-2xl text-stone-400 font-bold transition">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
-        <span class="text-[10px]">الأكل</span>
-      </button>
-      <button onclick="switchTab('remittance')" id="nav-remittance" class="flex flex-col items-center gap-1 py-1.5 rounded-2xl text-stone-400 font-bold transition">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7Z"/></svg>
-        <span class="text-[10px]">التحويل</span>
-      </button>
-      <button onclick="switchTab('important')" id="nav-important" class="flex flex-col items-center gap-1 py-1.5 rounded-2xl text-stone-400 font-bold transition">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-        <span class="text-[10px]">المهمة</span>
-      </button>
+    <nav class="bottom-nav relative shrink-0 z-30 rounded-t-[26px] border-t border-stone-200/70 px-2 pt-1.5 safe-bottom" aria-label="التنقل الرئيسي">
+      <div class="grid grid-cols-5 items-end">
+        <button type="button" onclick="switchTab('home')" id="nav-home" class="nav-btn active" aria-current="page">
+          <span class="nav-ic">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22"/></svg>
+          </span>
+          <span>الرئيسية</span>
+        </button>
+        <button type="button" onclick="switchTab('food')" id="nav-food" class="nav-btn">
+          <span class="nav-ic">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+          </span>
+          <span>الأكل</span>
+        </button>
+        <div class="flex justify-center">
+          <button type="button" onclick="openExpenseModal()" class="fab-center" aria-label="إضافة مصروف سريع" title="إضافة مصروف سريع">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+        <button type="button" onclick="switchTab('remittance')" id="nav-remittance" class="nav-btn">
+          <span class="nav-ic">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7Z"/></svg>
+          </span>
+          <span>التحويل</span>
+        </button>
+        <button type="button" onclick="switchTab('important')" id="nav-important" class="nav-btn">
+          <span class="nav-ic">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m9 11 3 3L22 4"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </span>
+          <span>المهام</span>
+        </button>
+      </div>
     </nav>
 
     <!-- إشعار Toast عائم -->
-    <div id="toast-box" class="hidden fixed sm:absolute top-20 left-1/2 -translate-x-1/2 z-[60] bg-stone-900 text-white px-4 py-2.5 rounded-2xl text-xs font-bold shadow-xl flex items-center gap-2 whitespace-nowrap animate-fade">
-      <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-      <span id="toast-msg">تم الحفظ</span>
+    <div id="toast-box" class="toast info" role="status" aria-live="polite">
+      <span id="toast-icon" class="toast-ic"></span>
+      <span id="toast-msg"></span>
     </div>
 
     <!-- ======================================================================
@@ -1128,6 +1294,8 @@
           </div>
         </div>
 
+        <p id="app-version-label" class="thmanyah-num text-center text-[10px] font-bold text-stone-400">الإصدار التجريبي</p>
+
         <!-- إعادة ضبط البيانات بتأكيد مزدوج داخل الواجهة -->
         <div class="pt-2 border-t border-stone-200">
           <div id="reset-trigger-wrap">
@@ -1194,42 +1362,42 @@
     // اقتراحات الوجبات السريعة حسب النظام (بطبخ vs بدون طبخ)
     const QUICK_MEALS_BY_MODE = {
       cook: [
-        { type: 'lunch', name: 'كبسة دجاج منزلية', cost: 18 },
-        { type: 'breakfast', name: 'بيض شكشوكة وخبز', cost: 8 },
-        { type: 'lunch', name: 'مكرونة بالصلصة', cost: 14 },
-        { type: 'dinner', name: 'شوربة عدس وسلطة', cost: 10 },
-        { type: 'dinner', name: 'إيدام خضار وأرز', cost: 13 }
+        { type: 'lunch', name: 'كبسة دجاج منزلية', cost: 15 },
+        { type: 'breakfast', name: 'بيض شكشوكة وخبز', cost: 7 },
+        { type: 'lunch', name: 'مكرونة بالصلصة', cost: 10 },
+        { type: 'dinner', name: 'شوربة عدس وسلطة', cost: 7 },
+        { type: 'dinner', name: 'إيدام خضار وأرز', cost: 12 }
       ],
       nocook: [
-        { type: 'breakfast', name: 'ساندوتش جبن وخبز + عصير', cost: 9 },
-        { type: 'lunch', name: 'وجبة شاورما / بروستد', cost: 22 },
-        { type: 'dinner', name: 'تونة جاهزة وخبز', cost: 11 },
-        { type: 'dinner', name: 'زبادي وتمر ومكسرات', cost: 10 },
-        { type: 'snack', name: 'قهوة ومخبوزات', cost: 14 }
+        { type: 'breakfast', name: 'ساندوتش جبن وخبز + عصير', cost: 10 },
+        { type: 'lunch', name: 'وجبة شاورما / بروستد', cost: 24 },
+        { type: 'dinner', name: 'تونة جاهزة وخبز', cost: 9 },
+        { type: 'dinner', name: 'زبادي وتمر ومكسرات', cost: 9 },
+        { type: 'snack', name: 'قهوة ومخبوزات', cost: 18 }
       ]
     };
 
     // قوائم مشتريات الأسبوع المقترحة حسب النظام
     const SUGGESTED_GROCERIES_BY_MODE = {
       cook: [
-        { name: 'أرز بسمتي', qty: '5 كيلو', price: 42 },
-        { name: 'دجاج طازج / مبرد', qty: '3 حبات', price: 54 },
-        { name: 'خضار مشكلة (طماطم، بصل، بطاطس)', qty: 'كيس مشكل', price: 28 },
-        { name: 'زيت طبخ وبهارات', qty: 'عبوة', price: 24 },
-        { name: 'بيض طازج', qty: 'طبق 30', price: 18 },
-        { name: 'خبز عربي وتوست', qty: '4 ربطات', price: 12 },
-        { name: 'مكرونة ومعجون طماطم', qty: '3 حبات', price: 15 },
-        { name: 'شاي وحليب وسكر', qty: 'أسبوعي', price: 22 }
+        { name: 'أرز بسمتي', qty: '5 كيلو', price: 55 },
+        { name: 'دجاج طازج / مبرد', qty: '3 حبات', price: 57 },
+        { name: 'خضار مشكلة (طماطم، بصل، بطاطس)', qty: 'كيس مشكل', price: 22 },
+        { name: 'زيت طبخ وبهارات', qty: 'عبوة', price: 26 },
+        { name: 'بيض طازج', qty: 'طبق 30', price: 24 },
+        { name: 'خبز عربي وتوست', qty: '4 ربطات', price: 14 },
+        { name: 'مكرونة ومعجون طماطم', qty: '3 حبات', price: 12 },
+        { name: 'شاي وحليب وسكر', qty: 'أسبوعي', price: 30 }
       ],
       nocook: [
-        { name: 'خبز توست وصامولي', qty: '4 أكياس', price: 16 },
-        { name: 'أجبان ونواشف (جبن سائل، لبنة، حلاوة)', qty: 'تشكيلة', price: 38 },
-        { name: 'علب تونة وفول جاهز', qty: '6 علب', price: 32 },
-        { name: 'زبادي وحليب طويل الأجل', qty: 'عبوة أسبوعية', price: 24 },
-        { name: 'فواكه جاهزة (موز، تفاح)', qty: '2 كيلو', price: 22 },
-        { name: 'تمر ومكسرات صحية', qty: 'عبوة', price: 25 },
-        { name: 'مياه وعصائر طازجة', qty: 'كرتون + عصائر', price: 26 },
-        { name: 'قهوة سريعة وسناكات', qty: 'أسبوعي', price: 28 }
+        { name: 'خبز توست وصامولي', qty: '4 أكياس', price: 18 },
+        { name: 'أجبان ونواشف (جبن سائل، لبنة، حلاوة)', qty: 'تشكيلة', price: 42 },
+        { name: 'علب تونة وفول جاهز', qty: '6 علب', price: 30 },
+        { name: 'زبادي وحليب طويل الأجل', qty: 'عبوة أسبوعية', price: 26 },
+        { name: 'فواكه جاهزة (موز، تفاح)', qty: '2 كيلو', price: 16 },
+        { name: 'تمر ومكسرات صحية', qty: 'عبوة', price: 35 },
+        { name: 'مياه وعصائر طازجة', qty: 'كرتون + عصائر', price: 24 },
+        { name: 'قهوة سريعة وسناكات', qty: 'أسبوعي', price: 30 }
       ]
     };
 
@@ -1243,14 +1411,14 @@
           {
             title: 'خطة الطبخ الاقتصادية (أرز، دجاج، عدس وبيض)',
             groceries: [
-              { name: 'أرز بسمتي (حصة أسبوعية)', qty: '2 كيلو', price: 20 },
-              { name: 'دجاج مبرد/مجمد', qty: '2 حبة', price: 32 },
-              { name: 'طبق بيض طازج', qty: '30 حبة', price: 18 },
-              { name: 'عدس أصفر وشوفان', qty: 'كيلو مشكل', price: 14 },
+              { name: 'أرز بسمتي (حصة أسبوعية)', qty: '2 كيلو', price: 24 },
+              { name: 'دجاج مبرد/مجمد', qty: '2 حبة', price: 34 },
+              { name: 'طبق بيض طازج', qty: '30 حبة', price: 24 },
+              { name: 'عدس أصفر وشوفان', qty: 'كيلو مشكل', price: 16 },
               { name: 'خضار أساسية (بصل، طماطم، بطاطس)', qty: 'تشكيلة', price: 18 },
               { name: 'مكرونة ومعجون طماطم', qty: '3 حبات', price: 12 },
-              { name: 'خبز عربي وتوست', qty: '3 ربطات', price: 9 },
-              { name: 'جبن ولبنة وشاي وحليب', qty: 'أسبوعي', price: 19 }
+              { name: 'خبز عربي وتوست', qty: '3 ربطات', price: 11 },
+              { name: 'جبن ولبنة وشاي وحليب', qty: 'أسبوعي', price: 28 }
             ],
             mealsByDay: [
               [{ type: 'breakfast', name: 'بيض مسلوق وخبز وشاي', cost: 4 }, { type: 'lunch', name: 'كبسة دجاج منزلية', cost: 11 }, { type: 'dinner', name: 'شوربة عدس وخبز محمص', cost: 5 }],
@@ -1265,14 +1433,14 @@
           {
             title: 'خطة الطبخ الاقتصادية البديلة (بقوليات، شوفان وإيدامات)',
             groceries: [
-              { name: 'صدور دجاج اقتصادية', qty: '1.5 كيلو', price: 34 },
-              { name: 'أرز مصري وبسمتي', qty: '2 كيلو', price: 18 },
+              { name: 'صدور دجاج اقتصادية', qty: '1.5 كيلو', price: 45 },
+              { name: 'أرز مصري وبسمتي', qty: '2 كيلو', price: 20 },
               { name: 'فول معلب وعدس وحمص', qty: '5 علب/كيس', price: 18 },
-              { name: 'طبق بيض طازج', qty: '30 حبة', price: 18 },
-              { name: 'خضار إيدام (كوسة، جزر، طماطم، بصل)', qty: 'تشكيلة', price: 20 },
+              { name: 'طبق بيض طازج', qty: '30 حبة', price: 24 },
+              { name: 'خضار إيدام (كوسة، جزر، طماطم، بصل)', qty: 'تشكيلة', price: 22 },
               { name: 'مكرونة وشعيرية', qty: '3 أكياس', price: 10 },
-              { name: 'خبز عربي وزبادي', qty: 'أسبوعي', price: 14 },
-              { name: 'شوفان وحليب مجفف', qty: 'عبوة', price: 15 }
+              { name: 'خبز عربي وزبادي', qty: 'أسبوعي', price: 16 },
+              { name: 'شوفان وحليب مجفف', qty: 'عبوة', price: 22 }
             ],
             mealsByDay: [
               [{ type: 'breakfast', name: 'فول بالزيت والكمون وخبز', cost: 5 }, { type: 'lunch', name: 'صدور دجاج مشوية وأرز بالشعيرية', cost: 11 }, { type: 'dinner', name: 'زبادي وخبز محمص', cost: 4 }],
@@ -1289,14 +1457,14 @@
           {
             title: 'خطة الطبخ المتوازنة (تنوع دجاج، لحم مفروم وتونة)',
             groceries: [
-              { name: 'دجاج مبرد كامل + صدور', qty: '3 حبات', price: 54 },
-              { name: 'لحم مفروم طازج', qty: 'نصف كيلو', price: 24 },
-              { name: 'أرز بسمتي فاخر', qty: '3 كيلو', price: 32 },
-              { name: 'خضار وسلطة وفواكه أسبوعية', qty: 'تشكيلة كاملة', price: 38 },
-              { name: 'بيض + أجبان + لبنة وزبادي', qty: 'أسبوعي', price: 36 },
+              { name: 'دجاج مبرد كامل + صدور', qty: '3 حبات', price: 62 },
+              { name: 'لحم مفروم طازج', qty: 'نصف كيلو', price: 30 },
+              { name: 'أرز بسمتي فاخر', qty: '3 كيلو', price: 38 },
+              { name: 'خضار وسلطة وفواكه أسبوعية', qty: 'تشكيلة كاملة', price: 40 },
+              { name: 'بيض + أجبان + لبنة وزبادي', qty: 'أسبوعي', price: 45 },
               { name: 'مكرونة، عدس وشوفان', qty: 'تشكيلة', price: 20 },
               { name: 'خبز عربي وتوست وبهارات', qty: 'أسبوعي', price: 18 },
-              { name: 'شاي، قهوة، حليب وعصير', qty: 'أسبوعي', price: 22 }
+              { name: 'شاي، قهوة، حليب وعصير', qty: 'أسبوعي', price: 32 }
             ],
             mealsByDay: [
               [{ type: 'breakfast', name: 'شكشوكة بالجبن وخبز وشاي', cost: 7 }, { type: 'lunch', name: 'كبسة دجاج بالخضار وسلطة', cost: 16 }, { type: 'dinner', name: 'شوربة عدس وتوست محمص', cost: 7 }],
@@ -1311,14 +1479,14 @@
           {
             title: 'خطة الطبخ المتوازنة البديلة (سمك فيليه، فاهيتا وإيدامات)',
             groceries: [
-              { name: 'صدور دجاج + أفخاذ دجاج', qty: '2.5 كيلو', price: 52 },
-              { name: 'سمك فيليه مجمد', qty: 'كيلو واحد', price: 28 },
+              { name: 'صدور دجاج + أفخاذ دجاج', qty: '2.5 كيلو', price: 65 },
+              { name: 'سمك فيليه مجمد', qty: 'كيلو واحد', price: 32 },
               { name: 'أرز بسمتي ومعكرونة فتوتشيني', qty: 'تشكيلة', price: 32 },
-              { name: 'خضار طازجة (فلفل رومي، بروكلي، سلطة)', qty: 'تشكيلة', price: 36 },
-              { name: 'فواكه (تفاح، موز، برتقال)', qty: '2 كيلو', price: 22 },
-              { name: 'بيض + أجبان + قشطة وعسل', qty: 'أسبوعي', price: 34 },
-              { name: 'خبز تورتيلا وعربي وتوست', qty: 'تشكيلة', price: 18 },
-              { name: 'كريمة طبخ وبهارات ومشروبات', qty: 'أسبوعي', price: 22 }
+              { name: 'خضار طازجة (فلفل رومي، بروكلي، سلطة)', qty: 'تشكيلة', price: 35 },
+              { name: 'فواكه (تفاح، موز، برتقال)', qty: '2 كيلو', price: 18 },
+              { name: 'بيض + أجبان + قشطة وعسل', qty: 'أسبوعي', price: 45 },
+              { name: 'خبز تورتيلا وعربي وتوست', qty: 'تشكيلة', price: 20 },
+              { name: 'كريمة طبخ وبهارات ومشروبات', qty: 'أسبوعي', price: 28 }
             ],
             mealsByDay: [
               [{ type: 'breakfast', name: 'أومليت بالفلفل الرومي والجبن', cost: 8 }, { type: 'lunch', name: 'صيادية سمك فيليه وسلطة', cost: 18 }, { type: 'dinner', name: 'ساندوتش تورتيلا جبن وخيار', cost: 7 }],
@@ -1335,14 +1503,14 @@
           {
             title: 'خطة الطبخ المريحة (لحوم طازجة، سلمون/فيليه وفواكه ومكسرات)',
             groceries: [
-              { name: 'لحم طازج (حاشي/غنم مقطع)', qty: '1.5 كيلو', price: 85 },
-              { name: 'صدور ودجاج مبرد طازج', qty: '2.5 كيلو', price: 58 },
-              { name: 'سمك سلمون / فيليه طازج', qty: 'كيلو', price: 45 },
-              { name: 'أرز بسمتي فاخر ومكرونة إيطالية', qty: 'تشكيلة', price: 36 },
-              { name: 'خضار طازجة وسلطات جاهزة', qty: 'تشكيلة غنية', price: 42 },
-              { name: 'فواكه موسمية وتمر ومكسرات', qty: 'تشكيلة', price: 44 },
-              { name: 'أجبان فاخرة، بيض، عسل، وزبادي يوناني', qty: 'أسبوعي', price: 45 },
-              { name: 'قهوة مختصة، شاي، وحليب وعصائر', qty: 'أسبوعي', price: 35 }
+              { name: 'لحم طازج (حاشي/غنم مقطع)', qty: '1.5 كيلو', price: 110 },
+              { name: 'صدور ودجاج مبرد طازج', qty: '2.5 كيلو', price: 68 },
+              { name: 'سمك سلمون / فيليه طازج', qty: 'كيلو', price: 75 },
+              { name: 'أرز بسمتي فاخر ومكرونة إيطالية', qty: 'تشكيلة', price: 42 },
+              { name: 'خضار طازجة وسلطات جاهزة', qty: 'تشكيلة غنية', price: 45 },
+              { name: 'فواكه موسمية وتمر ومكسرات', qty: 'تشكيلة', price: 55 },
+              { name: 'أجبان فاخرة، بيض، عسل، وزبادي يوناني', qty: 'أسبوعي', price: 60 },
+              { name: 'قهوة مختصة، شاي، وحليب وعصائر', qty: 'أسبوعي', price: 50 }
             ],
             mealsByDay: [
               [{ type: 'breakfast', name: 'شكشوكة بالجبن وقهوة مختصة', cost: 12 }, { type: 'lunch', name: 'كبسة لحم طازج وسلطة جرجير', cost: 28 }, { type: 'dinner', name: 'زبادي يوناني بالعسل والمكسرات', cost: 11 }],
@@ -1357,14 +1525,14 @@
           {
             title: 'خطة الطبخ المريحة البديلة (ستيك، مشويات ووجبات صحية)',
             groceries: [
-              { name: 'ستيك لحم / لحم مفروم طازج', qty: '1.5 كيلو', price: 82 },
-              { name: 'دجاج طازج وصدور متبلة', qty: '3 كيلو', price: 62 },
-              { name: 'روبيان / فيليه بحري', qty: 'نصف كيلو', price: 42 },
-              { name: 'أرز بسمتي وكينوا ومكرونة', qty: 'تشكيلة', price: 38 },
-              { name: 'خضار طازجة وفواكه مشكلة', qty: 'تشكيلة غنية', price: 52 },
-              { name: 'ألبان، زبادي يوناني، بيض وأجبان', qty: 'أسبوعي', price: 46 },
-              { name: 'مخبوزات طازجة وتورتيلا وتمر', qty: 'أسبوعي', price: 28 },
-              { name: 'قهوة وعصائر طازجة وزيت زيتون', qty: 'أسبوعي', price: 38 }
+              { name: 'ستيك لحم / لحم مفروم طازج', qty: '1.5 كيلو', price: 105 },
+              { name: 'دجاج طازج وصدور متبلة', qty: '3 كيلو', price: 75 },
+              { name: 'روبيان / فيليه بحري', qty: 'نصف كيلو', price: 40 },
+              { name: 'أرز بسمتي وكينوا ومكرونة', qty: 'تشكيلة', price: 45 },
+              { name: 'خضار طازجة وفواكه مشكلة', qty: 'تشكيلة غنية', price: 55 },
+              { name: 'ألبان، زبادي يوناني، بيض وأجبان', qty: 'أسبوعي', price: 55 },
+              { name: 'مخبوزات طازجة وتورتيلا وتمر', qty: 'أسبوعي', price: 32 },
+              { name: 'قهوة وعصائر طازجة وزيت زيتون', qty: 'أسبوعي', price: 50 }
             ],
             mealsByDay: [
               [{ type: 'breakfast', name: 'توست بالبيض والأجبان وقهوة', cost: 12 }, { type: 'lunch', name: 'ستيك لحم مع خضار سوتيه وأرز', cost: 28 }, { type: 'dinner', name: 'زبادي يوناني وتمر ومكسرات', cost: 11 }],
@@ -1383,13 +1551,13 @@
           {
             title: 'خطة بدون طبخ اقتصادية (نواشف، تونة، فول وتميس)',
             groceries: [
-              { name: 'خبز توست وصامولي وتميس', qty: 'أسبوعي', price: 18 },
-              { name: 'علب تونة جاهزة', qty: '5 علب', price: 24 },
-              { name: 'جبن سائل + جبن شرائح + لبنة', qty: '3 عبوات', price: 26 },
-              { name: 'فول جاهز / معلب وحلاوة طحينية', qty: 'تشكيلة', price: 16 },
-              { name: 'زبادي وحليب طويل الأجل', qty: '6 حبات + لترين', price: 20 },
-              { name: 'تمر وموز وخيار وطماطم (بدون طبخ)', qty: 'تشكيلة', price: 18 },
-              { name: 'شاي وقهوة سريعة ومياه', qty: 'أسبوعي', price: 18 }
+              { name: 'خبز توست وصامولي وتميس', qty: 'أسبوعي', price: 20 },
+              { name: 'علب تونة جاهزة', qty: '5 علب', price: 35 },
+              { name: 'جبن سائل + جبن شرائح + لبنة', qty: '3 عبوات', price: 36 },
+              { name: 'فول جاهز / معلب وحلاوة طحينية', qty: 'تشكيلة', price: 20 },
+              { name: 'زبادي وحليب طويل الأجل', qty: '6 حبات + لترين', price: 22 },
+              { name: 'تمر وموز وخيار وطماطم (بدون طبخ)', qty: 'تشكيلة', price: 20 },
+              { name: 'شاي وقهوة سريعة ومياه', qty: 'أسبوعي', price: 22 }
             ],
             mealsByDay: [
               [{ type: 'breakfast', name: 'ساندوتش جبن وخيار وشاي', cost: 5 }, { type: 'lunch', name: 'فول وتميس من المطعم الشعبي', cost: 9 }, { type: 'dinner', name: 'تونة جاهزة مع خبز وطماطم', cost: 7 }],
@@ -1404,13 +1572,13 @@
           {
             title: 'خطة بدون طبخ اقتصادية البديلة (ساندوتشات باردة وفول وفلافل)',
             groceries: [
-              { name: 'خبز صامولي وتورتيلا وتوست', qty: '4 أكياس', price: 16 },
-              { name: 'تونة جاهزة + حمص معلب جاهز', qty: '6 علب', price: 26 },
-              { name: 'أجبان مثلثات وقشطة ومربى', qty: 'تشكيلة', price: 24 },
-              { name: 'شوفان سريع (يُنقع بحليب بارد) وحليب', qty: 'عبوة + لترين', price: 22 },
-              { name: 'زبادي وتمر وتفاح', qty: 'أسبوعي', price: 20 },
-              { name: 'مرتديلا حلال / ديك رومي بارد', qty: 'عبوتين', price: 18 },
-              { name: 'مياه وعصائر صغيرة وشاي', qty: 'أسبوعي', price: 16 }
+              { name: 'خبز صامولي وتورتيلا وتوست', qty: '4 أكياس', price: 18 },
+              { name: 'تونة جاهزة + حمص معلب جاهز', qty: '6 علب', price: 34 },
+              { name: 'أجبان مثلثات وقشطة ومربى', qty: 'تشكيلة', price: 28 },
+              { name: 'شوفان سريع (يُنقع بحليب بارد) وحليب', qty: 'عبوة + لترين', price: 24 },
+              { name: 'زبادي وتمر وتفاح', qty: 'أسبوعي', price: 22 },
+              { name: 'مرتديلا حلال / ديك رومي بارد', qty: 'عبوتين', price: 22 },
+              { name: 'مياه وعصائر صغيرة وشاي', qty: 'أسبوعي', price: 20 }
             ],
             mealsByDay: [
               [{ type: 'breakfast', name: 'شوفان بارد بالحليب والتمر', cost: 5 }, { type: 'lunch', name: 'تورتيلا حمص وتونة باردة', cost: 8 }, { type: 'dinner', name: 'ساندوتش جبن مثلثات وشاي', cost: 5 }],
@@ -1428,12 +1596,12 @@
             title: 'خطة بدون طبخ متوازنة (وجبات جاهزة + نواشف صحية وزبادي يوناني)',
             groceries: [
               { name: 'خبز توست بر وتورتيلا وصامولي', qty: 'تشكيلة', price: 20 },
-              { name: 'تونة جاهزة + صدور دجاج جاهزة للتسخين', qty: 'أسبوعي', price: 48 },
-              { name: 'زبادي يوناني + حليب وعصائر', qty: 'أسبوعي', price: 36 },
-              { name: 'أجبان، لبنة، زبدة فول سوداني وعسل', qty: 'تشكيلة', price: 38 },
-              { name: 'فواكه جاهزة وتمر ومكسرات', qty: 'أسبوعي', price: 32 },
-              { name: 'سلطات جاهزة ومقبلات (حمص/متبل)', qty: '4 علب', price: 24 },
-              { name: 'ميزانية مطاعم سريعة (فول/شاورما/بروستد)', qty: '3 وجبات', price: 52 }
+              { name: 'تونة جاهزة + صدور دجاج جاهزة للتسخين', qty: 'أسبوعي', price: 55 },
+              { name: 'زبادي يوناني + حليب وعصائر', qty: 'أسبوعي', price: 38 },
+              { name: 'أجبان، لبنة، زبدة فول سوداني وعسل', qty: 'تشكيلة', price: 48 },
+              { name: 'فواكه جاهزة وتمر ومكسرات', qty: 'أسبوعي', price: 40 },
+              { name: 'سلطات جاهزة ومقبلات (حمص/متبل)', qty: '4 علب', price: 30 },
+              { name: 'ميزانية مطاعم سريعة (فول/شاورما/بروستد)', qty: '3 وجبات', price: 66 }
             ],
             mealsByDay: [
               [{ type: 'breakfast', name: 'زبادي يوناني بالعسل والتمر', cost: 8 }, { type: 'lunch', name: 'وجبة شاورما عربي/صاروخ', cost: 18 }, { type: 'dinner', name: 'تورتيلا تونة وخس جاهز', cost: 9 }],
@@ -1448,13 +1616,13 @@
           {
             title: 'خطة بدون طبخ متوازنة البديلة (وجبات باردة صحية ومطاعم اقتصادية)',
             groceries: [
-              { name: 'مخبوزات طازجة وتوست بر وتورتيلا', qty: 'أسبوعي', price: 22 },
-              { name: 'تونة، سلمون معلب، وحمص وفول جاهز', qty: 'تشكيلة', price: 42 },
-              { name: 'شرائح ديك رومي وجبن قريش ولبنة', qty: 'تشكيلة', price: 40 },
-              { name: 'زبادي يوناني وحليب بروتين/عادي', qty: 'أسبوعي', price: 34 },
-              { name: 'خضار جاهزة للأكل وفواكه ومكسرات', qty: 'أسبوعي', price: 34 },
-              { name: 'قهوة سريعة وشاي ومياه', qty: 'أسبوعي', price: 20 },
-              { name: 'ميزانية وجبات خارجية (3 وجبات)', qty: 'مطاعم', price: 54 }
+              { name: 'مخبوزات طازجة وتوست بر وتورتيلا', qty: 'أسبوعي', price: 24 },
+              { name: 'تونة، سلمون معلب، وحمص وفول جاهز', qty: 'تشكيلة', price: 48 },
+              { name: 'شرائح ديك رومي وجبن قريش ولبنة', qty: 'تشكيلة', price: 42 },
+              { name: 'زبادي يوناني وحليب بروتين/عادي', qty: 'أسبوعي', price: 36 },
+              { name: 'خضار جاهزة للأكل وفواكه ومكسرات', qty: 'أسبوعي', price: 40 },
+              { name: 'قهوة سريعة وشاي ومياه', qty: 'أسبوعي', price: 25 },
+              { name: 'ميزانية وجبات خارجية (3 وجبات)', qty: 'مطاعم', price: 66 }
             ],
             mealsByDay: [
               [{ type: 'breakfast', name: 'توست بجبن قريش وطماطم وقهوة', cost: 8 }, { type: 'lunch', name: 'وجبة دجاج شواية وأرز', cost: 19 }, { type: 'dinner', name: 'تورتيلا ديك رومي وخس', cost: 9 }],
@@ -1471,12 +1639,12 @@
           {
             title: 'خطة بدون طبخ مريحة (وجبات صحية جاهزة، مطاعم ومقاهي)',
             groceries: [
-              { name: 'وجبات صحية جاهزة للتسخين (بروتين + كارب)', qty: '5 وجبات', price: 115 },
-              { name: 'زبادي يوناني، حليب بروتين وعصائر طازجة', qty: 'أسبوعي', price: 48 },
-              { name: 'أجبان فاخرة، ديك رومي مدخن وتونة فاخرة', qty: 'تشكيلة', price: 52 },
-              { name: 'فواكه مقطعة، تمر فاخر ومكسرات', qty: 'أسبوعي', price: 42 },
-              { name: 'مخبوزات طازجة وتوست بر وسلطات جاهزة', qty: 'أسبوعي', price: 36 },
-              { name: 'ميزانية مطاعم ومقاهي أسبوعية', qty: '3 وجبات + قهوة', price: 85 }
+              { name: 'وجبات صحية جاهزة للتسخين (بروتين + كارب)', qty: '5 وجبات', price: 150 },
+              { name: 'زبادي يوناني، حليب بروتين وعصائر طازجة', qty: 'أسبوعي', price: 55 },
+              { name: 'أجبان فاخرة، ديك رومي مدخن وتونة فاخرة', qty: 'تشكيلة', price: 60 },
+              { name: 'فواكه مقطعة، تمر فاخر ومكسرات', qty: 'أسبوعي', price: 50 },
+              { name: 'مخبوزات طازجة وتوست بر وسلطات جاهزة', qty: 'أسبوعي', price: 40 },
+              { name: 'ميزانية مطاعم ومقاهي أسبوعية', qty: '3 وجبات + قهوة', price: 105 }
             ],
             mealsByDay: [
               [{ type: 'breakfast', name: 'كرواسون جبن وقهوة مختصة', cost: 16 }, { type: 'lunch', name: 'وجبة صحية جاهزة (دجاج وأرز)', cost: 24 }, { type: 'dinner', name: 'زبادي يوناني ومكسرات وتمر', cost: 12 }],
@@ -1491,12 +1659,12 @@
           {
             title: 'خطة بدون طبخ مريحة البديلة (اشتراكات وجبات باردة وساخنة)',
             groceries: [
-              { name: 'صندوق وجبات جاهزة متنوعة', qty: '6 وجبات', price: 132 },
-              { name: 'سلطات جاهزة ومقبلات طازجة', qty: '5 علب', price: 40 },
-              { name: 'تونة، ديك رومي، أجبان فاخرة ولبنة', qty: 'تشكيلة', price: 48 },
-              { name: 'زبادي يوناني، عصائر طازجة وحليب', qty: 'أسبوعي', price: 44 },
-              { name: 'فواكه جاهزة، جرانولا ومكسرات', qty: 'أسبوعي', price: 42 },
-              { name: 'ميزانية مطاعم وقهوة خارجية', qty: 'أسبوعي', price: 70 }
+              { name: 'صندوق وجبات جاهزة متنوعة', qty: '6 وجبات', price: 175 },
+              { name: 'سلطات جاهزة ومقبلات طازجة', qty: '5 علب', price: 45 },
+              { name: 'تونة، ديك رومي، أجبان فاخرة ولبنة', qty: 'تشكيلة', price: 55 },
+              { name: 'زبادي يوناني، عصائر طازجة وحليب', qty: 'أسبوعي', price: 48 },
+              { name: 'فواكه جاهزة، جرانولا ومكسرات', qty: 'أسبوعي', price: 48 },
+              { name: 'ميزانية مطاعم وقهوة خارجية', qty: 'أسبوعي', price: 90 }
             ],
             mealsByDay: [
               [{ type: 'breakfast', name: 'جرانولا بالزبادي اليوناني والفواكه', cost: 14 }, { type: 'lunch', name: 'وجبة جاهزة (كبسة دجاج صحية)', cost: 23 }, { type: 'dinner', name: 'تورتيلا ديك رومي وسلطة', cost: 13 }],
@@ -1578,7 +1746,9 @@
         ],
         meals: createEmptyMeals(),
         groceries: [],
-        lastSmartPlanMeta: null
+        lastSmartPlanMeta: null,
+        dailyTasks: [],
+        tasksDay: ''
       };
     }
 
@@ -1713,12 +1883,30 @@
       return Number(state.profile.customRates[key] ?? DEFAULT_CURRENCIES[key]?.rate ?? 1);
     }
 
-    function showToast(msg) {
+    // ==================== الإشعارات العائمة ====================
+    const TOAST_ICONS = {
+      success: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+      warn: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 7v6"/><path d="M12 17h.01"/></svg>',
+      info: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 11v6"/><path d="M12 7h.01"/></svg>'
+    };
+
+    function inferToastType(msg) {
+      const text = String(msg || '');
+      if (/تعذر|غير صالح|أدخل|اكتب|حدّد|يتجاوز|أولاً/.test(text)) return 'warn';
+      if (/^تم|بنجاح|✓|أهلاً|أحسنت/.test(text)) return 'success';
+      return 'info';
+    }
+
+    function showToast(msg, type) {
       const box = document.getElementById('toast-box');
-      document.getElementById('toast-msg').textContent = msg;
-      box.classList.remove('hidden');
+      const kind = type || inferToastType(msg);
+      document.getElementById('toast-msg').textContent = String(msg || '').replace(/\s*[✓✨]\s*$/u, '');
+      document.getElementById('toast-icon').innerHTML = TOAST_ICONS[kind] || TOAST_ICONS.info;
+      box.className = `toast ${kind}`;
+      void box.offsetWidth; // إعادة تشغيل حركة الظهور
+      box.classList.add('show');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => box.classList.add('hidden'), 2600);
+      toastTimer = setTimeout(() => box.classList.remove('show'), 2800);
     }
 
     // ==================== معالج التسجيل الأولي (4 خطوات) ====================
@@ -1922,11 +2110,14 @@
       renderFoodSection();
       renderRemittance();
       renderObligations();
+      renderTasks();
     }
 
     function renderHeader() {
       const name = state.profile.name || 'صديقي';
-      document.getElementById('header-greeting').textContent = `أهلاً، ${name}`;
+      const hour = new Date().getHours();
+      const greeting = hour < 12 ? 'صباح الخير' : 'مساء الخير';
+      document.getElementById('header-greeting').textContent = `${greeting}، ${name}`;
       const dateStr = new Date().toLocaleDateString('ar-SA', { weekday: 'long', day: 'numeric', month: 'long' });
       document.getElementById('header-date-label').textContent = dateStr;
     }
@@ -2031,10 +2222,11 @@
     // ==================== قسم الأكل والمقاضي (وجبات اليوم + مشتريات الأسبوع) ====================
     function getBudgetTierInfo(budget) {
       const b = Number(budget || 0);
-      if (b <= 160) {
+      // حدود الفئات مبنية على متوسط أسعار السوق السعودي للمقاضي الأسبوعية
+      if (b <= 180) {
         return { key: 'economy', label: 'اقتصادية', badgeClass: 'bg-teal-100 text-teal-900' };
       }
-      if (b <= 280) {
+      if (b <= 320) {
         return { key: 'balanced', label: 'متوازنة', badgeClass: 'bg-emerald-100 text-[#0F6A4F]' };
       }
       return { key: 'comfortable', label: 'مريحة', badgeClass: 'bg-amber-100 text-amber-900' };
@@ -2204,10 +2396,10 @@
       // نصيحة التوفير الذكية عند انخفاض الميزانية
       const tipWrap = document.getElementById('food-low-budget-tip');
       const tipText = document.getElementById('food-low-budget-tip-text');
-      if (mode === 'nocook' && budget <= 160) {
+      if (mode === 'nocook' && budget <= 180) {
         tipWrap.classList.remove('hidden');
         tipText.textContent = ' ميزانيتك أسبوعياً اقتصادية مع نظام "بدون طبخ"؛ التحول للطبخ المنزلي سيوفر عليك حتى 35%، أو ركّز على البروتين الاقتصادي مثل التونة والبيض والفول والزبادي.';
-      } else if (mode === 'cook' && budget <= 125) {
+      } else if (mode === 'cook' && budget <= 140) {
         tipWrap.classList.remove('hidden');
         tipText.textContent = ' ميزانيتك ضيقة هذا الأسبوع؛ ركّز على البروتين الاقتصادي (البيض، العدس، الفول، الدجاج الكامل) واشترِ الأرز والخضار الأساسية بكميات موزونة لتقليل الهدر.';
       } else {
@@ -2840,15 +3032,258 @@
       showToast('تمت إعادة ضبط التطبيق');
     }
 
+    // ==================== مهام اليوم ====================
+    const TASK_SUGGESTIONS = [
+      'تسجيل مصاريف اليوم',
+      'مراجعة المسموح صرفه اليوم',
+      'الاتصال بالأهل',
+      'تجهيز وجبة الدوام',
+      'متابعة سعر الصرف'
+    ];
+    const TASK_RING_LENGTH = 97.4;
+    const CHECK_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+
+    // في بداية كل يوم: المهام المتكررة ترجع غير منجزة، والمهام المنجزة لمرة واحدة تُحذف
+    function rolloverDailyTasks() {
+      const today = todayISO();
+      if (state.tasksDay === today) return;
+      state.dailyTasks = (state.dailyTasks || [])
+        .filter(t => t.repeat || !t.done)
+        .map(t => ({ ...t, done: false }));
+      state.tasksDay = today;
+      saveState();
+    }
+
+    function addDailyTask(e, presetTitle) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('task-title-input');
+      const repeatEl = document.getElementById('task-repeat-input');
+      const title = String(presetTitle || input.value || '').trim();
+      if (!title) return;
+      state.dailyTasks.push({
+        id: 'tk_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        title,
+        repeat: presetTitle ? false : repeatEl.checked,
+        done: false
+      });
+      if (!presetTitle) {
+        input.value = '';
+        repeatEl.checked = false;
+      }
+      state.tasksDay = state.tasksDay || todayISO();
+      saveState();
+      renderTasks();
+      showToast('تمت إضافة المهمة');
+    }
+
+    function quickAddTask(idx) {
+      const title = TASK_SUGGESTIONS[idx];
+      if (title) addDailyTask(null, title);
+    }
+
+    function toggleTaskDone(id) {
+      const task = state.dailyTasks.find(t => t.id === id);
+      if (!task) return;
+      task.done = !task.done;
+      saveState();
+      renderTasks();
+      const total = state.dailyTasks.length;
+      if (task.done && total > 0 && state.dailyTasks.every(t => t.done)) {
+        showToast('أحسنت! أنجزت كل مهام اليوم', 'success');
+      }
+    }
+
+    function toggleTaskRepeat(id) {
+      const task = state.dailyTasks.find(t => t.id === id);
+      if (!task) return;
+      task.repeat = !task.repeat;
+      saveState();
+      renderTasks();
+      showToast(task.repeat ? 'صارت المهمة تتكرر كل يوم' : 'صارت المهمة لمرة واحدة', 'info');
+    }
+
+    function deleteTask(id) {
+      state.dailyTasks = state.dailyTasks.filter(t => t.id !== id);
+      saveState();
+      renderTasks();
+    }
+
+    function renderTasks() {
+      const tasks = state.dailyTasks || [];
+      const total = tasks.length;
+      const done = tasks.filter(t => t.done).length;
+      const ratio = total ? done / total : 0;
+
+      document.getElementById('tasks-ring').setAttribute('stroke-dashoffset', String(TASK_RING_LENGTH * (1 - ratio)));
+      document.getElementById('tasks-ring-label').textContent = `${done}/${total}`;
+      document.getElementById('tasks-subtitle').textContent = total === 0
+        ? 'رتّب يومك وخلّك على خطتك'
+        : (done === total ? 'أنجزت كل مهام اليوم، عساك على القوة' : `باقي ${total - done} من ${total} مهام`);
+
+      // اقتراحات سريعة غير مضافة بعد
+      const existing = new Set(tasks.map(t => t.title));
+      document.getElementById('task-quick-chips').innerHTML = TASK_SUGGESTIONS
+        .map((title, idx) => existing.has(title) ? '' : `
+          <button type="button" onclick="quickAddTask(${idx})"
+                  class="px-3 py-1.5 rounded-xl bg-[#F6F7F5] hover:bg-[#E7F3EE] border border-stone-200 text-[11px] font-bold text-stone-700 active:scale-95 transition">
+            + ${escapeHtml(title)}
+          </button>`)
+        .join('');
+
+      const listEl = document.getElementById('daily-tasks-list');
+      if (!total) {
+        listEl.innerHTML = `<p class="text-center text-xs text-stone-400 py-5">ما فيه مهام لليوم. أضف مهمة أو اختر من الاقتراحات.</p>`;
+      } else {
+        const sorted = [...tasks].sort((a, b) => Number(a.done) - Number(b.done));
+        listEl.innerHTML = sorted.map(t => `
+          <div class="flex items-center gap-3 p-3 rounded-2xl border transition ${t.done ? 'bg-[#E7F3EE]/60 border-emerald-200/70' : 'bg-[#F6F7F5] border-stone-200/70'}">
+            <button type="button" onclick="toggleTaskDone('${t.id}')" aria-label="${t.done ? 'إلغاء الإنجاز' : 'تم الإنجاز'}"
+                    class="w-6 h-6 rounded-lg border-2 flex items-center justify-center shrink-0 transition ${t.done ? 'bg-[#0F6A4F] border-[#0F6A4F] text-white' : 'bg-white border-stone-300'}">
+              ${t.done ? CHECK_SVG : ''}
+            </button>
+            <p class="flex-1 min-w-0 text-xs font-extrabold truncate ${t.done ? 'line-through text-stone-400' : 'text-stone-900'}">${escapeHtml(t.title)}</p>
+            <button type="button" onclick="toggleTaskRepeat('${t.id}')"
+                    class="text-[10px] font-bold px-2 py-1 rounded-lg shrink-0 transition ${t.repeat ? 'bg-amber-100 text-amber-900' : 'bg-white text-stone-400 border border-stone-200'}">
+              ${t.repeat ? 'يومية' : 'مرة'}
+            </button>
+            <button type="button" onclick="deleteTask('${t.id}')" class="p-1 text-stone-400 hover:text-rose-600" aria-label="حذف المهمة">✕</button>
+          </div>
+        `).join('');
+      }
+
+      // البطاقة المختصرة في الرئيسية
+      const next = tasks.find(t => !t.done);
+      document.getElementById('home-tasks-count').textContent = `${done}/${total}`;
+      document.getElementById('home-tasks-next').textContent = total === 0
+        ? 'أضف أول مهمة ليومك'
+        : (next ? next.title : 'أنجزت كل مهام اليوم');
+    }
+
+    // ==================== التحديث عند الاتصال بالإنترنت ====================
+    // يُستبدل __WEB_VERSION__ برقم البناء تلقائياً في GitHub Actions
+    const APP_WEB_VERSION = '__WEB_VERSION__';
+    const UPDATE_REPO = 'musdes21/hisbat-mughtarib';
+    const UPDATE_CHECK_INTERVAL = 10 * 60 * 1000;
+    let pendingUpdate = null;
+    let lastUpdateCheck = 0;
+
+    function isBuiltApp() {
+      return /^\d+$/.test(APP_WEB_VERSION);
+    }
+
+    function getNativePlugin(name) {
+      const cap = window.Capacitor;
+      if (!cap || typeof cap.isNativePlatform !== 'function' || !cap.isNativePlatform()) return null;
+      return (cap.Plugins || {})[name] || null;
+    }
+
+    function renderVersionLabel() {
+      const el = document.getElementById('app-version-label');
+      if (el) el.textContent = isBuiltApp() ? `الإصدار ${APP_WEB_VERSION}` : 'الإصدار التجريبي';
+    }
+
+    function renderUpdateBanner() {
+      const banner = document.getElementById('update-banner');
+      if (!pendingUpdate) {
+        banner.classList.add('hidden');
+        return;
+      }
+      document.getElementById('update-banner-sub').textContent = pendingUpdate.kind === 'apk'
+        ? `الإصدار ${pendingUpdate.version} يحتاج تنزيل نسخة جديدة من التطبيق`
+        : `الإصدار ${pendingUpdate.version} جاهز، يتحدث خلال ثوانٍ وبياناتك تبقى كما هي`;
+      banner.classList.remove('hidden');
+    }
+
+    // يقرأ رقم آخر إصدار فقط من GitHub، ولا يرسل أي بيانات من بياناتك
+    async function checkForUpdate(force = false) {
+      if (!isBuiltApp() || !navigator.onLine) return;
+      const updater = getNativePlugin('CapacitorUpdater');
+      if (!updater) return;
+      if (!force && Date.now() - lastUpdateCheck < UPDATE_CHECK_INTERVAL) return;
+      lastUpdateCheck = Date.now();
+      try {
+        const res = await fetch(`https://api.github.com/repos/${UPDATE_REPO}/releases/latest`, {
+          cache: 'no-store',
+          headers: { Accept: 'application/vnd.github+json' }
+        });
+        if (!res.ok) return;
+        const release = await res.json();
+        const remoteWeb = parseInt(String(release.tag_name || '').replace(/\D/g, ''), 10) || 0;
+        const nativeMatch = /native\s*=\s*(\d+)/.exec(release.body || '');
+        const remoteNative = nativeMatch ? parseInt(nativeMatch[1], 10) : 0;
+
+        let localNative = 0;
+        const appPlugin = getNativePlugin('App');
+        if (appPlugin) {
+          try {
+            const info = await appPlugin.getInfo();
+            localNative = parseInt(info.build, 10) || 0;
+          } catch (e) {}
+        }
+
+        const findAsset = name => (release.assets || []).find(a => a.name === name);
+        const apkAsset = findAsset('hisbat-mughtarib.apk');
+        const webAsset = findAsset('www.zip');
+
+        if (remoteNative > localNative && apkAsset) {
+          pendingUpdate = { kind: 'apk', url: apkAsset.browser_download_url, version: remoteWeb };
+        } else if (remoteWeb > parseInt(APP_WEB_VERSION, 10) && webAsset) {
+          pendingUpdate = { kind: 'web', url: webAsset.browser_download_url, version: String(remoteWeb) };
+        } else {
+          pendingUpdate = null;
+        }
+        renderUpdateBanner();
+      } catch (e) {
+        // بدون إنترنت أو تعذر الوصول: نتجاهل بهدوء
+      }
+    }
+
+    async function applyUpdate() {
+      if (!pendingUpdate) return;
+      const btn = document.getElementById('update-btn');
+
+      if (pendingUpdate.kind === 'apk') {
+        showToast('جارٍ تنزيل النسخة الجديدة، ثبّتها بعد اكتمال التنزيل', 'info');
+        window.location.href = pendingUpdate.url;
+        return;
+      }
+
+      const updater = getNativePlugin('CapacitorUpdater');
+      if (!updater) return;
+      btn.disabled = true;
+      btn.textContent = 'جارٍ التحديث...';
+      try {
+        saveState();
+        const bundle = await updater.download({ url: pendingUpdate.url, version: pendingUpdate.version });
+        await updater.set({ id: bundle.id }); // يعيد تشغيل الواجهة بالإصدار الجديد
+      } catch (e) {
+        btn.disabled = false;
+        btn.textContent = 'تحديث';
+        showToast('تعذر تنزيل التحديث، حاول مرة ثانية');
+      }
+    }
+
+    async function initUpdater() {
+      renderVersionLabel();
+      const updater = getNativePlugin('CapacitorUpdater');
+      if (updater) {
+        try { await updater.notifyAppReady(); } catch (e) {}
+      }
+      checkForUpdate(true);
+      window.addEventListener('online', () => checkForUpdate(true));
+    }
+
     // ==================== التنقل والنوافذ ====================
     function switchTab(tabName) {
       ['home', 'food', 'remittance', 'important'].forEach(t => {
         document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tabName);
         const btn = document.getElementById(`nav-${t}`);
-        btn.className = t === tabName
-          ? 'flex flex-col items-center gap-1 py-1.5 rounded-2xl text-[#0F6A4F] bg-[#E7F3EE] font-extrabold transition'
-          : 'flex flex-col items-center gap-1 py-1.5 rounded-2xl text-stone-400 font-bold transition';
+        btn.classList.toggle('active', t === tabName);
+        if (t === tabName) btn.setAttribute('aria-current', 'page');
+        else btn.removeAttribute('aria-current');
       });
+      const main = document.querySelector('main');
+      if (main) main.scrollTop = 0;
     }
 
     function closeModal(id) {
@@ -2858,10 +3293,19 @@
     // ==================== التشغيل الأولي ====================
     window.addEventListener('DOMContentLoaded', () => {
       loadState();
+      rolloverDailyTasks();
       renderAll();
       if (!state.onboarded) {
         openOnboarding();
       }
+      initUpdater();
+      // عند الرجوع للتطبيق: تحديث مهام اليوم وفحص التحديثات
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) return;
+        rolloverDailyTasks();
+        renderTasks();
+        checkForUpdate();
+      });
     });
   </script>
 </body>

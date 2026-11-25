@@ -1,60 +1,112 @@
 name: Build Android APK
 
+# كل دفع إلى main يبني نسخة موقّعة ثابتة وينشرها كإصدار على GitHub.
+# التطبيق يقرأ آخر إصدار عند الاتصال بالإنترنت ويعرض زر "تحديث":
+#   - تغييرات الواجهة فقط: يحدّث نفسه عبر www.zip خلال ثوانٍ (بدون إعادة تثبيت)
+#   - تغييرات أصلية (رفع الرقم في native-version.txt): يطلب تنزيل APK جديد
+
 on:
   push:
     branches: [ main, master ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-apk:
     runs-on: ubuntu-latest
+    env:
+      WEB_VERSION: ${{ github.run_number }}
 
     steps:
       # 1. سحب ملفات المشروع
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. إعداد بيئة Node.js
+      # 2. إعداد Node.js و Java 17
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      # 3. إعداد Java 17 المطلوبة لـ Capacitor 6 و Gradle
       - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      # 4. تثبيت الحزم وبناء ملف CSS المحلي (بدون CDN)
-      - name: Install dependencies & build CSS
+      # 3. تثبيت الحزم، ووضع رقم الإصدار داخل التطبيق، وبناء CSS المحلي
+      - name: Install dependencies & build web
         run: |
-          npm install
+          npm ci
+          sed -i "s/__WEB_VERSION__/${WEB_VERSION}/g" www/index.html
           npm run build:css
 
-      # 5. تجهيز منصة الأندرويد وتوليد الأيقونة وشاشة البداية
+      # 4. تجهيز الأندرويد، رقم الإصدار، الأيقونة وشاشة البداية
       - name: Prepare Android platform & assets
         run: |
-          if [ ! -d "android" ]; then
-            npx cap add android
-          fi
-          npx @capacitor/assets generate --android \
+          NATIVE_VERSION=$(tr -d '[:space:]' < native-version.txt)
+          echo "NATIVE_VERSION=${NATIVE_VERSION}" >> "$GITHUB_ENV"
+          npx cap add android
+          sed -i "s/versionCode [0-9]\+/versionCode ${NATIVE_VERSION}/; s/versionName \"[^\"]*\"/versionName \"1.${NATIVE_VERSION}.${WEB_VERSION}\"/" android/app/build.gradle
+          grep -E "versionCode|versionName" android/app/build.gradle
+          npx @capacitor/assets generate --android --assetPath resources \
             --iconBackgroundColor '#0F6A4F' \
             --splashBackgroundColor '#0F6A4F'
           npx cap sync android
 
-      # 6. تجميع ملف الـ APK التجريبي (Debug APK)
-      - name: Build Debug APK
+      # 5. بناء APK موقّع بمفتاح ثابت (يسمح بتثبيت التحديثات فوق النسخة القديمة)
+      #    إذا لم تُضف أسرار التوقيع بعد، يُبنى APK تجريبي (Debug) كبديل مؤقت
+      - name: Build APK
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleDebug
+          chmod +x android/gradlew
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.keystore"
+            npx cap build android \
+              --keystorepath "$RUNNER_TEMP/release.keystore" \
+              --keystorepass "$KEYSTORE_PASSWORD" \
+              --keystorealias "$KEY_ALIAS" \
+              --keystorealiaspass "$KEY_PASSWORD" \
+              --androidreleasetype APK \
+              --signing-type apksigner
+            APK=$(find android/app/build/outputs/apk/release -name "*.apk" ! -name "*unsigned*" | head -n 1)
+          else
+            echo "::warning::Signing secrets are missing; building a debug APK instead. Add ANDROID_KEYSTORE_* secrets for stable signed releases."
+            (cd android && ./gradlew assembleDebug)
+            APK=$(find android/app/build/outputs/apk/debug -name "*.apk" | head -n 1)
+          fi
+          if [ -z "$APK" ]; then
+            echo "::error::No APK found"
+            ls -R android/app/build/outputs || true
+            exit 1
+          fi
+          mkdir -p dist
+          cp "$APK" dist/hisbat-mughtarib.apk
+          (cd www && zip -qr ../dist/www.zip .)
+          ls -la dist
 
-      # 7. رفع ملف الـ APK لتحميله مباشرة من GitHub
+      # 6. رفع الـ APK كملف مرفق لهذا التشغيل
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: hisbat-mughtarib-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: dist/hisbat-mughtarib.apk
           retention-days: 30
+
+      # 7. نشر الإصدار ليقرأه زر التحديث داخل التطبيق
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          SUBJECT=$(git log -1 --pretty=%s)
+          printf 'native=%s\n\n%s\n' "$NATIVE_VERSION" "$SUBJECT" > release-notes.txt
+          gh release create "v${WEB_VERSION}" dist/hisbat-mughtarib.apk dist/www.zip \
+            --title "الإصدار ${WEB_VERSION}" \
+            --notes-file release-notes.txt \
+            --latest
