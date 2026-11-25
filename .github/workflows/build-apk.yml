@@ -76,7 +76,11 @@ jobs:
         run: |
           chmod +x android/gradlew
           if [ -n "$KEYSTORE_BASE64" ]; then
-            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.keystore"
+            # تنظيف أي رموز نهاية سطر (CR/LF) أو مسافات قد تكون أُضيفت عند حفظ الأسرار من Windows
+            KEYSTORE_PASSWORD=$(printf '%s' "$KEYSTORE_PASSWORD" | tr -d '\r\n')
+            KEY_PASSWORD=$(printf '%s' "$KEY_PASSWORD" | tr -d '\r\n')
+            KEY_ALIAS=$(printf '%s' "$KEY_ALIAS" | tr -d '\r\n ')
+            printf '%s' "$KEYSTORE_BASE64" | tr -d '\r\n ' | base64 -d > "$RUNNER_TEMP/release.keystore"
             npx cap build android \
               --keystorepath "$RUNNER_TEMP/release.keystore" \
               --keystorepass "$KEYSTORE_PASSWORD" \
