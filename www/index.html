@@ -1013,6 +1013,20 @@
     <!-- ======================================================================
          النافذة 3: التخصيص الكامل والملف الشخصي (Settings / Customize)
          ====================================================================== -->
+    <!-- نافذة تأكيد استبدال خطة الوجبات والمقاضي الحالية -->
+    <div id="modal-plan-confirm" class="hidden fixed inset-0 z-[70] bg-stone-950/60 backdrop-blur-xs flex items-center justify-center p-5">
+      <div class="bg-[#F6F7F5] w-full max-w-[400px] rounded-3xl p-5 shadow-2xl border border-stone-200 space-y-4">
+        <h3 class="thmanyah-display text-lg font-black text-stone-900">استبدال الخطة الحالية؟</h3>
+        <p class="text-xs text-stone-600 leading-relaxed">
+          لديك وجبات أو مقاضٍ محفوظة في الخطة الحالية. إذا تابعت، ستُستبدل بالخطة الجديدة. المصاريف التي سجلتها من قبل لن تتأثر.
+        </p>
+        <div class="grid grid-cols-2 gap-2.5">
+          <button type="button" onclick="cancelPlanReplace()" class="py-3 rounded-2xl bg-white border border-stone-200 text-stone-700 text-xs font-extrabold">إلغاء</button>
+          <button type="button" onclick="confirmPlanReplace()" class="py-3 rounded-2xl bg-[#0F6A4F] text-white text-xs font-extrabold">نعم، استبدلها</button>
+        </div>
+      </div>
+    </div>
+
     <div id="modal-settings" class="hidden fixed inset-0 z-50 bg-stone-950/60 backdrop-blur-xs flex items-end justify-center">
       <div class="bg-[#F6F7F5] w-full max-w-[460px] max-h-[92vh] rounded-t-[30px] p-5 pb-7 shadow-2xl border-t border-stone-200 overflow-y-auto no-scrollbar animate-sheet space-y-4">
         <div class="w-10 h-1.5 bg-stone-300 rounded-full mx-auto"></div>
@@ -2035,7 +2049,34 @@
     }
 
     // توليد خطة وجبات ومقاضي متكاملة تتناسب مع الميزانية الأسبوعية بدقة
+    // يطلب تأكيد المستخدم قبل استبدال وجباته ومقاضيه الحالية
+    let pendingPlanIsAlternative = false;
+
+    function hasExistingPlanData() {
+      const hasMeals = WEEK_DAYS.some(d => (state.meals[d.key] || []).length > 0);
+      return hasMeals || state.groceries.length > 0;
+    }
+
     function generateSmartPlan(isAlternative = false) {
+      if (hasExistingPlanData()) {
+        pendingPlanIsAlternative = isAlternative;
+        document.getElementById('modal-plan-confirm').classList.remove('hidden');
+        return;
+      }
+      applySmartPlan(isAlternative);
+    }
+
+    function confirmPlanReplace() {
+      document.getElementById('modal-plan-confirm').classList.add('hidden');
+      applySmartPlan(pendingPlanIsAlternative);
+    }
+
+    function cancelPlanReplace() {
+      document.getElementById('modal-plan-confirm').classList.add('hidden');
+      showToast('تم الإبقاء على خطتك الحالية');
+    }
+
+    function applySmartPlan(isAlternative = false) {
       const mode = state.profile.cookingMode || 'cook';
       const budget = Math.max(50, Number(state.profile.weeklyFoodBudget || 250));
       const tier = getBudgetTierInfo(budget);
