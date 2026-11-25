@@ -49,6 +49,9 @@ jobs:
           NATIVE_VERSION=$(tr -d '[:space:]' < native-version.txt)
           echo "NATIVE_VERSION=${NATIVE_VERSION}" >> "$GITHUB_ENV"
           npx cap add android
+          # إضافة التحديث تطلب androidx.work 2.10 (يحتاج compileSdk 35)، وقالب Capacitor 6 يستخدم 34،
+          # فنثبّت إصداراً متوافقاً مع 34 لكل الوحدات
+          printf '\nsubprojects {\n    configurations.all {\n        resolutionStrategy.force "androidx.work:work-runtime:2.9.1"\n    }\n}\n' >> android/build.gradle
           sed -i "s/versionCode [0-9]\+/versionCode ${NATIVE_VERSION}/; s/versionName \"[^\"]*\"/versionName \"1.${NATIVE_VERSION}.${WEB_VERSION}\"/" android/app/build.gradle
           grep -E "versionCode|versionName" android/app/build.gradle
           npx @capacitor/assets generate --android --assetPath resources \
