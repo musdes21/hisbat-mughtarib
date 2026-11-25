@@ -81,6 +81,11 @@ jobs:
             KEY_PASSWORD=$(printf '%s' "$KEY_PASSWORD" | tr -d '\r\n')
             KEY_ALIAS=$(printf '%s' "$KEY_ALIAS" | tr -d '\r\n ')
             printf '%s' "$KEYSTORE_BASE64" | tr -d '\r\n ' | base64 -d > "$RUNNER_TEMP/release.keystore"
+            # cap build يستدعي apksigner بالاسم، فنضيف أحدث build-tools إلى المسار
+            SDK="${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
+            BUILD_TOOLS=$(ls "$SDK/build-tools" | sort -V | tail -n 1)
+            export PATH="$SDK/build-tools/$BUILD_TOOLS:$PATH"
+            which apksigner
             npx cap build android \
               --keystorepath "$RUNNER_TEMP/release.keystore" \
               --keystorepass "$KEYSTORE_PASSWORD" \
