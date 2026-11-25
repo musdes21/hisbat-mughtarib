@@ -98,6 +98,11 @@ jobs:
           mkdir -p dist
           cp "$APK" dist/hisbat-mughtarib.apk
           (cd www && zip -qr ../dist/www.zip .)
+          # ملف صغير يقرأه زر التحديث (بدون حد طلبات واجهة GitHub البرمجية)
+          BASE="https://github.com/${GITHUB_REPOSITORY}/releases/download/v${WEB_VERSION}"
+          printf '{"web": %s, "native": %s, "apk": "%s/hisbat-mughtarib.apk", "www": "%s/www.zip"}\n' \
+            "$WEB_VERSION" "$NATIVE_VERSION" "$BASE" "$BASE" > dist/update.json
+          cat dist/update.json
           ls -la dist
 
       # 6. رفع الـ APK كملف مرفق لهذا التشغيل
@@ -115,7 +120,7 @@ jobs:
         run: |
           SUBJECT=$(git log -1 --pretty=%s)
           printf 'native=%s\n\n%s\n' "$NATIVE_VERSION" "$SUBJECT" > release-notes.txt
-          gh release create "v${WEB_VERSION}" dist/hisbat-mughtarib.apk dist/www.zip \
+          gh release create "v${WEB_VERSION}" dist/hisbat-mughtarib.apk dist/www.zip dist/update.json \
             --title "الإصدار ${WEB_VERSION}" \
             --notes-file release-notes.txt \
             --latest

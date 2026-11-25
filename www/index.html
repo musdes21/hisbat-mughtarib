@@ -1365,7 +1365,13 @@
           </button>
         </div>
 
-        <p id="app-version-label" class="thmanyah-num text-center text-[10px] font-bold text-stone-400">الإصدار التجريبي</p>
+        <div class="space-y-1.5">
+          <button type="button" id="check-update-btn" onclick="manualCheckForUpdate()"
+                  class="w-full py-2.5 rounded-xl bg-white border border-stone-200 hover:bg-stone-50 text-stone-700 text-[11px] font-extrabold active:scale-[0.99] transition">
+            التحقق من التحديثات
+          </button>
+          <p id="app-version-label" class="thmanyah-num text-center text-[10px] font-bold text-stone-400">الإصدار التجريبي</p>
+        </div>
 
         <!-- إعادة ضبط البيانات بتأكيد مزدوج داخل الواجهة -->
         <div class="pt-2 border-t border-stone-200">
@@ -3243,7 +3249,7 @@
     // يُستبدل __WEB_VERSION__ برقم البناء تلقائياً في GitHub Actions
     const APP_WEB_VERSION = '__WEB_VERSION__';
     const UPDATE_REPO = 'musdes21/hisbat-mughtarib';
-    const UPDATE_CHECK_INTERVAL = 10 * 60 * 1000;
+    const UPDATE_CHECK_INTERVAL = 60 * 1000;
     let pendingUpdate = null;
     let lastUpdateCheck = 0;
 
@@ -3257,9 +3263,26 @@
       return (cap.Plugins || {})[name] || null;
     }
 
+    let localNativeVersion = 0;
+
+    async function getLocalNativeVersion() {
+      if (localNativeVersion) return localNativeVersion;
+      const appPlugin = getNativePlugin('App');
+      if (appPlugin) {
+        try {
+          const info = await appPlugin.getInfo();
+          localNativeVersion = parseInt(info.build, 10) || 0;
+        } catch (e) {}
+      }
+      return localNativeVersion;
+    }
+
     function renderVersionLabel() {
       const el = document.getElementById('app-version-label');
-      if (el) el.textContent = isBuiltApp() ? `الإصدار ${APP_WEB_VERSION}` : 'الإصدار التجريبي';
+      if (!el) return;
+      el.textContent = isBuiltApp()
+        ? `الإصدار ${APP_WEB_VERSION}${localNativeVersion ? ` • النسخة الأصلية ${localNativeVersion}` : ''}`
+        : 'الإصدار التجريبي';
     }
 
     function renderUpdateBanner() {
@@ -3274,47 +3297,112 @@
       banner.classList.remove('hidden');
     }
 
-    // يقرأ رقم آخر إصدار فقط من GitHub، ولا يرسل أي بيانات من بياناتك
-    async function checkForUpdate(force = false) {
-      if (!isBuiltApp() || !navigator.onLine) return;
-      const updater = getNativePlugin('CapacitorUpdater');
-      if (!updater) return;
-      if (!force && Date.now() - lastUpdateCheck < UPDATE_CHECK_INTERVAL) return;
-      lastUpdateCheck = Date.now();
+    // يحوّل رد الخادم (نص أو JSON أو base64) إلى كائن
+    function parseUpdateManifest(data) {
+      if (data && typeof data === 'object') return data;
+      const text = String(data || '').trim();
+      try { return JSON.parse(text); } catch (e) {}
+      try { return JSON.parse(atob(text)); } catch (e) {}
+      throw new Error('ملف التحديث غير مقروء');
+    }
+
+    // يقرأ معلومات آخر إصدار فقط، ولا يرسل أي بيانات من بياناتك
+    async function fetchUpdateManifest() {
+      const errors = [];
+
+      // 1) ملف update.json من آخر إصدار عبر اتصال أصلي (بدون حد طلبات GitHub ولا قيود المتصفح)
+      const http = getNativePlugin('CapacitorHttp');
+      if (http) {
+        try {
+          const res = await http.request({
+            url: `https://github.com/${UPDATE_REPO}/releases/latest/download/update.json?t=${Date.now()}`,
+            method: 'GET',
+            responseType: 'text',
+            headers: { 'Cache-Control': 'no-cache' }
+          });
+          if (res.status >= 200 && res.status < 300) {
+            const m = parseUpdateManifest(res.data);
+            if (m && m.web) return m;
+          }
+          errors.push(`update.json: ${res.status}`);
+        } catch (e) {
+          errors.push(`update.json: ${e && e.message ? e.message : e}`);
+        }
+      }
+
+      // 2) احتياطي: واجهة GitHub البرمجية
       try {
         const res = await fetch(`https://api.github.com/repos/${UPDATE_REPO}/releases/latest`, {
           cache: 'no-store',
           headers: { Accept: 'application/vnd.github+json' }
         });
-        if (!res.ok) return;
+        if (!res.ok) throw new Error(res.status === 403 ? 'تجاوز حد الطلبات (403)' : `HTTP ${res.status}`);
         const release = await res.json();
-        const remoteWeb = parseInt(String(release.tag_name || '').replace(/\D/g, ''), 10) || 0;
         const nativeMatch = /native\s*=\s*(\d+)/.exec(release.body || '');
-        const remoteNative = nativeMatch ? parseInt(nativeMatch[1], 10) : 0;
-
-        let localNative = 0;
-        const appPlugin = getNativePlugin('App');
-        if (appPlugin) {
-          try {
-            const info = await appPlugin.getInfo();
-            localNative = parseInt(info.build, 10) || 0;
-          } catch (e) {}
-        }
-
         const findAsset = name => (release.assets || []).find(a => a.name === name);
-        const apkAsset = findAsset('hisbat-mughtarib.apk');
-        const webAsset = findAsset('www.zip');
+        const apk = findAsset('hisbat-mughtarib.apk');
+        const www = findAsset('www.zip');
+        return {
+          web: parseInt(String(release.tag_name || '').replace(/\D/g, ''), 10) || 0,
+          native: nativeMatch ? parseInt(nativeMatch[1], 10) : 0,
+          apk: apk ? apk.browser_download_url : '',
+          www: www ? www.browser_download_url : ''
+        };
+      } catch (e) {
+        errors.push(`api: ${e && e.message ? e.message : e}`);
+      }
 
-        if (remoteNative > localNative && apkAsset) {
-          pendingUpdate = { kind: 'apk', url: apkAsset.browser_download_url, version: remoteWeb };
-        } else if (remoteWeb > parseInt(APP_WEB_VERSION, 10) && webAsset) {
-          pendingUpdate = { kind: 'web', url: webAsset.browser_download_url, version: String(remoteWeb) };
+      throw new Error(errors.join(' | '));
+    }
+
+    // يرجع: 'unavailable' | 'offline' | 'skipped' | 'update' | 'latest' | 'error'
+    async function checkForUpdate(force = false) {
+      if (!isBuiltApp() || !getNativePlugin('CapacitorUpdater')) return { status: 'unavailable' };
+      if (!navigator.onLine) return { status: 'offline' };
+      if (!force && Date.now() - lastUpdateCheck < UPDATE_CHECK_INTERVAL) return { status: 'skipped' };
+      lastUpdateCheck = Date.now();
+      try {
+        const manifest = await fetchUpdateManifest();
+        const remoteWeb = parseInt(manifest.web, 10) || 0;
+        const remoteNative = parseInt(manifest.native, 10) || 0;
+        const localNative = await getLocalNativeVersion();
+        renderVersionLabel();
+
+        if (remoteNative > localNative && manifest.apk) {
+          pendingUpdate = { kind: 'apk', url: manifest.apk, version: remoteWeb };
+        } else if (remoteWeb > parseInt(APP_WEB_VERSION, 10) && manifest.www) {
+          pendingUpdate = { kind: 'web', url: manifest.www, version: String(remoteWeb) };
         } else {
           pendingUpdate = null;
         }
         renderUpdateBanner();
+        return pendingUpdate ? { status: 'update' } : { status: 'latest', remoteWeb };
       } catch (e) {
-        // بدون إنترنت أو تعذر الوصول: نتجاهل بهدوء
+        return { status: 'error', message: e && e.message ? e.message : String(e) };
+      }
+    }
+
+    // زر "التحقق من التحديثات" في الإعدادات: يعرض النتيجة بوضوح
+    async function manualCheckForUpdate() {
+      const btn = document.getElementById('check-update-btn');
+      btn.disabled = true;
+      btn.textContent = 'جارٍ التحقق...';
+      const result = await checkForUpdate(true);
+      btn.disabled = false;
+      btn.textContent = 'التحقق من التحديثات';
+
+      if (result.status === 'unavailable') {
+        showToast('التحقق من التحديثات يعمل داخل تطبيق الجوال فقط', 'info');
+      } else if (result.status === 'offline') {
+        showToast('أنت غير متصل بالإنترنت، اتصل وحاول مرة ثانية', 'warn');
+      } else if (result.status === 'update') {
+        closeModal('modal-settings');
+        switchTab('home');
+        showToast('فيه تحديث جديد، اضغط زر "تحديث" بالأعلى', 'success');
+      } else if (result.status === 'latest') {
+        showToast(`تم التحقق: أنت على آخر إصدار (${APP_WEB_VERSION})`, 'success');
+      } else {
+        showToast(`تعذر التحقق من التحديثات: ${result.message || 'خطأ غير معروف'}`, 'warn');
       }
     }
 
@@ -3349,6 +3437,8 @@
       if (updater) {
         try { await updater.notifyAppReady(); } catch (e) {}
       }
+      await getLocalNativeVersion();
+      renderVersionLabel();
       checkForUpdate(true);
       window.addEventListener('online', () => checkForUpdate(true));
     }
