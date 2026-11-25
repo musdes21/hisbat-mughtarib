@@ -1,0 +1,24 @@
+{
+  "appId": "com.hisbat.mughtarib",
+  "appName": "حِسبة مغترب",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "android": {
+    "backgroundColor": "#0F6A4F",
+    "captureInput": true
+  },
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "backgroundColor": "#0F6A4F",
+      "androidSplashResourceName": "splash",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false,
+      "splashFullScreen": true,
+      "splashImmersive": true
+    }
+  }
+}

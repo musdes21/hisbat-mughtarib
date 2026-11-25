@@ -1,0 +1,2827 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0F6A4F" />
+  <title>حِسبة مغترب | إدارة الميزانية والوجبات والتحويلات</title>
+
+  <!-- Tailwind CSS (مبني محلياً أثناء البناء، بدون CDN) -->
+  <link rel="stylesheet" href="./css/tailwind.css" />
+
+  <style>
+    /* ==========================================================================
+       1. تعريف عائلة خط ثمانية (Thmanyah Typeface) — المسارات المحلية للأرشيف
+       يدعم WOFF2 للأداء السريع و OTF كاحتياطي محلي لجميع الأوزان (300 - 900)
+       ========================================================================== */
+
+    /* --- Thmanyah Serif Display --- */
+    @font-face {
+      font-family: 'Thmanyah Serif Display';
+      src: url('./thmanyah typeface/thmanyahserifdisplay/woff2/thmanyahserifdisplay-Light.woff2') format('woff2'),
+           url('./thmanyah typeface/thmanyahserifdisplay/otf/thmanyahserifdisplay-Light.otf') format('opentype');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Thmanyah Serif Display';
+      src: url('./thmanyah typeface/thmanyahserifdisplay/woff2/thmanyahserifdisplay-Regular.woff2') format('woff2'),
+           url('./thmanyah typeface/thmanyahserifdisplay/otf/thmanyahserifdisplay-Regular.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Thmanyah Serif Display';
+      src: url('./thmanyah typeface/thmanyahserifdisplay/woff2/thmanyahserifdisplay-Medium.woff2') format('woff2'),
+           url('./thmanyah typeface/thmanyahserifdisplay/otf/thmanyahserifdisplay-Medium.otf') format('opentype');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Thmanyah Serif Display';
+      src: url('./thmanyah typeface/thmanyahserifdisplay/woff2/thmanyahserifdisplay-Bold.woff2') format('woff2'),
+           url('./thmanyah typeface/thmanyahserifdisplay/otf/thmanyahserifdisplay-Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Thmanyah Serif Display';
+      src: url('./thmanyah typeface/thmanyahserifdisplay/woff2/thmanyahserifdisplay-Black.woff2') format('woff2'),
+           url('./thmanyah typeface/thmanyahserifdisplay/otf/thmanyahserifdisplay-Black.otf') format('opentype');
+      font-weight: 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* --- Thmanyah Serif Text --- */
+    @font-face {
+      font-family: 'Thmanyah Serif Text';
+      src: url('./thmanyah typeface/thmanyahseriftext/woff2/thmanyahseriftext-Light.woff2') format('woff2'),
+           url('./thmanyah typeface/thmanyahseriftext/otf/thmanyahseriftext-Light.otf') format('opentype');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Thmanyah Serif Text';
+      src: url('./thmanyah typeface/thmanyahseriftext/woff2/thmanyahseriftext-Regular.woff2') format('woff2'),
+           url('./thmanyah typeface/thmanyahseriftext/otf/thmanyahseriftext-Regular.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Thmanyah Serif Text';
+      src: url('./thmanyah typeface/thmanyahseriftext/woff2/thmanyahseriftext-Medium.woff2') format('woff2'),
+           url('./thmanyah typeface/thmanyahseriftext/otf/thmanyahseriftext-Medium.otf') format('opentype');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Thmanyah Serif Text';
+      src: url('./thmanyah typeface/thmanyahseriftext/woff2/thmanyahseriftext-Bold.woff2') format('woff2'),
+           url('./thmanyah typeface/thmanyahseriftext/otf/thmanyahseriftext-Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Thmanyah Serif Text';
+      src: url('./thmanyah typeface/thmanyahseriftext/woff2/thmanyahseriftext-Black.woff2') format('woff2'),
+           url('./thmanyah typeface/thmanyahseriftext/otf/thmanyahseriftext-Black.otf') format('opentype');
+      font-weight: 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* --- Thmanyah Sans --- */
+    @font-face {
+      font-family: 'Thmanyah Sans';
+      src: url('./thmanyah typeface/thmanyahsans/woff2/thmanyahsans-Light.woff2') format('woff2'),
+           url('./thmanyah typeface/thmanyahsans/otf/thmanyahsans-Light.otf') format('opentype');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Thmanyah Sans';
+      src: url('./thmanyah typeface/thmanyahsans/woff2/thmanyahsans-Regular.woff2') format('woff2'),
+           url('./thmanyah typeface/thmanyahsans/otf/thmanyahsans-Regular.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Thmanyah Sans';
+      src: url('./thmanyah typeface/thmanyahsans/woff2/thmanyahsans-Medium.woff2') format('woff2'),
+           url('./thmanyah typeface/thmanyahsans/otf/thmanyahsans-Medium.otf') format('opentype');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Thmanyah Sans';
+      src: url('./thmanyah typeface/thmanyahsans/woff2/thmanyahsans-Bold.woff2') format('woff2'),
+           url('./thmanyah typeface/thmanyahsans/otf/thmanyahsans-Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Thmanyah Sans';
+      src: url('./thmanyah typeface/thmanyahsans/woff2/thmanyahsans-Black.woff2') format('woff2'),
+           url('./thmanyah typeface/thmanyahsans/otf/thmanyahsans-Black.otf') format('opentype');
+      font-weight: 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* ==========================================================================
+       2. تفعيل البدائل الأسلوبية ونهايات الحروف والتراكيب تلقائياً (OpenType)
+       ========================================================================== */
+    body {
+      font-family: 'Thmanyah Sans', system-ui, sans-serif;
+      font-feature-settings: "calt" 1, "liga" 1, "rlig" 1, "salt" 1;
+      font-variant-ligatures: common-ligatures contextual;
+      background-color: #E8EAE6;
+      color: #18181B;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    /* العناوين البارزة مع البدائل الأسلوبية والمدّات ونهايات الحروف المرسلة */
+    .thmanyah-display {
+      font-family: 'Thmanyah Serif Display', 'Thmanyah Sans', serif;
+      font-feature-settings: "salt" 1, "swsh" 1, "cswh" 1, "calt" 1, "liga" 1, "dlig" 1, "rlig" 1, "ss01" 1, "ss02" 1, "ss03" 1;
+      font-variant-ligatures: common-ligatures discretionary-ligatures contextual;
+      text-rendering: optimizeLegibility;
+    }
+
+    .thmanyah-serif-text {
+      font-family: 'Thmanyah Serif Text', 'Thmanyah Sans', serif;
+      font-feature-settings: "calt" 1, "liga" 1, "rlig" 1, "salt" 1;
+      font-variant-ligatures: common-ligatures contextual;
+    }
+
+    /* أرقام مالية بمحاذاة جدولية واضحة */
+    .thmanyah-num {
+      font-variant-numeric: tabular-nums lining-nums;
+      font-feature-settings: "tnum" 1, "lnum" 1;
+    }
+
+    /* إخفاء شريط التمرير مع بقاء التمرير سلساً */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* مسافة الأمان السفلية لأجهزة الأندرويد و Capacitor */
+    .safe-bottom {
+      padding-bottom: max(0.65rem, env(safe-area-inset-bottom));
+    }
+
+    /* حركات واجهة ناعمة */
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0.4; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-sheet {
+      animation: slideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .animate-fade {
+      animation: fadeIn 0.22s ease-out forwards;
+    }
+
+    /* السماح بتحديد النص داخل حقول الإدخال */
+    input, select, textarea {
+      user-select: text;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex justify-center items-start sm:py-4">
+
+  <!-- ========================================================================
+       إطار التطبيق المحمول (عرض كامل على الجوال، وإطار هاتف أنيق على سطح المكتب)
+       ======================================================================== -->
+  <div id="app-shell" class="w-full max-w-[460px] min-h-screen sm:min-h-[840px] sm:max-h-[94vh] bg-[#F6F7F5] sm:rounded-[34px] sm:shadow-2xl sm:border sm:border-stone-300/80 flex flex-col relative overflow-hidden">
+
+    <!-- ======================================================================
+         1. معالج التسجيل والتخصيص لأول مرة (4 خطوات)
+         ====================================================================== -->
+    <div id="onboarding-screen" class="hidden absolute inset-0 z-50 bg-[#F6F7F5] flex flex-col overflow-hidden">
+      <!-- ترويسة المعالج -->
+      <div class="bg-[#0F6A4F] text-white px-6 pt-8 pb-6 rounded-b-[32px] shadow-md shrink-0 relative overflow-hidden">
+        <div class="absolute -left-10 -top-10 w-36 h-36 rounded-full bg-amber-400/15 blur-2xl pointer-events-none"></div>
+        <div class="relative flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-2xl bg-white/15 border border-white/20 flex items-center justify-center">
+              <svg class="w-5 h-5 text-amber-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12V7H5a2 2 0 0 1 0-4h14v4M3 5v14a2 2 0 0 0 2 2h16v-5M18 12a2 2 0 0 0 0 4h4v-4h-4Z"/></svg>
+            </div>
+            <div>
+              <h1 class="thmanyah-display text-xl font-black leading-tight">حِسـبة مغـترب</h1>
+              <p class="text-[11px] text-emerald-100/90">خصّص كل تفاصيلك من البداية</p>
+            </div>
+          </div>
+          <span id="ob-step-badge" class="thmanyah-num text-xs font-extrabold bg-white/15 px-3 py-1 rounded-full border border-white/20">1 / 4</span>
+        </div>
+
+        <!-- شريط تقدم الخطوات -->
+        <div class="relative grid grid-cols-4 gap-2">
+          <div id="ob-prog-1" class="h-1.5 rounded-full bg-amber-400 transition-all"></div>
+          <div id="ob-prog-2" class="h-1.5 rounded-full bg-white/25 transition-all"></div>
+          <div id="ob-prog-3" class="h-1.5 rounded-full bg-white/25 transition-all"></div>
+          <div id="ob-prog-4" class="h-1.5 rounded-full bg-white/25 transition-all"></div>
+        </div>
+      </div>
+
+      <!-- محتوى الخطوات -->
+      <div class="flex-1 overflow-y-auto no-scrollbar px-5 py-5">
+
+        <!-- الخطوة 1: البيانات الأساسية -->
+        <div id="ob-step-1" class="space-y-4 animate-fade">
+          <div>
+            <h2 class="thmanyah-display text-2xl font-black text-stone-900">أهلاً بك، عرّفنا بنفسك</h2>
+            <p class="thmanyah-serif-text text-xs text-stone-500 mt-1">أدخل اسمك وراتبك الشهري لنبني لك حسبة دقيقة تناسبك.</p>
+          </div>
+
+          <div class="bg-white rounded-3xl p-5 border border-stone-200/80 shadow-xs space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1.5">الاسم (كيف تحب نناديك؟)</label>
+              <input id="wiz-name" type="text" placeholder="مثال: أحمد، أبو خالد..."
+                     class="w-full rounded-2xl bg-[#F6F7F5] border border-stone-200 px-4 py-3 text-sm font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1.5">الراتب الشهري (بالريال السعودي SAR)</label>
+              <input id="wiz-salary" type="number" min="100" step="50" value="6000"
+                     class="thmanyah-num w-full rounded-2xl bg-[#F6F7F5] border border-stone-200 px-4 py-3 text-lg font-black text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1.5">يوم نزول الراتب في الشهر (1 - 31)</label>
+              <input id="wiz-payday" type="number" min="1" max="31" value="27"
+                     class="thmanyah-num w-full rounded-2xl bg-[#F6F7F5] border border-stone-200 px-4 py-3 text-base font-extrabold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+            </div>
+          </div>
+
+          <!-- بطاقة طمأنة الخصوصية والحفظ المحلي -->
+          <div class="bg-[#E7F3EE] border border-emerald-200/90 rounded-3xl p-4 flex items-start gap-3">
+            <div class="w-9 h-9 rounded-2xl bg-[#0F6A4F] text-amber-300 flex items-center justify-center shrink-0 text-base">🔒</div>
+            <div class="space-y-0.5">
+              <p class="text-xs font-black text-[#0A4D39]">كل شيء محفوظ على جهازك فقط</p>
+              <p class="text-[11px] text-stone-600 leading-relaxed">لا نطلب تسجيل دخول ولا نرسل راتبك أو مصاريفك لأي خادم خارجي. جميع بياناتك تبقى داخل جهازك وتعمل بدون إنترنت.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- الخطوة 2: التحويل للبلاد -->
+        <div id="ob-step-2" class="hidden space-y-4 animate-fade">
+          <div>
+            <h2 class="thmanyah-display text-2xl font-black text-stone-900">خطة التحـويل للـبلاد</h2>
+            <p class="thmanyah-serif-text text-xs text-stone-500 mt-1">حدد المبلغ المستهدف تحويله شهرياً وعملة بلدك وسعر الصرف.</p>
+          </div>
+
+          <div class="bg-white rounded-3xl p-5 border border-stone-200/80 shadow-xs space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1.5">هدف التحويل الشهري (ر.س)</label>
+              <input id="wiz-remit-target" type="number" min="0" step="50" value="2000" oninput="updateWizardRemitPreview()"
+                     class="thmanyah-num w-full rounded-2xl bg-[#F6F7F5] border border-stone-200 px-4 py-3 text-lg font-black text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1.5">عملة البلد الأم</label>
+              <select id="wiz-currency" onchange="handleWizardCurrencyChange()"
+                      class="w-full rounded-2xl bg-[#F6F7F5] border border-stone-200 px-4 py-3 text-sm font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]">
+                <option value="YER">الريال اليمني (YER)</option>
+                <option value="EGP">الجنيه المصري (EGP)</option>
+                <option value="SDG">الجنيه السوداني (SDG)</option>
+                <option value="JOD">الدينار الأردني (JOD)</option>
+                <option value="SYP">الليرة السورية (SYP)</option>
+                <option value="INR">الروبية الهندية (INR)</option>
+                <option value="PKR">الروبية الباكستانية (PKR)</option>
+                <option value="CUSTOM">عملة أخرى مخصصة...</option>
+              </select>
+            </div>
+
+            <div id="wiz-custom-currency-wrap" class="hidden">
+              <label class="block text-xs font-bold text-stone-700 mb-1.5">رمز أو اسم العملة المخصصة</label>
+              <input id="wiz-custom-currency-code" type="text" placeholder="مثلاً: MAD أو درهم مغربي" oninput="updateWizardRemitPreview()"
+                     class="w-full rounded-2xl bg-[#F6F7F5] border border-stone-200 px-4 py-3 text-sm font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1.5">سعر الصرف لكل 1 ريال سعودي</label>
+              <input id="wiz-rate" type="number" min="0" step="0.01" value="530" oninput="updateWizardRemitPreview()"
+                     class="thmanyah-num w-full rounded-2xl bg-[#F6F7F5] border border-stone-200 px-4 py-3 text-base font-extrabold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+            </div>
+
+            <div class="bg-[#E7F3EE] border border-emerald-200 rounded-2xl p-3.5 flex items-center justify-between">
+              <span class="text-xs font-bold text-[#0F6A4F]">المبلغ الواصل للبلاد تقريباً</span>
+              <span id="wiz-remit-preview" class="thmanyah-num text-base font-black text-[#0A4D39]">1,060,000 YER</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- الخطوة 3: الالتزامات الثابتة -->
+        <div id="ob-step-3" class="hidden space-y-4 animate-fade">
+          <div>
+            <h2 class="thmanyah-display text-2xl font-black text-stone-900">الالتـزامات الثـابتة</h2>
+            <p class="thmanyah-serif-text text-xs text-stone-500 mt-1">عدّل مبالغ فواتيرك الشهرية الثابتة أو أضف التزاماتك الخاصة.</p>
+          </div>
+
+          <div class="bg-white rounded-3xl p-4 border border-stone-200/80 shadow-xs space-y-3">
+            <div id="wiz-fixed-list" class="space-y-2.5"></div>
+
+            <!-- إضافة التزام ثابت جديد -->
+            <div class="pt-3 border-t border-stone-100 flex gap-2">
+              <input id="wiz-new-fixed-name" type="text" placeholder="التزام جديد (مثلاً: قسط)"
+                     class="flex-1 rounded-xl bg-[#F6F7F5] border border-stone-200 px-3 py-2.5 text-xs font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+              <input id="wiz-new-fixed-amount" type="number" min="0" placeholder="ر.س"
+                     class="thmanyah-num w-20 rounded-xl bg-[#F6F7F5] border border-stone-200 px-2.5 py-2.5 text-xs font-extrabold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+              <button type="button" onclick="addWizardFixedItem()" class="px-3.5 py-2.5 rounded-xl bg-[#0F6A4F] text-white text-xs font-bold active:scale-95 transition">
+                إضافة
+              </button>
+            </div>
+
+            <div class="bg-[#F6F7F5] rounded-2xl p-3 flex items-center justify-between text-xs">
+              <span class="font-bold text-stone-600">إجمالي الالتزامات الثابتة</span>
+              <span id="wiz-fixed-total" class="thmanyah-num font-black text-[#0F6A4F]">0 ر.س</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- الخطوة 4: نظام الأكل والمقاضي -->
+        <div id="ob-step-4" class="hidden space-y-4 animate-fade">
+          <div>
+            <h2 class="thmanyah-display text-2xl font-black text-stone-900">نظـام الأكـل والمقـاضي</h2>
+            <p class="thmanyah-serif-text text-xs text-stone-500 mt-1">اختر أسلوبك المعتاد لنجهّز لك اقتراحات الوجبات وقائمة مشتريات الأسبوع.</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <button type="button" id="wiz-mode-cook" onclick="selectWizardCookingMode('cook')"
+                    class="p-4 rounded-3xl border-2 text-right transition flex flex-col gap-2 bg-[#E7F3EE] border-[#0F6A4F]">
+              <span class="text-3xl">🍳</span>
+              <div>
+                <p class="thmanyah-display text-base font-black text-[#0A4D39]">بطبخ</p>
+                <p class="text-[11px] text-stone-600 mt-0.5 leading-relaxed">طبخ في السكن ومقاضي أسبوعية كاملة واقتصادية.</p>
+              </div>
+            </button>
+
+            <button type="button" id="wiz-mode-nocook" onclick="selectWizardCookingMode('nocook')"
+                    class="p-4 rounded-3xl border-2 text-right transition flex flex-col gap-2 bg-white border-stone-200">
+              <span class="text-3xl">🥪</span>
+              <div>
+                <p class="thmanyah-display text-base font-black text-stone-900">بدون طبخ</p>
+                <p class="text-[11px] text-stone-600 mt-0.5 leading-relaxed">وجبات جاهزة، نواشف، سندوتشات، ومطاعم سريعة.</p>
+              </div>
+            </button>
+          </div>
+
+          <div class="bg-white rounded-3xl p-5 border border-stone-200/80 shadow-xs space-y-2">
+            <label class="block text-xs font-bold text-stone-700">ميزانية الأكل والمقاضي الأسبوعية (ر.س)</label>
+            <input id="wiz-food-budget" type="number" min="50" step="25" value="250"
+                   class="thmanyah-num w-full rounded-2xl bg-[#F6F7F5] border border-stone-200 px-4 py-3 text-lg font-black text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+            <p class="text-[11px] text-stone-500">يمكنك تعديل النظام والميزانية في أي وقت من داخل التطبيق.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- أزرار التنقل أسفل المعالج -->
+      <div class="bg-white border-t border-stone-200 px-5 py-4 safe-bottom flex items-center gap-3 shrink-0">
+        <button id="ob-prev-btn" type="button" onclick="prevWizardStep()"
+                class="hidden px-5 py-3.5 rounded-2xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-sm transition">
+          السابق
+        </button>
+        <button id="ob-next-btn" type="button" onclick="nextWizardStep()"
+                class="flex-1 py-3.5 rounded-2xl bg-[#0F6A4F] hover:bg-[#0A4D39] active:scale-[0.99] text-white font-extrabold text-sm shadow-md transition">
+          التالي
+        </button>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         2. الشريط العلوي للتطبيق الرئيسي
+         ====================================================================== -->
+    <header class="bg-[#0F6A4F] text-white px-5 pt-5 pb-4 rounded-b-[28px] shadow-md z-20 shrink-0 relative overflow-hidden">
+      <div class="absolute -left-10 -top-10 w-36 h-36 rounded-full bg-amber-400/15 blur-2xl pointer-events-none"></div>
+      <div class="relative flex items-center justify-between gap-2">
+        <div class="min-w-0">
+          <h1 id="header-greeting" class="thmanyah-display text-xl font-black leading-tight text-white truncate">أهلاً، بك</h1>
+          <div class="flex items-center gap-2 mt-0.5 flex-wrap">
+            <p id="header-date-label" class="thmanyah-serif-text text-[11px] text-emerald-100/90 truncate">حِسبة مغترب</p>
+            <span class="inline-flex items-center gap-1 text-[10px] font-bold bg-white/15 text-amber-200 px-2 py-0.5 rounded-full border border-white/15 shrink-0">
+              <span>🔒</span><span>محفوظ على جهازك</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- زر التخصيص والإعدادات -->
+        <button onclick="openSettingsModal()"
+                class="px-3 py-2 rounded-2xl bg-white/15 hover:bg-white/25 active:scale-95 transition border border-white/20 flex items-center gap-1.5 text-white shrink-0"
+                title="تخصيص الإعدادات والملف الشخصي">
+          <svg class="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065Z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span class="text-xs font-bold">تخصيص</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ======================================================================
+         3. المحتوى الرئيسي القابل للتمرير
+         ====================================================================== -->
+    <main class="flex-1 overflow-y-auto no-scrollbar px-4 pt-4 pb-28 space-y-4">
+
+      <!-- ====================================================================
+           التبويب 1: الرئيسية (Home)
+           ==================================================================== -->
+      <section id="tab-home" class="space-y-4 animate-fade">
+
+        <!-- بطاقة المتبقي من الراتب والملخص الشهري -->
+        <div class="bg-gradient-to-bl from-[#0F6A4F] to-[#0A4D39] text-white rounded-3xl p-5 shadow-md space-y-4 relative overflow-hidden">
+          <div class="absolute -left-10 -bottom-10 w-36 h-36 rounded-full bg-amber-400/15 blur-2xl pointer-events-none"></div>
+          <div class="relative flex items-start justify-between gap-2">
+            <div>
+              <p class="text-xs text-emerald-100/90 font-bold">المتبقي من الراتب هذا الشهر</p>
+              <div class="flex items-baseline gap-1.5 mt-1">
+                <span id="home-remaining-salary" class="thmanyah-display thmanyah-num text-3xl font-black text-white">0</span>
+                <span class="text-xs font-bold text-amber-300">ر.س</span>
+              </div>
+            </div>
+            <div class="text-left bg-white/10 border border-white/15 rounded-2xl px-3 py-1.5">
+              <p class="text-[10px] text-emerald-100">الراتب</p>
+              <p class="thmanyah-num text-xs font-extrabold"><span id="home-total-salary">0</span> ر.س</p>
+            </div>
+          </div>
+
+          <!-- شريط استهلاك الراتب -->
+          <div class="relative space-y-1.5">
+            <div class="flex items-center justify-between text-[11px] text-emerald-100">
+              <span>المصروف حتى الآن: <strong class="thmanyah-num text-white"><span id="home-total-spent">0</span> ر.س</strong></span>
+              <span id="home-spent-percent" class="thmanyah-num font-extrabold text-amber-300">0%</span>
+            </div>
+            <div class="w-full h-2 bg-white/15 rounded-full overflow-hidden">
+              <div id="home-progress-bar" class="h-full bg-amber-400 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- المصروف اليومي المسموح والالتزامات الثابتة -->
+          <div class="relative grid grid-cols-2 gap-2.5 pt-1">
+            <div class="bg-white/10 border border-white/15 rounded-2xl p-3">
+              <p class="text-[10px] text-emerald-100">المسموح صرفه اليوم</p>
+              <p class="thmanyah-num text-lg font-black text-amber-300 mt-0.5"><span id="home-daily-allowance">0</span> <span class="text-[10px] font-bold">ر.س</span></p>
+              <p id="home-days-left" class="thmanyah-num text-[10px] text-emerald-100/80 mt-0.5">متبقي 0 يوماً</p>
+            </div>
+            <div class="bg-white/10 border border-white/15 rounded-2xl p-3">
+              <p class="text-[10px] text-emerald-100">الالتزامات الثابتة</p>
+              <p class="thmanyah-num text-lg font-black text-white mt-0.5"><span id="home-fixed-total">0</span> <span class="text-[10px] font-bold">ر.س</span></p>
+              <p class="text-[10px] text-emerald-100/80 mt-0.5">محجوزة من الميزانية</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- بطاقتا التحويل والأكل السريعة -->
+        <div class="grid grid-cols-2 gap-3">
+          <!-- بطاقة هدف التحويل -->
+          <button type="button" onclick="switchTab('remittance')" class="bg-white rounded-3xl p-4 shadow-xs border border-stone-200/80 text-right space-y-2 active:scale-[0.98] transition">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-stone-800">التحويل للبلاد</span>
+              <span id="home-remit-status" class="thmanyah-num text-[10px] font-extrabold bg-[#E7F3EE] text-[#0F6A4F] px-2 py-0.5 rounded-full">0%</span>
+            </div>
+            <div>
+              <p class="thmanyah-num text-lg font-black text-[#0F6A4F]"><span id="home-remit-sar">0</span> <span class="text-[10px] font-bold">ر.س</span></p>
+              <p id="home-remit-converted" class="thmanyah-num text-[10px] font-bold text-stone-500 truncate mt-0.5">≈ 0</p>
+            </div>
+          </button>
+
+          <!-- بطاقة الأكل الأسبوعية -->
+          <button type="button" onclick="switchTab('food')" class="bg-white rounded-3xl p-4 shadow-xs border border-stone-200/80 text-right space-y-2 active:scale-[0.98] transition">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-stone-800 flex items-center gap-1">
+                <span id="home-food-mode-icon">🍳</span>
+                <span>الأكل</span>
+              </span>
+              <span id="home-food-mode-badge" class="text-[10px] font-extrabold bg-amber-50 text-amber-800 px-2 py-0.5 rounded-full">بطبخ</span>
+            </div>
+            <div class="space-y-1.5">
+              <p class="thmanyah-num text-xs font-black text-stone-900">
+                <span id="home-food-spent">0</span>
+                <span class="text-stone-400 font-bold">/ <span id="home-food-budget">250</span> ر.س</span>
+              </p>
+              <div class="w-full h-1.5 bg-stone-100 rounded-full overflow-hidden">
+                <div id="home-food-bar" class="h-full bg-amber-500 rounded-full transition-all" style="width: 0%"></div>
+              </div>
+            </div>
+          </button>
+        </div>
+
+        <!-- شريط أقرب التزام مهم -->
+        <button type="button" onclick="switchTab('important')" class="w-full bg-white rounded-2xl p-3.5 shadow-xs border border-stone-200/80 flex items-center justify-between gap-2 text-right active:scale-[0.99] transition">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-base shrink-0">📌</div>
+            <div class="min-w-0">
+              <p class="text-[10px] font-bold text-stone-400">أقرب التزام مهم</p>
+              <p id="home-next-obligation-title" class="text-xs font-extrabold text-stone-900 truncate">لا توجد التزامات</p>
+            </div>
+          </div>
+          <span id="home-next-obligation-days" class="thmanyah-num text-[10px] font-extrabold bg-amber-100 text-amber-900 px-2.5 py-1 rounded-xl shrink-0">—</span>
+        </button>
+
+        <!-- سجل آخر العمليات -->
+        <div class="bg-white rounded-3xl p-4 shadow-xs border border-stone-200/80 space-y-3">
+          <div class="flex items-center justify-between">
+            <h2 class="thmanyah-display text-base font-black text-stone-900">آخـر العمـليات</h2>
+            <span id="home-tx-count" class="thmanyah-num text-[11px] font-bold text-stone-400">0 عمليات</span>
+          </div>
+          <div id="home-transactions-list" class="space-y-2"></div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           التبويب 2: الأكل والمقاضي (محرك اقتراح ذكي حسب الميزانية والطبخ)
+           ==================================================================== -->
+      <section id="tab-food" class="hidden space-y-4 animate-fade">
+
+        <!-- بطاقة الميزانية الأسبوعية والتصنيف التلقائي + تبديل بطبخ/بدون طبخ -->
+        <div class="bg-white rounded-3xl p-4 shadow-xs border border-stone-200/80 space-y-3.5">
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h2 class="thmanyah-display text-lg font-black text-stone-900">الأكـل والمقـاضي</h2>
+                <span id="food-tier-badge" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#0F6A4F]">متوازنة</span>
+              </div>
+              <p class="thmanyah-serif-text text-[11px] text-stone-500 mt-0.5">اقتراحات ذكية تتكيّف مع ميزانيتك الأسبوعية</p>
+            </div>
+            <button type="button" onclick="openSettingsModal()"
+                    class="text-[11px] font-bold text-[#0F6A4F] bg-[#E7F3EE] hover:bg-emerald-100 px-2.5 py-1.5 rounded-xl transition shrink-0">
+              تعديل الميزانية
+            </button>
+          </div>
+
+          <!-- إحصائيات الميزانية الأسبوعية (المحدد، المصروف، المتبقي) -->
+          <div class="grid grid-cols-3 gap-2">
+            <div class="bg-[#F6F7F5] rounded-2xl p-2.5 text-center border border-stone-200/60">
+              <p class="text-[10px] font-bold text-stone-500">المحدد</p>
+              <p id="food-budget-limit" class="thmanyah-num text-sm font-black text-stone-900 mt-0.5">250 ر.س</p>
+            </div>
+            <div class="bg-[#F6F7F5] rounded-2xl p-2.5 text-center border border-stone-200/60">
+              <p class="text-[10px] font-bold text-stone-500">المصروف</p>
+              <p id="food-budget-spent" class="thmanyah-num text-sm font-black text-amber-700 mt-0.5">0 ر.س</p>
+            </div>
+            <div class="bg-[#E7F3EE]/70 rounded-2xl p-2.5 text-center border border-emerald-200/70">
+              <p class="text-[10px] font-bold text-[#0F6A4F]">المتبقي</p>
+              <p id="food-budget-remaining" class="thmanyah-num text-sm font-black text-[#0A4D39] mt-0.5">250 ر.س</p>
+            </div>
+          </div>
+
+          <!-- شريط نسبة الاستهلاك -->
+          <div class="space-y-1">
+            <div class="flex items-center justify-between text-[10px] font-bold text-stone-500">
+              <span>نسبة استهلاك ميزانية الأسبوع</span>
+              <span id="food-budget-pct" class="thmanyah-num font-extrabold text-stone-800">0%</span>
+            </div>
+            <div class="w-full h-2 bg-stone-100 rounded-full overflow-hidden">
+              <div id="food-budget-bar" class="h-full bg-[#0F6A4F] rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- مفتاح التبديل الفوري: بطبخ vs بدون طبخ -->
+          <div class="grid grid-cols-2 gap-1.5 bg-[#F6F7F5] p-1.5 rounded-2xl border border-stone-200/70">
+            <button type="button" id="food-mode-btn-cook" onclick="setCookingMode('cook')"
+                    class="py-2.5 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 bg-[#0F6A4F] text-white shadow-xs">
+              <span>🍳</span><span>بطبخ</span>
+            </button>
+            <button type="button" id="food-mode-btn-nocook" onclick="setCookingMode('nocook')"
+                    class="py-2.5 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 text-stone-600">
+              <span>🥪</span><span>بدون طبخ</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- بطاقة محرك الاقتراح الذكي للوجبات والمقاضي -->
+        <div class="bg-gradient-to-bl from-[#0F6A4F] to-[#0A4D39] text-white rounded-3xl p-4 shadow-md space-y-3 relative overflow-hidden">
+          <div class="absolute -left-8 -top-8 w-28 h-28 rounded-full bg-amber-400/15 blur-2xl pointer-events-none"></div>
+
+          <div class="relative flex items-center justify-between gap-2">
+            <div>
+              <h3 class="thmanyah-display text-base font-black text-white">المخـطّط الـذكي للأسبـوع</h3>
+              <p id="smart-plan-subtitle" class="text-[11px] text-emerald-100/90 mt-0.5">يولّد 7 أيام وجبات + قائمة مقاضي متطابقة</p>
+            </div>
+            <span id="smart-plan-variant-badge" class="hidden thmanyah-num text-[10px] font-extrabold bg-white/15 px-2.5 py-1 rounded-full border border-white/20 shrink-0">خطة 1</span>
+          </div>
+
+          <!-- تنبيه نصيحة التوفير للميزانيات المنخفضة -->
+          <div id="food-low-budget-tip" class="hidden relative bg-amber-400/20 border border-amber-300/40 rounded-2xl p-3 text-[11px] text-amber-100 leading-relaxed">
+            <strong class="text-amber-300">💡 نصيحة توفير ذكية:</strong>
+            <span id="food-low-budget-tip-text"></span>
+          </div>
+
+          <!-- ملخص مقارنة تكلفة الخطة المقترحة بالميزانية -->
+          <div id="smart-plan-summary" class="hidden relative bg-white/10 border border-white/15 rounded-2xl p-3 space-y-1">
+            <p id="smart-plan-comparison-text" class="thmanyah-num text-xs font-extrabold text-amber-300"></p>
+            <p id="smart-plan-meals-cost-text" class="thmanyah-num text-[11px] text-emerald-100/90"></p>
+          </div>
+
+          <!-- أزرار توليد وتبديل الاقتراح -->
+          <div class="relative flex items-center gap-2">
+            <button type="button" onclick="generateSmartPlan(false)"
+                    class="flex-1 py-3 px-3 rounded-2xl bg-amber-400 hover:bg-amber-300 active:scale-[0.98] text-stone-950 text-xs font-black shadow-sm transition">
+              ✨ اقترح خطة وجبات ومقاضي تناسب ميزانيتي
+            </button>
+            <button type="button" id="btn-swap-plan" onclick="generateSmartPlan(true)"
+                    class="py-3 px-3 rounded-2xl bg-white/15 hover:bg-white/25 active:scale-95 border border-white/20 text-white text-xs font-extrabold transition shrink-0"
+                    title="تبديل الاقتراح بتشكيلة بديلة">
+              🔄 تبديل
+            </button>
+          </div>
+        </div>
+
+        <!-- التبويبات الفرعية: وجبات الأسبوع | مشتريات الأسبوع -->
+        <div class="bg-white rounded-2xl p-1.5 shadow-xs border border-stone-200/80 grid grid-cols-2 gap-1.5">
+          <button type="button" id="food-subtab-meals" onclick="switchFoodSubTab('meals')"
+                  class="py-2.5 rounded-xl text-xs font-extrabold bg-[#E7F3EE] text-[#0F6A4F] transition">
+            وجبات الأسبوع (7 أيام)
+          </button>
+          <button type="button" id="food-subtab-groceries" onclick="switchFoodSubTab('groceries')"
+                  class="py-2.5 rounded-xl text-xs font-bold text-stone-500 hover:bg-stone-50 transition">
+            مشتريات الأسبوع (<span id="groc-count-badge" class="thmanyah-num">0</span>)
+          </button>
+        </div>
+
+        <!-- القسم الفرعي أ: وجبات اليوم (7 أيام) -->
+        <div id="food-panel-meals" class="space-y-4">
+          <!-- شريط اختيار أيام الأسبوع السبعة -->
+          <div id="days-selector" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1"></div>
+
+          <!-- ملخص تكلفة اليوم والأسبوع -->
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-white rounded-2xl p-3.5 border border-stone-200/80 flex items-center justify-between">
+              <span class="text-[11px] font-bold text-stone-500">تكلفة <span id="selected-day-name">اليوم</span></span>
+              <span id="selected-day-total" class="thmanyah-num text-sm font-black text-[#0F6A4F]">0 ر.س</span>
+            </div>
+            <div class="bg-white rounded-2xl p-3.5 border border-stone-200/80 flex items-center justify-between">
+              <span class="text-[11px] font-bold text-stone-500">إجمالي الأسبوع</span>
+              <span id="week-meals-total" class="thmanyah-num text-sm font-black text-amber-700">0 ر.س</span>
+            </div>
+          </div>
+
+          <!-- اقتراحات الإضافة السريعة حسب نظام الطبخ والميزانية -->
+          <div class="bg-white rounded-3xl p-4 border border-stone-200/80 shadow-xs space-y-2.5">
+            <div class="flex items-center justify-between">
+              <p class="text-xs font-extrabold text-stone-800">إضافة سريعة لـ <span id="quick-add-day-label" class="text-[#0F6A4F]">اليوم</span></p>
+              <span id="quick-add-mode-hint" class="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-lg">اقتراحات بطبخ</span>
+            </div>
+            <div id="meal-quick-chips" class="flex flex-wrap gap-2"></div>
+          </div>
+
+          <!-- نموذج إضافة وجبة مخصصة -->
+          <form onsubmit="addCustomMeal(event)" class="bg-white rounded-3xl p-4 border border-stone-200/80 shadow-xs space-y-3">
+            <p class="text-xs font-extrabold text-stone-800">أضف وجبة مخصصة</p>
+            <div class="grid grid-cols-3 gap-2">
+              <select id="meal-type-input" class="rounded-xl bg-[#F6F7F5] border border-stone-200 px-2.5 py-2.5 text-xs font-bold text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]">
+                <option value="breakfast">فطور</option>
+                <option value="lunch" selected>غداء</option>
+                <option value="dinner">عشاء</option>
+                <option value="snack">قهوة وسناك</option>
+              </select>
+              <input id="meal-name-input" type="text" required placeholder="اسم الوجبة"
+                     class="col-span-2 rounded-xl bg-[#F6F7F5] border border-stone-200 px-3 py-2.5 text-xs font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+            </div>
+            <div class="flex gap-2">
+              <input id="meal-cost-input" type="number" required min="0" step="0.5" placeholder="التكلفة (ر.س)"
+                     class="thmanyah-num flex-1 rounded-xl bg-[#F6F7F5] border border-stone-200 px-3 py-2.5 text-xs font-extrabold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+              <button type="submit" class="px-5 py-2.5 rounded-xl bg-[#0F6A4F] hover:bg-[#0A4D39] active:scale-95 text-white text-xs font-extrabold transition">
+                إضافة للجدول
+              </button>
+            </div>
+          </form>
+
+          <!-- قائمة وجبات اليوم المختار -->
+          <div class="bg-white rounded-3xl p-4 border border-stone-200/80 shadow-xs space-y-2.5">
+            <h3 class="thmanyah-display text-base font-black text-stone-900">وجـبات <span id="meals-list-day-title">اليوم</span></h3>
+            <div id="day-meals-list" class="space-y-2.5"></div>
+          </div>
+        </div>
+
+        <!-- القسم الفرعي ب: مشتريات الأسبوع -->
+        <div id="food-panel-groceries" class="hidden space-y-4">
+          <!-- بطاقة ملخص مشتريات الأسبوع والمقارنة المباشرة بالميزانية -->
+          <div class="bg-white rounded-3xl p-4 border border-stone-200/80 shadow-xs space-y-3">
+            <div class="grid grid-cols-2 gap-2.5">
+              <div class="bg-[#F6F7F5] rounded-2xl p-3">
+                <p class="text-[10px] font-bold text-stone-500">إجمالي القائمة</p>
+                <p id="groc-total-all" class="thmanyah-num text-lg font-black text-stone-900 mt-0.5">0 ر.س</p>
+              </div>
+              <div class="bg-[#E7F3EE] rounded-2xl p-3">
+                <p class="text-[10px] font-bold text-[#0F6A4F]">المؤشّر عليه (تم شراؤه)</p>
+                <p id="groc-total-bought" class="thmanyah-num text-lg font-black text-[#0A4D39] mt-0.5">0 ر.س</p>
+              </div>
+            </div>
+
+            <!-- شريط مقارنة إجمالي المقاضي بالميزانية الأسبوعية -->
+            <div id="groc-budget-diff-banner" class="rounded-2xl px-3.5 py-2.5 text-xs font-extrabold bg-[#E7F3EE] text-[#0A4D39] border border-emerald-200">
+              إجمالي المقاضي 0 ر.س
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" onclick="generateSmartPlan(false)"
+                      class="py-2.5 px-3 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 text-[11px] font-extrabold active:scale-95 transition">
+                ✨ تحديث حسب ميزانيتي
+              </button>
+              <button type="button" onclick="deductBoughtGroceries()"
+                      class="py-2.5 px-3 rounded-xl bg-[#0F6A4F] hover:bg-[#0A4D39] text-white text-[11px] font-extrabold active:scale-95 transition">
+                خصم المشتريات المؤشرة
+              </button>
+            </div>
+          </div>
+
+          <!-- نموذج إضافة صنف جديد لقائمة المشتريات -->
+          <form onsubmit="addGroceryItem(event)" class="bg-white rounded-3xl p-4 border border-stone-200/80 shadow-xs space-y-2.5">
+            <p class="text-xs font-extrabold text-stone-800">إضافة صنف لقائمة الأسبوع</p>
+            <div class="grid grid-cols-12 gap-2">
+              <input id="groc-name-input" type="text" required placeholder="الصنف (مثلاً: أرز، جبن)"
+                     class="col-span-6 rounded-xl bg-[#F6F7F5] border border-stone-200 px-3 py-2.5 text-xs font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+              <input id="groc-qty-input" type="text" placeholder="الكمية"
+                     class="col-span-3 rounded-xl bg-[#F6F7F5] border border-stone-200 px-2.5 py-2.5 text-xs font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+              <input id="groc-price-input" type="number" required min="0" step="0.5" placeholder="ر.س"
+                     class="thmanyah-num col-span-3 rounded-xl bg-[#F6F7F5] border border-stone-200 px-2.5 py-2.5 text-xs font-extrabold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+            </div>
+            <button type="submit" class="w-full py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-extrabold active:scale-[0.99] transition">
+              + إضافة للقائمة
+            </button>
+          </form>
+
+          <!-- قائمة أصناف الأسبوع (مع إمكانية تعديل السعر مباشرة) -->
+          <div class="bg-white rounded-3xl p-4 border border-stone-200/80 shadow-xs space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="thmanyah-display text-base font-black text-stone-900">قائـمة الأسـبوع</h3>
+                <p class="text-[10px] text-stone-400">يمكنك التأشير على الصنف أو تعديل سعره مباشرة</p>
+              </div>
+              <button type="button" onclick="clearBoughtGroceries()" class="text-[11px] font-bold text-stone-400 hover:text-rose-600 transition">مسح المكتمل</button>
+            </div>
+            <div id="groceries-list" class="space-y-2"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           التبويب 3: التحويل للبلاد (Remittance)
+           ==================================================================== -->
+      <section id="tab-remittance" class="hidden space-y-4 animate-fade">
+        <div class="bg-white rounded-3xl p-5 shadow-xs border border-stone-200/80 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="thmanyah-display text-lg font-black text-stone-900">التحـويل للـبلاد</h2>
+              <p class="thmanyah-serif-text text-xs text-stone-500">حاسبة فورية من الريال السعودي لعملة بلدك</p>
+            </div>
+            <div class="w-10 h-10 rounded-2xl bg-[#E7F3EE] text-[#0F6A4F] flex items-center justify-center">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16V4m0 0L3 8m4-4 4 4m6 0v12m0 0 4-4m-4 4-4-4"/></svg>
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold text-stone-600">عملة البلد الأم</label>
+            <select id="remit-currency-select" onchange="handleRemitCurrencyChange()"
+                    class="w-full rounded-2xl bg-[#F6F7F5] border border-stone-200 px-3.5 py-3 text-sm font-bold text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]">
+              <option value="YER">الريال اليمني (YER)</option>
+              <option value="EGP">الجنيه المصري (EGP)</option>
+              <option value="SDG">الجنيه السوداني (SDG)</option>
+              <option value="JOD">الدينار الأردني (JOD)</option>
+              <option value="SYP">الليرة السورية (SYP)</option>
+              <option value="INR">الروبية الهندية (INR)</option>
+              <option value="PKR">الروبية الباكستانية (PKR)</option>
+              <option value="CUSTOM">عملة مخصصة</option>
+            </select>
+          </div>
+
+          <div id="remit-custom-code-wrap" class="hidden space-y-1.5">
+            <label class="text-xs font-bold text-stone-600">رمز العملة المخصصة</label>
+            <input id="remit-custom-code-input" type="text" oninput="handleCustomCurrencyCodeChange()" placeholder="مثلاً: MAD"
+                   class="w-full rounded-2xl bg-[#F6F7F5] border border-stone-200 px-3.5 py-2.5 text-sm font-bold text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div class="space-y-1.5">
+              <label class="text-xs font-bold text-stone-600">المبلغ بالريال (SAR)</label>
+              <input id="remit-amount-input" type="number" min="0" step="50" oninput="handleRemitAmountChange()"
+                     class="thmanyah-num w-full rounded-2xl bg-[#F6F7F5] border border-stone-200 px-3.5 py-3 text-base font-extrabold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-xs font-bold text-stone-600">سعر الصرف (يدوي)</label>
+              <input id="remit-rate-input" type="number" min="0" step="0.01" oninput="handleRemitRateChange()"
+                     class="thmanyah-num w-full rounded-2xl bg-[#F6F7F5] border border-stone-200 px-3.5 py-3 text-base font-extrabold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+            </div>
+          </div>
+
+          <!-- نتيجة التحويل -->
+          <div class="bg-[#0F6A4F] text-white rounded-2xl p-4 flex items-center justify-between">
+            <div>
+              <p class="text-[11px] text-emerald-100">المبلغ الصافي الواصل للبلاد</p>
+              <div class="flex items-baseline gap-1.5 mt-1">
+                <span id="remit-result-val" class="thmanyah-display thmanyah-num text-2xl font-black text-amber-300">0</span>
+                <span id="remit-result-code" class="text-xs font-bold text-emerald-100">YER</span>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold bg-white/15 px-2.5 py-1 rounded-xl border border-white/15">
+              1 ر.س = <span id="remit-rate-badge" class="thmanyah-num">0</span>
+            </span>
+          </div>
+
+          <button onclick="confirmRemittanceNow()"
+                  class="w-full py-3.5 rounded-2xl bg-[#D97706] hover:bg-amber-700 active:scale-[0.99] transition text-white font-extrabold text-sm shadow-md flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7Z"/></svg>
+            <span>تأكيد تحويل الآن (خصم من الراتب)</span>
+          </button>
+        </div>
+
+        <!-- توزيع الحوالة -->
+        <div class="bg-white rounded-3xl p-5 shadow-xs border border-stone-200/80 space-y-3.5">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="thmanyah-display text-base font-black text-stone-900">توزيـع الحـوالة</h3>
+              <p class="thmanyah-serif-text text-[11px] text-stone-500">أين يذهب كل ريال تحوله للبلاد؟</p>
+            </div>
+            <span id="remit-dist-total" class="thmanyah-num text-xs font-extrabold text-[#0F6A4F] bg-[#E7F3EE] px-2.5 py-1 rounded-xl">0 ر.س</span>
+          </div>
+
+          <div id="remit-distribution-list" class="space-y-2"></div>
+
+          <form onsubmit="addDistributionItem(event)" class="pt-2 border-t border-stone-100 flex gap-2">
+            <input id="dist-label-input" type="text" required placeholder="بند جديد (مثلاً: مصروف الأهل)"
+                   class="flex-1 rounded-xl bg-[#F6F7F5] border border-stone-200 px-3 py-2.5 text-xs font-bold text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+            <input id="dist-amount-input" type="number" required min="1" placeholder="ر.س"
+                   class="thmanyah-num w-20 rounded-xl bg-[#F6F7F5] border border-stone-200 px-2.5 py-2.5 text-xs font-extrabold text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+            <button type="submit" class="px-3.5 py-2.5 rounded-xl bg-[#0F6A4F] text-white text-xs font-bold active:scale-95 transition">
+              إضافة
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           التبويب 4: المهمة (رادار الالتزامات والمواعيد)
+           ==================================================================== -->
+      <section id="tab-important" class="hidden space-y-4 animate-fade">
+        <div class="bg-white rounded-3xl p-5 shadow-xs border border-stone-200/80">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="thmanyah-display text-lg font-black text-stone-900">رادار المهـمّات</h2>
+              <p class="thmanyah-serif-text text-xs text-stone-500">التزاماتك ومواعيدك الأساسية بعداد تنازلي</p>
+            </div>
+            <button onclick="openObligationModal()"
+                    class="px-3 py-2 rounded-xl bg-[#0F6A4F] hover:bg-[#0A4D39] active:scale-95 transition text-white text-xs font-bold flex items-center gap-1">
+              <span>+</span><span>التزام جديد</span>
+            </button>
+          </div>
+          <div id="obligations-list" class="space-y-3"></div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ======================================================================
+         4. الزر العائم (+) لإضافة مصروف سريع في 3 ثوانٍ
+         ====================================================================== -->
+    <button onclick="openExpenseModal()"
+            class="fixed sm:absolute bottom-20 left-4 z-30 w-14 h-14 rounded-2xl bg-[#D97706] hover:bg-amber-700 active:scale-95 transition text-white shadow-xl shadow-amber-900/25 flex items-center justify-center border-2 border-amber-300/40"
+            title="إضافة مصروف سريع">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/></svg>
+    </button>
+
+    <!-- ======================================================================
+         5. شريط التنقل السفلي الثابت (4 تبويبات)
+         ====================================================================== -->
+    <nav class="bg-white/95 backdrop-blur-md border-t border-stone-200/90 px-2 pt-2 safe-bottom grid grid-cols-4 gap-1 shrink-0 z-20">
+      <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center gap-1 py-1.5 rounded-2xl text-[#0F6A4F] bg-[#E7F3EE] font-extrabold transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span class="text-[10px]">الرئيسية</span>
+      </button>
+      <button onclick="switchTab('food')" id="nav-food" class="flex flex-col items-center gap-1 py-1.5 rounded-2xl text-stone-400 font-bold transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+        <span class="text-[10px]">الأكل</span>
+      </button>
+      <button onclick="switchTab('remittance')" id="nav-remittance" class="flex flex-col items-center gap-1 py-1.5 rounded-2xl text-stone-400 font-bold transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7Z"/></svg>
+        <span class="text-[10px]">التحويل</span>
+      </button>
+      <button onclick="switchTab('important')" id="nav-important" class="flex flex-col items-center gap-1 py-1.5 rounded-2xl text-stone-400 font-bold transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+        <span class="text-[10px]">المهمة</span>
+      </button>
+    </nav>
+
+    <!-- إشعار Toast عائم -->
+    <div id="toast-box" class="hidden fixed sm:absolute top-20 left-1/2 -translate-x-1/2 z-[60] bg-stone-900 text-white px-4 py-2.5 rounded-2xl text-xs font-bold shadow-xl flex items-center gap-2 whitespace-nowrap animate-fade">
+      <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+      <span id="toast-msg">تم الحفظ</span>
+    </div>
+
+    <!-- ======================================================================
+         النافذة 1: إضافة مصروف سريع (+)
+         ====================================================================== -->
+    <div id="modal-expense" class="hidden fixed inset-0 z-50 bg-stone-950/60 backdrop-blur-xs flex items-end justify-center">
+      <form onsubmit="submitExpense(event)" class="bg-[#F6F7F5] w-full max-w-[460px] rounded-t-[30px] p-5 pb-7 shadow-2xl border-t border-stone-200 animate-sheet space-y-4">
+        <div class="w-10 h-1.5 bg-stone-300 rounded-full mx-auto"></div>
+        <div class="flex items-center justify-between">
+          <h3 class="thmanyah-display text-lg font-black text-stone-900">إضافة مصروف سريع</h3>
+          <button type="button" onclick="closeModal('modal-expense')" class="p-2 rounded-xl bg-stone-200/70 text-stone-600">✕</button>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2" id="expense-category-grid">
+          <button type="button" onclick="selectExpenseCategory('food')" data-cat="food" class="cat-chip p-2.5 rounded-2xl border text-center transition bg-[#0F6A4F] text-white border-[#0F6A4F]">
+            <div class="text-lg">🍽️</div><div class="text-[10px] font-bold mt-0.5">أكل ومقاضي</div>
+          </button>
+          <button type="button" onclick="selectExpenseCategory('coffee')" data-cat="coffee" class="cat-chip p-2.5 rounded-2xl border text-center transition bg-white text-stone-700 border-stone-200">
+            <div class="text-lg">☕</div><div class="text-[10px] font-bold mt-0.5">قهوة وسناك</div>
+          </button>
+          <button type="button" onclick="selectExpenseCategory('transport')" data-cat="transport" class="cat-chip p-2.5 rounded-2xl border text-center transition bg-white text-stone-700 border-stone-200">
+            <div class="text-lg">🚗</div><div class="text-[10px] font-bold mt-0.5">مواصلات</div>
+          </button>
+          <button type="button" onclick="selectExpenseCategory('housing')" data-cat="housing" class="cat-chip p-2.5 rounded-2xl border text-center transition bg-white text-stone-700 border-stone-200">
+            <div class="text-lg">🏠</div><div class="text-[10px] font-bold mt-0.5">سكن وفواتير</div>
+          </button>
+          <button type="button" onclick="selectExpenseCategory('remittance')" data-cat="remittance" class="cat-chip p-2.5 rounded-2xl border text-center transition bg-white text-stone-700 border-stone-200">
+            <div class="text-lg">✈️</div><div class="text-[10px] font-bold mt-0.5">تحويل</div>
+          </button>
+          <button type="button" onclick="selectExpenseCategory('other')" data-cat="other" class="cat-chip p-2.5 rounded-2xl border text-center transition bg-white text-stone-700 border-stone-200">
+            <div class="text-lg">🛍️</div><div class="text-[10px] font-bold mt-0.5">أخرى</div>
+          </button>
+        </div>
+
+        <div class="space-y-3">
+          <div>
+            <label class="text-xs font-bold text-stone-600">المبلغ (ر.س)</label>
+            <input id="exp-amount-input" type="number" required min="0.5" step="0.5" placeholder="مثال: 25"
+                   class="thmanyah-num mt-1 w-full rounded-2xl bg-white border border-stone-200 px-4 py-3 text-xl font-black text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+          </div>
+          <div>
+            <label class="text-xs font-bold text-stone-600">ملاحظة (اختياري)</label>
+            <input id="exp-note-input" type="text" placeholder="مثلاً: غداء، بنزين، فاتورة نت..."
+                   class="mt-1 w-full rounded-2xl bg-white border border-stone-200 px-4 py-3 text-sm font-bold text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 rounded-2xl bg-[#0F6A4F] hover:bg-[#0A4D39] active:scale-[0.99] transition text-white font-extrabold text-sm shadow-md">
+          حفظ المصروف الآن
+        </button>
+      </form>
+    </div>
+
+    <!-- ======================================================================
+         النافذة 2: إضافة أو تعديل التزام مهم
+         ====================================================================== -->
+    <div id="modal-obligation" class="hidden fixed inset-0 z-50 bg-stone-950/60 backdrop-blur-xs flex items-end justify-center">
+      <form onsubmit="submitObligation(event)" class="bg-[#F6F7F5] w-full max-w-[460px] rounded-t-[30px] p-5 pb-7 shadow-2xl border-t border-stone-200 animate-sheet space-y-4">
+        <div class="w-10 h-1.5 bg-stone-300 rounded-full mx-auto"></div>
+        <div class="flex items-center justify-between">
+          <h3 id="ob-modal-title" class="thmanyah-display text-lg font-black text-stone-900">إضافة التزام مهم</h3>
+          <button type="button" onclick="closeModal('modal-obligation')" class="p-2 rounded-xl bg-stone-200/70 text-stone-600">✕</button>
+        </div>
+        <input id="ob-edit-id" type="hidden" value="" />
+
+        <div class="space-y-3">
+          <div>
+            <label class="text-xs font-bold text-stone-600">اسم الالتزام أو الموعد</label>
+            <input id="ob-title-input" type="text" required placeholder="مثلاً: تجديد الإقامة، تذكرة السفر"
+                   class="mt-1 w-full rounded-2xl bg-white border border-stone-200 px-4 py-3 text-sm font-bold text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs font-bold text-stone-600">المبلغ المطلوب (ر.س)</label>
+              <input id="ob-amount-input" type="number" required min="0" placeholder="1500"
+                     class="thmanyah-num mt-1 w-full rounded-2xl bg-white border border-stone-200 px-3.5 py-3 text-sm font-extrabold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+            </div>
+            <div>
+              <label class="text-xs font-bold text-stone-600">تاريخ الاستحقاق</label>
+              <input id="ob-date-input" type="date" required
+                     class="thmanyah-num mt-1 w-full rounded-2xl bg-white border border-stone-200 px-3 py-3 text-xs font-bold text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 rounded-2xl bg-[#0F6A4F] hover:bg-[#0A4D39] active:scale-[0.99] transition text-white font-extrabold text-sm shadow-md">
+          حفظ الالتزام
+        </button>
+      </form>
+    </div>
+
+    <!-- ======================================================================
+         النافذة 3: التخصيص الكامل والملف الشخصي (Settings / Customize)
+         ====================================================================== -->
+    <div id="modal-settings" class="hidden fixed inset-0 z-50 bg-stone-950/60 backdrop-blur-xs flex items-end justify-center">
+      <div class="bg-[#F6F7F5] w-full max-w-[460px] max-h-[92vh] rounded-t-[30px] p-5 pb-7 shadow-2xl border-t border-stone-200 overflow-y-auto no-scrollbar animate-sheet space-y-4">
+        <div class="w-10 h-1.5 bg-stone-300 rounded-full mx-auto"></div>
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="thmanyah-display text-lg font-black text-stone-900">تخصيص حسابك وميزانيتك</h3>
+            <p class="text-[11px] text-stone-500">عدّل أي معلومة في أي وقت</p>
+          </div>
+          <button type="button" onclick="closeModal('modal-settings')" class="p-2 rounded-xl bg-stone-200/70 text-stone-600">✕</button>
+        </div>
+
+        <form onsubmit="saveSettingsForm(event)" class="space-y-4">
+          <!-- البيانات الأساسية -->
+          <div class="bg-white rounded-2xl p-4 border border-stone-200/80 space-y-3">
+            <p class="text-xs font-extrabold text-[#0F6A4F]">البيانات الأساسية</p>
+            <div>
+              <label class="text-[11px] font-bold text-stone-600">الاسم</label>
+              <input id="set-name" type="text" required class="mt-1 w-full rounded-xl bg-[#F6F7F5] border border-stone-200 px-3 py-2.5 text-sm font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+            </div>
+            <div class="grid grid-cols-2 gap-2.5">
+              <div>
+                <label class="text-[11px] font-bold text-stone-600">الراتب الشهري (ر.س)</label>
+                <input id="set-salary" type="number" required min="100" class="thmanyah-num mt-1 w-full rounded-xl bg-[#F6F7F5] border border-stone-200 px-3 py-2.5 text-sm font-black text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+              </div>
+              <div>
+                <label class="text-[11px] font-bold text-stone-600">يوم نزول الراتب</label>
+                <input id="set-payday" type="number" required min="1" max="31" class="thmanyah-num mt-1 w-full rounded-xl bg-[#F6F7F5] border border-stone-200 px-3 py-2.5 text-sm font-black text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+              </div>
+            </div>
+          </div>
+
+          <!-- التحويل ونظام الأكل -->
+          <div class="bg-white rounded-2xl p-4 border border-stone-200/80 space-y-3">
+            <p class="text-xs font-extrabold text-[#0F6A4F]">التحويل والأكل</p>
+            <div class="grid grid-cols-2 gap-2.5">
+              <div>
+                <label class="text-[11px] font-bold text-stone-600">هدف التحويل (ر.س)</label>
+                <input id="set-remit-target" type="number" required min="0" class="thmanyah-num mt-1 w-full rounded-xl bg-[#F6F7F5] border border-stone-200 px-3 py-2.5 text-sm font-black text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+              </div>
+              <div>
+                <label class="text-[11px] font-bold text-stone-600">ميزانية الأكل الأسبوعية</label>
+                <input id="set-food-budget" type="number" required min="0" class="thmanyah-num mt-1 w-full rounded-xl bg-[#F6F7F5] border border-stone-200 px-3 py-2.5 text-sm font-black text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+              </div>
+            </div>
+            <div>
+              <label class="text-[11px] font-bold text-stone-600">نظام الأكل المفضل</label>
+              <select id="set-cooking-mode" class="mt-1 w-full rounded-xl bg-[#F6F7F5] border border-stone-200 px-3 py-2.5 text-xs font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]">
+                <option value="cook">🍳 بطبخ (مقاضي وطبخ منزلي)</option>
+                <option value="nocook">🥪 بدون طبخ (وجبات جاهزة ونواشف)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- الالتزامات الثابتة -->
+          <div class="bg-white rounded-2xl p-4 border border-stone-200/80 space-y-2.5">
+            <p class="text-xs font-extrabold text-[#0F6A4F]">الالتزامات الشهرية الثابتة</p>
+            <div id="set-fixed-list" class="space-y-2"></div>
+            <div class="pt-2 border-t border-stone-100 flex gap-2">
+              <input id="set-new-fixed-name" type="text" placeholder="التزام ثابت جديد"
+                     class="flex-1 rounded-xl bg-[#F6F7F5] border border-stone-200 px-3 py-2 text-xs font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+              <input id="set-new-fixed-amount" type="number" min="0" placeholder="ر.س"
+                     class="thmanyah-num w-20 rounded-xl bg-[#F6F7F5] border border-stone-200 px-2.5 py-2 text-xs font-extrabold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F6A4F]" />
+              <button type="button" onclick="addSettingsFixedItem()" class="px-3 py-2 rounded-xl bg-stone-900 text-white text-xs font-bold">إضافة</button>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-3.5 rounded-2xl bg-[#0F6A4F] hover:bg-[#0A4D39] text-white font-extrabold text-sm shadow-md transition">
+            حفظ جميع التعديلات
+          </button>
+        </form>
+
+        <!-- قسم الخصوصية والنسخ الاحتياطي المحلي على جهاز المستخدم -->
+        <div class="bg-[#E7F3EE]/80 rounded-2xl p-4 border border-emerald-200/80 space-y-3">
+          <div class="flex items-start gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-[#0F6A4F] text-amber-300 flex items-center justify-center shrink-0 text-sm">🔒</div>
+            <div class="min-w-0">
+              <p class="text-xs font-black text-[#0A4D39]">بياناتك على جهازك فقط (بدون سيرفر)</p>
+              <p class="text-[11px] text-stone-600 leading-relaxed mt-0.5">
+                كل مصاريفك، وجباتك، وتحويلاتك مخزّنة محلياً داخل جهازك ولا تغادره أبداً.
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-white/80 rounded-xl px-3 py-2 flex items-center justify-between text-[11px] border border-emerald-200/60">
+            <span class="font-bold text-stone-600">حجم بياناتك على الجهاز</span>
+            <span id="local-storage-size" class="thmanyah-num font-black text-[#0F6A4F]">0 KB</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="exportLocalBackup()"
+                    class="py-2.5 px-3 rounded-xl bg-white hover:bg-stone-50 border border-emerald-300 text-[#0A4D39] text-[11px] font-extrabold active:scale-95 transition">
+              ⬇️ حفظ نسخة على جهازك
+            </button>
+            <button type="button" onclick="document.getElementById('import-backup-file').click()"
+                    class="py-2.5 px-3 rounded-xl bg-[#0F6A4F] hover:bg-[#0A4D39] text-white text-[11px] font-extrabold active:scale-95 transition">
+              ⬆️ استعادة نسخة
+            </button>
+            <input id="import-backup-file" type="file" accept="application/json,.json" class="hidden" onchange="importLocalBackup(event)" />
+          </div>
+        </div>
+
+        <!-- إعادة ضبط البيانات بتأكيد مزدوج داخل الواجهة -->
+        <div class="pt-2 border-t border-stone-200">
+          <div id="reset-trigger-wrap">
+            <button type="button" onclick="showResetConfirm(true)" class="w-full py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-extrabold transition">
+              إعادة ضبط التطبيق والبدء من جديد
+            </button>
+          </div>
+          <div id="reset-confirm-wrap" class="hidden bg-rose-50 border border-rose-200 rounded-2xl p-3 space-y-2.5">
+            <p class="text-xs font-bold text-rose-900 text-center">هل أنت متأكد؟ سيتم مسح جميع بياناتك والعودة لشاشة التسجيل.</p>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" onclick="showResetConfirm(false)" class="py-2 rounded-xl bg-white border border-stone-200 text-stone-700 text-xs font-bold">إلغاء</button>
+              <button type="button" onclick="confirmResetApp()" class="py-2 rounded-xl bg-rose-600 text-white text-xs font-extrabold">نعم، امسح الكل</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========================================================================
+       المنطق البرمجي الكامل للتطبيق (Vanilla JS + LocalStorage Offline-First)
+       ======================================================================== -->
+  <script>
+    const STORAGE_KEY = 'hisbat_mughtarib_app_v3';
+
+    const DEFAULT_CURRENCIES = {
+      YER: { name: 'ريال يمني', rate: 530 },
+      EGP: { name: 'جنيه مصري', rate: 13.10 },
+      SDG: { name: 'جنيه سوداني', rate: 160 },
+      JOD: { name: 'دينار أردني', rate: 0.189 },
+      SYP: { name: 'ليرة سورية', rate: 3900 },
+      INR: { name: 'روبية هندية', rate: 22.40 },
+      PKR: { name: 'روبية باكستانية', rate: 74.20 },
+      CUSTOM: { name: 'عملة مخصصة', rate: 1 }
+    };
+
+    const WEEK_DAYS = [
+      { key: 'sat', label: 'السبت', jsDay: 6 },
+      { key: 'sun', label: 'الأحد', jsDay: 0 },
+      { key: 'mon', label: 'الاثنين', jsDay: 1 },
+      { key: 'tue', label: 'الثلاثاء', jsDay: 2 },
+      { key: 'wed', label: 'الأربعاء', jsDay: 3 },
+      { key: 'thu', label: 'الخميس', jsDay: 4 },
+      { key: 'fri', label: 'الجمعة', jsDay: 5 }
+    ];
+
+    const MEAL_TYPE_META = {
+      breakfast: { label: 'فطور', icon: '🌅' },
+      lunch: { label: 'غداء', icon: '🍲' },
+      dinner: { label: 'عشاء', icon: '🌙' },
+      snack: { label: 'قهوة وسناك', icon: '☕' }
+    };
+
+    const CATEGORY_META = {
+      food: { label: 'أكل ومقاضي', icon: '🍽️', bg: 'bg-amber-50' },
+      coffee: { label: 'قهوة وسناك', icon: '☕', bg: 'bg-orange-50' },
+      transport: { label: 'مواصلات', icon: '🚗', bg: 'bg-sky-50' },
+      housing: { label: 'سكن وفواتير', icon: '🏠', bg: 'bg-indigo-50' },
+      remittance: { label: 'تحويل للبلاد', icon: '✈️', bg: 'bg-emerald-50' },
+      other: { label: 'أخرى', icon: '🛍️', bg: 'bg-stone-100' }
+    };
+
+    // اقتراحات الوجبات السريعة حسب النظام (بطبخ vs بدون طبخ)
+    const QUICK_MEALS_BY_MODE = {
+      cook: [
+        { type: 'lunch', name: 'كبسة دجاج منزلية', cost: 18 },
+        { type: 'breakfast', name: 'بيض شكشوكة وخبز', cost: 8 },
+        { type: 'lunch', name: 'مكرونة بالصلصة', cost: 14 },
+        { type: 'dinner', name: 'شوربة عدس وسلطة', cost: 10 },
+        { type: 'dinner', name: 'إيدام خضار وأرز', cost: 13 }
+      ],
+      nocook: [
+        { type: 'breakfast', name: 'ساندوتش جبن وخبز + عصير', cost: 9 },
+        { type: 'lunch', name: 'وجبة شاورما / بروستد', cost: 22 },
+        { type: 'dinner', name: 'تونة جاهزة وخبز', cost: 11 },
+        { type: 'dinner', name: 'زبادي وتمر ومكسرات', cost: 10 },
+        { type: 'snack', name: 'قهوة ومخبوزات', cost: 14 }
+      ]
+    };
+
+    // قوائم مشتريات الأسبوع المقترحة حسب النظام
+    const SUGGESTED_GROCERIES_BY_MODE = {
+      cook: [
+        { name: 'أرز بسمتي', qty: '5 كيلو', price: 42 },
+        { name: 'دجاج طازج / مبرد', qty: '3 حبات', price: 54 },
+        { name: 'خضار مشكلة (طماطم، بصل، بطاطس)', qty: 'كيس مشكل', price: 28 },
+        { name: 'زيت طبخ وبهارات', qty: 'عبوة', price: 24 },
+        { name: 'بيض طازج', qty: 'طبق 30', price: 18 },
+        { name: 'خبز عربي وتوست', qty: '4 ربطات', price: 12 },
+        { name: 'مكرونة ومعجون طماطم', qty: '3 حبات', price: 15 },
+        { name: 'شاي وحليب وسكر', qty: 'أسبوعي', price: 22 }
+      ],
+      nocook: [
+        { name: 'خبز توست وصامولي', qty: '4 أكياس', price: 16 },
+        { name: 'أجبان ونواشف (جبن سائل، لبنة، حلاوة)', qty: 'تشكيلة', price: 38 },
+        { name: 'علب تونة وفول جاهز', qty: '6 علب', price: 32 },
+        { name: 'زبادي وحليب طويل الأجل', qty: 'عبوة أسبوعية', price: 24 },
+        { name: 'فواكه جاهزة (موز، تفاح)', qty: '2 كيلو', price: 22 },
+        { name: 'تمر ومكسرات صحية', qty: 'عبوة', price: 25 },
+        { name: 'مياه وعصائر طازجة', qty: 'كرتون + عصائر', price: 26 },
+        { name: 'قهوة سريعة وسناكات', qty: 'أسبوعي', price: 28 }
+      ]
+    };
+
+    // =========================================================================
+    // محرك الخطط الذكية للوجبات والمقاضي (حسب الميزانية الأسبوعية ونظام الطبخ)
+    // 3 فئات ميزانية × نظامين (بطبخ / بدون طبخ) × نسختين متجددتين للتبديل
+    // =========================================================================
+    const SMART_PLANS_DB = {
+      cook: {
+        economy: [
+          {
+            title: 'خطة الطبخ الاقتصادية (أرز، دجاج، عدس وبيض)',
+            groceries: [
+              { name: 'أرز بسمتي (حصة أسبوعية)', qty: '2 كيلو', price: 20 },
+              { name: 'دجاج مبرد/مجمد', qty: '2 حبة', price: 32 },
+              { name: 'طبق بيض طازج', qty: '30 حبة', price: 18 },
+              { name: 'عدس أصفر وشوفان', qty: 'كيلو مشكل', price: 14 },
+              { name: 'خضار أساسية (بصل، طماطم، بطاطس)', qty: 'تشكيلة', price: 18 },
+              { name: 'مكرونة ومعجون طماطم', qty: '3 حبات', price: 12 },
+              { name: 'خبز عربي وتوست', qty: '3 ربطات', price: 9 },
+              { name: 'جبن ولبنة وشاي وحليب', qty: 'أسبوعي', price: 19 }
+            ],
+            mealsByDay: [
+              [{ type: 'breakfast', name: 'بيض مسلوق وخبز وشاي', cost: 4 }, { type: 'lunch', name: 'كبسة دجاج منزلية', cost: 11 }, { type: 'dinner', name: 'شوربة عدس وخبز محمص', cost: 5 }],
+              [{ type: 'breakfast', name: 'شوفان بالحليب', cost: 4 }, { type: 'lunch', name: 'مكرونة بالصلصة الحمراء', cost: 9 }, { type: 'dinner', name: 'شكشوكة وخبز عربي', cost: 6 }],
+              [{ type: 'breakfast', name: 'ساندوتش جبن ولبنة', cost: 5 }, { type: 'lunch', name: 'إيدام بطاطس ودجاج مع أرز', cost: 11 }, { type: 'dinner', name: 'بيض مقلي وسلطة خفيفة', cost: 5 }],
+              [{ type: 'breakfast', name: 'شوفان بالتمر والحليب', cost: 4 }, { type: 'lunch', name: 'مقلوبة خضار وأرز', cost: 10 }, { type: 'dinner', name: 'شوربة عدس بالليمون', cost: 5 }],
+              [{ type: 'breakfast', name: 'شكشوكة خفيفة وشاي', cost: 5 }, { type: 'lunch', name: 'دجاج بالفرن مع بطاطس', cost: 11 }, { type: 'dinner', name: 'توست بالجبن وطماطم', cost: 5 }],
+              [{ type: 'breakfast', name: 'بيض مسلوق ولبنة', cost: 5 }, { type: 'lunch', name: 'مكرونة بالدجاج والخضار', cost: 10 }, { type: 'dinner', name: 'عدس مطبوخ وخبز', cost: 5 }],
+              [{ type: 'breakfast', name: 'فطور بيتي متكامل (بيض وجبن)', cost: 6 }, { type: 'lunch', name: 'كبسة دجاج الجمعة', cost: 12 }, { type: 'dinner', name: 'خضار سوتيه وخبز', cost: 5 }]
+            ]
+          },
+          {
+            title: 'خطة الطبخ الاقتصادية البديلة (بقوليات، شوفان وإيدامات)',
+            groceries: [
+              { name: 'صدور دجاج اقتصادية', qty: '1.5 كيلو', price: 34 },
+              { name: 'أرز مصري وبسمتي', qty: '2 كيلو', price: 18 },
+              { name: 'فول معلب وعدس وحمص', qty: '5 علب/كيس', price: 18 },
+              { name: 'طبق بيض طازج', qty: '30 حبة', price: 18 },
+              { name: 'خضار إيدام (كوسة، جزر، طماطم، بصل)', qty: 'تشكيلة', price: 20 },
+              { name: 'مكرونة وشعيرية', qty: '3 أكياس', price: 10 },
+              { name: 'خبز عربي وزبادي', qty: 'أسبوعي', price: 14 },
+              { name: 'شوفان وحليب مجفف', qty: 'عبوة', price: 15 }
+            ],
+            mealsByDay: [
+              [{ type: 'breakfast', name: 'فول بالزيت والكمون وخبز', cost: 5 }, { type: 'lunch', name: 'صدور دجاج مشوية وأرز بالشعيرية', cost: 11 }, { type: 'dinner', name: 'زبادي وخبز محمص', cost: 4 }],
+              [{ type: 'breakfast', name: 'بيض أومليت بالخضار', cost: 5 }, { type: 'lunch', name: 'إيدام خضار مشكل وأرز', cost: 9 }, { type: 'dinner', name: 'شوفان بالحليب', cost: 4 }],
+              [{ type: 'breakfast', name: 'فول وبيض مسلوق', cost: 5 }, { type: 'lunch', name: 'مكرونة بالصلصة وصدور دجاج', cost: 11 }, { type: 'dinner', name: 'شوربة خضار خفيفة', cost: 5 }],
+              [{ type: 'breakfast', name: 'شوفان دافئ وشاي', cost: 4 }, { type: 'lunch', name: 'كشري بيتي اقتصادي', cost: 9 }, { type: 'dinner', name: 'بيض مسلوق وزبادي', cost: 5 }],
+              [{ type: 'breakfast', name: 'شكشوكة طماطم وبصل', cost: 5 }, { type: 'lunch', name: 'صينية خضار بصدور الدجاج', cost: 11 }, { type: 'dinner', name: 'فول بالطحينة وخبز', cost: 5 }],
+              [{ type: 'breakfast', name: 'بيض مقلي وخبز عربي', cost: 5 }, { type: 'lunch', name: 'أرز بالعدس (مجدّرة) وزبادي', cost: 8 }, { type: 'dinner', name: 'ساندوتش حمص وخيار', cost: 5 }],
+              [{ type: 'breakfast', name: 'فول وشكشوكة وخبز', cost: 6 }, { type: 'lunch', name: 'كبسة صدور دجاج وسلطة', cost: 12 }, { type: 'dinner', name: 'شوفان أو زبادي خفيف', cost: 4 }]
+            ]
+          }
+        ],
+        balanced: [
+          {
+            title: 'خطة الطبخ المتوازنة (تنوع دجاج، لحم مفروم وتونة)',
+            groceries: [
+              { name: 'دجاج مبرد كامل + صدور', qty: '3 حبات', price: 54 },
+              { name: 'لحم مفروم طازج', qty: 'نصف كيلو', price: 24 },
+              { name: 'أرز بسمتي فاخر', qty: '3 كيلو', price: 32 },
+              { name: 'خضار وسلطة وفواكه أسبوعية', qty: 'تشكيلة كاملة', price: 38 },
+              { name: 'بيض + أجبان + لبنة وزبادي', qty: 'أسبوعي', price: 36 },
+              { name: 'مكرونة، عدس وشوفان', qty: 'تشكيلة', price: 20 },
+              { name: 'خبز عربي وتوست وبهارات', qty: 'أسبوعي', price: 18 },
+              { name: 'شاي، قهوة، حليب وعصير', qty: 'أسبوعي', price: 22 }
+            ],
+            mealsByDay: [
+              [{ type: 'breakfast', name: 'شكشوكة بالجبن وخبز وشاي', cost: 7 }, { type: 'lunch', name: 'كبسة دجاج بالخضار وسلطة', cost: 16 }, { type: 'dinner', name: 'شوربة عدس وتوست محمص', cost: 7 }],
+              [{ type: 'breakfast', name: 'شوفان بالحليب والموز', cost: 7 }, { type: 'lunch', name: 'مكرونة بولونيز باللحم المفروم', cost: 17 }, { type: 'dinner', name: 'ساندوتش لبنة وزعتر وخضار', cost: 7 }],
+              [{ type: 'breakfast', name: 'بيض أومليت بالجبن والطماطم', cost: 7 }, { type: 'lunch', name: 'إيدام دجاج بالكاري مع أرز', cost: 16 }, { type: 'dinner', name: 'سلطة زبادي وبطاطس مشوية', cost: 7 }],
+              [{ type: 'breakfast', name: 'فول بيتي بالزيت والليمون', cost: 7 }, { type: 'lunch', name: 'صينية بطاطس باللحم المفروم', cost: 17 }, { type: 'dinner', name: 'توست بالجبن وفواكه', cost: 7 }],
+              [{ type: 'breakfast', name: 'شوفان بالحليب والعسل', cost: 7 }, { type: 'lunch', name: 'صدور دجاج مشوية وأرز أبيض', cost: 16 }, { type: 'dinner', name: 'بيض مسلوق وسلطة خضراء', cost: 7 }],
+              [{ type: 'breakfast', name: 'شكشوكة ولبنة وخبز', cost: 7 }, { type: 'lunch', name: 'مقلوبة دجاج وباذنجان', cost: 16 }, { type: 'dinner', name: 'شوربة خضار وخبز', cost: 7 }],
+              [{ type: 'breakfast', name: 'فطور نهاية الأسبوع المنزلي', cost: 9 }, { type: 'lunch', name: 'مندي دجاج بيتي وسلطة دقوس', cost: 18 }, { type: 'dinner', name: 'ساندوتش جبن وزبادي', cost: 7 }]
+            ]
+          },
+          {
+            title: 'خطة الطبخ المتوازنة البديلة (سمك فيليه، فاهيتا وإيدامات)',
+            groceries: [
+              { name: 'صدور دجاج + أفخاذ دجاج', qty: '2.5 كيلو', price: 52 },
+              { name: 'سمك فيليه مجمد', qty: 'كيلو واحد', price: 28 },
+              { name: 'أرز بسمتي ومعكرونة فتوتشيني', qty: 'تشكيلة', price: 32 },
+              { name: 'خضار طازجة (فلفل رومي، بروكلي، سلطة)', qty: 'تشكيلة', price: 36 },
+              { name: 'فواكه (تفاح، موز، برتقال)', qty: '2 كيلو', price: 22 },
+              { name: 'بيض + أجبان + قشطة وعسل', qty: 'أسبوعي', price: 34 },
+              { name: 'خبز تورتيلا وعربي وتوست', qty: 'تشكيلة', price: 18 },
+              { name: 'كريمة طبخ وبهارات ومشروبات', qty: 'أسبوعي', price: 22 }
+            ],
+            mealsByDay: [
+              [{ type: 'breakfast', name: 'أومليت بالفلفل الرومي والجبن', cost: 8 }, { type: 'lunch', name: 'صيادية سمك فيليه وسلطة', cost: 18 }, { type: 'dinner', name: 'ساندوتش تورتيلا جبن وخيار', cost: 7 }],
+              [{ type: 'breakfast', name: 'توست باللبنة والعسل وحليب', cost: 7 }, { type: 'lunch', name: 'فاهيتا دجاج بالتورتيلا', cost: 16 }, { type: 'dinner', name: 'شوربة شوفان وخضار', cost: 7 }],
+              [{ type: 'breakfast', name: 'بيض عيون مع خبز وطماطم', cost: 7 }, { type: 'lunch', name: 'مكرونة بالكريمة وصدور الدجاج', cost: 17 }, { type: 'dinner', name: 'زبادي بالفواكه', cost: 7 }],
+              [{ type: 'breakfast', name: 'شكشوكة وخبز عربي', cost: 7 }, { type: 'lunch', name: 'أفخاذ دجاج مشوية بالخضار وأرز', cost: 16 }, { type: 'dinner', name: 'ساندوتش قشطة وعسل وشاي', cost: 7 }],
+              [{ type: 'breakfast', name: 'شوفان بالحليب والموز', cost: 7 }, { type: 'lunch', name: 'فيليه سمك بالفرن مع بطاطس', cost: 18 }, { type: 'dinner', name: 'سلطة خضراء وبيض مسلوق', cost: 7 }],
+              [{ type: 'breakfast', name: 'بيض بالجبن وتوست', cost: 7 }, { type: 'lunch', name: 'إيدام بامية ودجاج مع أرز', cost: 16 }, { type: 'dinner', name: 'تورتيلا لبنة وزعتر', cost: 7 }],
+              [{ type: 'breakfast', name: 'فطور بيتي مع فواكه وشاي', cost: 9 }, { type: 'lunch', name: 'برياني دجاج منزلي', cost: 18 }, { type: 'dinner', name: 'شوربة خفيفة وتوست', cost: 7 }]
+            ]
+          }
+        ],
+        comfortable: [
+          {
+            title: 'خطة الطبخ المريحة (لحوم طازجة، سلمون/فيليه وفواكه ومكسرات)',
+            groceries: [
+              { name: 'لحم طازج (حاشي/غنم مقطع)', qty: '1.5 كيلو', price: 85 },
+              { name: 'صدور ودجاج مبرد طازج', qty: '2.5 كيلو', price: 58 },
+              { name: 'سمك سلمون / فيليه طازج', qty: 'كيلو', price: 45 },
+              { name: 'أرز بسمتي فاخر ومكرونة إيطالية', qty: 'تشكيلة', price: 36 },
+              { name: 'خضار طازجة وسلطات جاهزة', qty: 'تشكيلة غنية', price: 42 },
+              { name: 'فواكه موسمية وتمر ومكسرات', qty: 'تشكيلة', price: 44 },
+              { name: 'أجبان فاخرة، بيض، عسل، وزبادي يوناني', qty: 'أسبوعي', price: 45 },
+              { name: 'قهوة مختصة، شاي، وحليب وعصائر', qty: 'أسبوعي', price: 35 }
+            ],
+            mealsByDay: [
+              [{ type: 'breakfast', name: 'شكشوكة بالجبن وقهوة مختصة', cost: 12 }, { type: 'lunch', name: 'كبسة لحم طازج وسلطة جرجير', cost: 28 }, { type: 'dinner', name: 'زبادي يوناني بالعسل والمكسرات', cost: 11 }],
+              [{ type: 'breakfast', name: 'أومليت بالخضار وتوست وأفوكادو', cost: 12 }, { type: 'lunch', name: 'فيليه سمك مشوي وأرز بالخضار', cost: 26 }, { type: 'dinner', name: 'ساندوتش دجاج مشوي وسلطة', cost: 12 }],
+              [{ type: 'breakfast', name: 'شوفان بالحليب والفواكه والمكسرات', cost: 11 }, { type: 'lunch', name: 'باستا ألفريدو بصدور الدجاج', cost: 22 }, { type: 'dinner', name: 'أجبان فاخرة وعسل وخبز طازج', cost: 11 }],
+              [{ type: 'breakfast', name: 'بيض مسلوق ولبنة وزيتون وعصير', cost: 11 }, { type: 'lunch', name: 'مقلقل لحم طازج مع خبز وسلطة', cost: 26 }, { type: 'dinner', name: 'شوربة كريمة دجاج وتوست', cost: 11 }],
+              [{ type: 'breakfast', name: 'بان كيك شوفان بالعسل وقهوة', cost: 12 }, { type: 'lunch', name: 'دجاج مشوي بالأعشاب وبطاطس مهروسة', cost: 22 }, { type: 'dinner', name: 'سلطة سيزر منزلية', cost: 12 }],
+              [{ type: 'breakfast', name: 'شكشوكة وفول بيتي وشاي', cost: 11 }, { type: 'lunch', name: 'سمك بالفرن مع أرز صيادية', cost: 26 }, { type: 'dinner', name: 'زبادي يوناني وفواكه وتمر', cost: 11 }],
+              [{ type: 'breakfast', name: 'فطور الجمعة الفاخر والقهوة', cost: 14 }, { type: 'lunch', name: 'مضغوط لحم منزلي وسلطة', cost: 30 }, { type: 'dinner', name: 'ساندوتش تورتيلا دجاج', cost: 12 }]
+            ]
+          },
+          {
+            title: 'خطة الطبخ المريحة البديلة (ستيك، مشويات ووجبات صحية)',
+            groceries: [
+              { name: 'ستيك لحم / لحم مفروم طازج', qty: '1.5 كيلو', price: 82 },
+              { name: 'دجاج طازج وصدور متبلة', qty: '3 كيلو', price: 62 },
+              { name: 'روبيان / فيليه بحري', qty: 'نصف كيلو', price: 42 },
+              { name: 'أرز بسمتي وكينوا ومكرونة', qty: 'تشكيلة', price: 38 },
+              { name: 'خضار طازجة وفواكه مشكلة', qty: 'تشكيلة غنية', price: 52 },
+              { name: 'ألبان، زبادي يوناني، بيض وأجبان', qty: 'أسبوعي', price: 46 },
+              { name: 'مخبوزات طازجة وتورتيلا وتمر', qty: 'أسبوعي', price: 28 },
+              { name: 'قهوة وعصائر طازجة وزيت زيتون', qty: 'أسبوعي', price: 38 }
+            ],
+            mealsByDay: [
+              [{ type: 'breakfast', name: 'توست بالبيض والأجبان وقهوة', cost: 12 }, { type: 'lunch', name: 'ستيك لحم مع خضار سوتيه وأرز', cost: 28 }, { type: 'dinner', name: 'زبادي يوناني وتمر ومكسرات', cost: 11 }],
+              [{ type: 'breakfast', name: 'شوفان بالفواكه وعصير طازج', cost: 11 }, { type: 'lunch', name: 'روبيان بالثوم والأرز الأبيض', cost: 26 }, { type: 'dinner', name: 'تورتيلا جبن وخضار طازجة', cost: 11 }],
+              [{ type: 'breakfast', name: 'فول بالزيت الزيتون وبيض', cost: 11 }, { type: 'lunch', name: 'شيش طاووق منزلي مع بطاطس', cost: 23 }, { type: 'dinner', name: 'سلطة تونة وخضار', cost: 12 }],
+              [{ type: 'breakfast', name: 'أومليت بالجبن والمشروم', cost: 12 }, { type: 'lunch', name: 'برجر لحم بيتي مشوي وسلطة', cost: 25 }, { type: 'dinner', name: 'شوربة عدس وخبز محمص', cost: 10 }],
+              [{ type: 'breakfast', name: 'زبادي يوناني وعسل وفواكه', cost: 11 }, { type: 'lunch', name: 'برياني دجاج بالزعفران', cost: 24 }, { type: 'dinner', name: 'ساندوتش لبنة وزعتر وعصير', cost: 11 }],
+              [{ type: 'breakfast', name: 'بيض مسلوق وأجبان وقهوة', cost: 11 }, { type: 'lunch', name: 'باستا بالروبيان والصلصة', cost: 26 }, { type: 'dinner', name: 'فواكه مشكلة وتمر وحليب', cost: 11 }],
+              [{ type: 'breakfast', name: 'فطور بيتي متكامل ومخبوزات', cost: 14 }, { type: 'lunch', name: 'مشويات دجاج ولحم منزلية', cost: 30 }, { type: 'dinner', name: 'سلطة خضراء وتوست بالجبن', cost: 11 }]
+            ]
+          }
+        ]
+      },
+      nocook: {
+        economy: [
+          {
+            title: 'خطة بدون طبخ اقتصادية (نواشف، تونة، فول وتميس)',
+            groceries: [
+              { name: 'خبز توست وصامولي وتميس', qty: 'أسبوعي', price: 18 },
+              { name: 'علب تونة جاهزة', qty: '5 علب', price: 24 },
+              { name: 'جبن سائل + جبن شرائح + لبنة', qty: '3 عبوات', price: 26 },
+              { name: 'فول جاهز / معلب وحلاوة طحينية', qty: 'تشكيلة', price: 16 },
+              { name: 'زبادي وحليب طويل الأجل', qty: '6 حبات + لترين', price: 20 },
+              { name: 'تمر وموز وخيار وطماطم (بدون طبخ)', qty: 'تشكيلة', price: 18 },
+              { name: 'شاي وقهوة سريعة ومياه', qty: 'أسبوعي', price: 18 }
+            ],
+            mealsByDay: [
+              [{ type: 'breakfast', name: 'ساندوتش جبن وخيار وشاي', cost: 5 }, { type: 'lunch', name: 'فول وتميس من المطعم الشعبي', cost: 9 }, { type: 'dinner', name: 'تونة جاهزة مع خبز وطماطم', cost: 7 }],
+              [{ type: 'breakfast', name: 'لبنة وزعتر مع توست', cost: 5 }, { type: 'lunch', name: 'ساندوتش تونة بالخبز الصامولي', cost: 8 }, { type: 'dinner', name: 'زبادي وتمر وموز', cost: 6 }],
+              [{ type: 'breakfast', name: 'حلاوة طحينية وجبن وحليب', cost: 5 }, { type: 'lunch', name: 'فول معلب جاهز مع خبز', cost: 8 }, { type: 'dinner', name: 'ساندوتش جبن شرائح وخيار', cost: 6 }],
+              [{ type: 'breakfast', name: 'توست بالجبن السائل وشاي', cost: 5 }, { type: 'lunch', name: 'ساندوتش فلافل/شاورما اقتصادي', cost: 10 }, { type: 'dinner', name: 'زبادي وخبز وطماطم', cost: 5 }],
+              [{ type: 'breakfast', name: 'لبنة وحلاوة وتوست', cost: 5 }, { type: 'lunch', name: 'تونة جاهزة مع خيار وخبز', cost: 8 }, { type: 'dinner', name: 'تمر وحليب وموز', cost: 6 }],
+              [{ type: 'breakfast', name: 'فول وتميس صباحي', cost: 7 }, { type: 'lunch', name: 'ساندوتشات أجبان وتونة', cost: 8 }, { type: 'dinner', name: 'زبادي وتمر', cost: 5 }],
+              [{ type: 'breakfast', name: 'توست بالجبن واللبنة وقهوة', cost: 6 }, { type: 'lunch', name: 'وجبة دجاج/شاورما اقتصادية', cost: 12 }, { type: 'dinner', name: 'حليب وتمر وخبز', cost: 5 }]
+            ]
+          },
+          {
+            title: 'خطة بدون طبخ اقتصادية البديلة (ساندوتشات باردة وفول وفلافل)',
+            groceries: [
+              { name: 'خبز صامولي وتورتيلا وتوست', qty: '4 أكياس', price: 16 },
+              { name: 'تونة جاهزة + حمص معلب جاهز', qty: '6 علب', price: 26 },
+              { name: 'أجبان مثلثات وقشطة ومربى', qty: 'تشكيلة', price: 24 },
+              { name: 'شوفان سريع (يُنقع بحليب بارد) وحليب', qty: 'عبوة + لترين', price: 22 },
+              { name: 'زبادي وتمر وتفاح', qty: 'أسبوعي', price: 20 },
+              { name: 'مرتديلا حلال / ديك رومي بارد', qty: 'عبوتين', price: 18 },
+              { name: 'مياه وعصائر صغيرة وشاي', qty: 'أسبوعي', price: 16 }
+            ],
+            mealsByDay: [
+              [{ type: 'breakfast', name: 'شوفان بارد بالحليب والتمر', cost: 5 }, { type: 'lunch', name: 'تورتيلا حمص وتونة باردة', cost: 8 }, { type: 'dinner', name: 'ساندوتش جبن مثلثات وشاي', cost: 5 }],
+              [{ type: 'breakfast', name: 'توست بالقشطة والمربى', cost: 5 }, { type: 'lunch', name: 'ساندوتش مرتديلا وجبن بارد', cost: 8 }, { type: 'dinner', name: 'زبادي وتفاح', cost: 5 }],
+              [{ type: 'breakfast', name: 'ساندوتش حمص جاهز وعصير', cost: 5 }, { type: 'lunch', name: 'فلافل ومشروب من البوفيه', cost: 9 }, { type: 'dinner', name: 'تونة جاهزة مع خبز', cost: 7 }],
+              [{ type: 'breakfast', name: 'شوفان بالحليب البارد', cost: 5 }, { type: 'lunch', name: 'تورتيلا مرتديلا وجبن', cost: 8 }, { type: 'dinner', name: 'زبادي وتمر', cost: 5 }],
+              [{ type: 'breakfast', name: 'جبن مثلثات وتوست وشاي', cost: 5 }, { type: 'lunch', name: 'تونة وحمص وخبز صامولي', cost: 9 }, { type: 'dinner', name: 'قشطة وتمر وحليب', cost: 6 }],
+              [{ type: 'breakfast', name: 'فلافل صباحية وشاي', cost: 7 }, { type: 'lunch', name: 'ساندوتشات نواشف وتونة', cost: 8 }, { type: 'dinner', name: 'زبادي وتفاح', cost: 5 }],
+              [{ type: 'breakfast', name: 'توست بالجبن والمربى وقهوة', cost: 6 }, { type: 'lunch', name: 'وجبة شاورما/فول وتميس', cost: 11 }, { type: 'dinner', name: 'شوفان بارد بالحليب', cost: 5 }]
+            ]
+          }
+        ],
+        balanced: [
+          {
+            title: 'خطة بدون طبخ متوازنة (وجبات جاهزة + نواشف صحية وزبادي يوناني)',
+            groceries: [
+              { name: 'خبز توست بر وتورتيلا وصامولي', qty: 'تشكيلة', price: 20 },
+              { name: 'تونة جاهزة + صدور دجاج جاهزة للتسخين', qty: 'أسبوعي', price: 48 },
+              { name: 'زبادي يوناني + حليب وعصائر', qty: 'أسبوعي', price: 36 },
+              { name: 'أجبان، لبنة، زبدة فول سوداني وعسل', qty: 'تشكيلة', price: 38 },
+              { name: 'فواكه جاهزة وتمر ومكسرات', qty: 'أسبوعي', price: 32 },
+              { name: 'سلطات جاهزة ومقبلات (حمص/متبل)', qty: '4 علب', price: 24 },
+              { name: 'ميزانية مطاعم سريعة (فول/شاورما/بروستد)', qty: '3 وجبات', price: 52 }
+            ],
+            mealsByDay: [
+              [{ type: 'breakfast', name: 'زبادي يوناني بالعسل والتمر', cost: 8 }, { type: 'lunch', name: 'وجبة شاورما عربي/صاروخ', cost: 18 }, { type: 'dinner', name: 'تورتيلا تونة وخس جاهز', cost: 9 }],
+              [{ type: 'breakfast', name: 'توست بزبدة الفول السوداني والموز', cost: 7 }, { type: 'lunch', name: 'صدور دجاج جاهزة مع سلطة وحمص', cost: 16 }, { type: 'dinner', name: 'ساندوتش لبنة وزعتر وعصير', cost: 8 }],
+              [{ type: 'breakfast', name: 'فول وتميس صباحي وشاي', cost: 10 }, { type: 'lunch', name: 'تونة جاهزة مع خبز وسلطة', cost: 12 }, { type: 'dinner', name: 'زبادي يوناني ومكسرات', cost: 9 }],
+              [{ type: 'breakfast', name: 'ساندوتش جبن وخيار وحليب', cost: 7 }, { type: 'lunch', name: 'نصف حبة بروستد/شواية مع أرز', cost: 20 }, { type: 'dinner', name: 'فواكه وتمر وحليب', cost: 8 }],
+              [{ type: 'breakfast', name: 'توست باللبنة والعسل وقهوة', cost: 8 }, { type: 'lunch', name: 'تورتيلا دجاج جاهز وحمص', cost: 15 }, { type: 'dinner', name: 'سلطة تونة باردة', cost: 10 }],
+              [{ type: 'breakfast', name: 'زبادي يوناني وموز ومكسرات', cost: 9 }, { type: 'lunch', name: 'وجبة مشاوي/شاورما اقتصادية', cost: 18 }, { type: 'dinner', name: 'ساندوتش جبن وعصير', cost: 7 }],
+              [{ type: 'breakfast', name: 'فول وتميس ومخبوزات صباحية', cost: 11 }, { type: 'lunch', name: 'وجبة بخاري/شواية من المطعم', cost: 20 }, { type: 'dinner', name: 'زبادي وتمر وتوست', cost: 7 }]
+            ]
+          },
+          {
+            title: 'خطة بدون طبخ متوازنة البديلة (وجبات باردة صحية ومطاعم اقتصادية)',
+            groceries: [
+              { name: 'مخبوزات طازجة وتوست بر وتورتيلا', qty: 'أسبوعي', price: 22 },
+              { name: 'تونة، سلمون معلب، وحمص وفول جاهز', qty: 'تشكيلة', price: 42 },
+              { name: 'شرائح ديك رومي وجبن قريش ولبنة', qty: 'تشكيلة', price: 40 },
+              { name: 'زبادي يوناني وحليب بروتين/عادي', qty: 'أسبوعي', price: 34 },
+              { name: 'خضار جاهزة للأكل وفواكه ومكسرات', qty: 'أسبوعي', price: 34 },
+              { name: 'قهوة سريعة وشاي ومياه', qty: 'أسبوعي', price: 20 },
+              { name: 'ميزانية وجبات خارجية (3 وجبات)', qty: 'مطاعم', price: 54 }
+            ],
+            mealsByDay: [
+              [{ type: 'breakfast', name: 'توست بجبن قريش وطماطم وقهوة', cost: 8 }, { type: 'lunch', name: 'وجبة دجاج شواية وأرز', cost: 19 }, { type: 'dinner', name: 'تورتيلا ديك رومي وخس', cost: 9 }],
+              [{ type: 'breakfast', name: 'زبادي يوناني وتمر ومكسرات', cost: 9 }, { type: 'lunch', name: 'سلطة تونة باردة وخبز بر', cost: 12 }, { type: 'dinner', name: 'حمص جاهز وخبز وخيار', cost: 8 }],
+              [{ type: 'breakfast', name: 'ساندوتش لبنة وحليب', cost: 7 }, { type: 'lunch', name: 'وجبة شاورما أو فطائر طازجة', cost: 17 }, { type: 'dinner', name: 'فواكه وزبادي يوناني', cost: 9 }],
+              [{ type: 'breakfast', name: 'فول جاهز وتوست بر وشاي', cost: 8 }, { type: 'lunch', name: 'تورتيلا ديك رومي وجبن وسلطة', cost: 14 }, { type: 'dinner', name: 'تمر وحليب ومكسرات', cost: 8 }],
+              [{ type: 'breakfast', name: 'توست بالجبن واللبنة وقهوة', cost: 8 }, { type: 'lunch', name: 'ساندوتش تونة وحمص', cost: 12 }, { type: 'dinner', name: 'زبادي يوناني وفواكه', cost: 9 }],
+              [{ type: 'breakfast', name: 'مخبوزات صباحية وحليب', cost: 9 }, { type: 'lunch', name: 'وجبة بروستد/مندي من المطعم', cost: 20 }, { type: 'dinner', name: 'خضار باردة وجبن قريش', cost: 8 }],
+              [{ type: 'breakfast', name: 'فطور نواشف كامل وقهوة', cost: 10 }, { type: 'lunch', name: 'تورتيلا تونة وحمص وسلطة', cost: 14 }, { type: 'dinner', name: 'زبادي وتمر وموز', cost: 8 }]
+            ]
+          }
+        ],
+        comfortable: [
+          {
+            title: 'خطة بدون طبخ مريحة (وجبات صحية جاهزة، مطاعم ومقاهي)',
+            groceries: [
+              { name: 'وجبات صحية جاهزة للتسخين (بروتين + كارب)', qty: '5 وجبات', price: 115 },
+              { name: 'زبادي يوناني، حليب بروتين وعصائر طازجة', qty: 'أسبوعي', price: 48 },
+              { name: 'أجبان فاخرة، ديك رومي مدخن وتونة فاخرة', qty: 'تشكيلة', price: 52 },
+              { name: 'فواكه مقطعة، تمر فاخر ومكسرات', qty: 'أسبوعي', price: 42 },
+              { name: 'مخبوزات طازجة وتوست بر وسلطات جاهزة', qty: 'أسبوعي', price: 36 },
+              { name: 'ميزانية مطاعم ومقاهي أسبوعية', qty: '3 وجبات + قهوة', price: 85 }
+            ],
+            mealsByDay: [
+              [{ type: 'breakfast', name: 'كرواسون جبن وقهوة مختصة', cost: 16 }, { type: 'lunch', name: 'وجبة صحية جاهزة (دجاج وأرز)', cost: 24 }, { type: 'dinner', name: 'زبادي يوناني ومكسرات وتمر', cost: 12 }],
+              [{ type: 'breakfast', name: 'توست بالديك الرومي والجبن وعصير', cost: 13 }, { type: 'lunch', name: 'وجبة مشاوي/شواية من المطعم', cost: 28 }, { type: 'dinner', name: 'سلطة تونة جاهزة وخبز بر', cost: 13 }],
+              [{ type: 'breakfast', name: 'زبادي يوناني بالفواكه وقهوة', cost: 14 }, { type: 'lunch', name: 'وجبة صحية جاهزة (لحم وخضار)', cost: 25 }, { type: 'dinner', name: 'ساندوتش أجبان فاخرة وحليب', cost: 12 }],
+              [{ type: 'breakfast', name: 'فول وتميس ومخبوزات طازجة', cost: 14 }, { type: 'lunch', name: 'وجبة صحية جاهزة (سمك وأرز)', cost: 25 }, { type: 'dinner', name: 'فواكه ومكسرات وحليب بروتين', cost: 13 }],
+              [{ type: 'breakfast', name: 'توست باللبنة والعسل وقهوة', cost: 14 }, { type: 'lunch', name: 'وجبة شاورما/برجر من المطعم', cost: 28 }, { type: 'dinner', name: 'سلطة جاهزة وديك رومي', cost: 13 }],
+              [{ type: 'breakfast', name: 'مخبوزات صباحية وعصير طازج', cost: 14 }, { type: 'lunch', name: 'وجبة صحية جاهزة (دجاج مشوي)', cost: 24 }, { type: 'dinner', name: 'تونة فاخرة وتوست بر', cost: 13 }],
+              [{ type: 'breakfast', name: 'فطور نهاية الأسبوع وقهوة مختصة', cost: 18 }, { type: 'lunch', name: 'وجبة غداء فاخرة من المطعم', cost: 32 }, { type: 'dinner', name: 'زبادي يوناني وتمر وفواكه', cost: 12 }]
+            ]
+          },
+          {
+            title: 'خطة بدون طبخ مريحة البديلة (اشتراكات وجبات باردة وساخنة)',
+            groceries: [
+              { name: 'صندوق وجبات جاهزة متنوعة', qty: '6 وجبات', price: 132 },
+              { name: 'سلطات جاهزة ومقبلات طازجة', qty: '5 علب', price: 40 },
+              { name: 'تونة، ديك رومي، أجبان فاخرة ولبنة', qty: 'تشكيلة', price: 48 },
+              { name: 'زبادي يوناني، عصائر طازجة وحليب', qty: 'أسبوعي', price: 44 },
+              { name: 'فواكه جاهزة، جرانولا ومكسرات', qty: 'أسبوعي', price: 42 },
+              { name: 'ميزانية مطاعم وقهوة خارجية', qty: 'أسبوعي', price: 70 }
+            ],
+            mealsByDay: [
+              [{ type: 'breakfast', name: 'جرانولا بالزبادي اليوناني والفواكه', cost: 14 }, { type: 'lunch', name: 'وجبة جاهزة (كبسة دجاج صحية)', cost: 23 }, { type: 'dinner', name: 'تورتيلا ديك رومي وسلطة', cost: 13 }],
+              [{ type: 'breakfast', name: 'ساندوتش جبن وقهوة مختصة', cost: 15 }, { type: 'lunch', name: 'وجبة جاهزة (باستا دجاج)', cost: 23 }, { type: 'dinner', name: 'حمص ومقبلات وخبز طازج', cost: 12 }],
+              [{ type: 'breakfast', name: 'توست باللبنة والمكسرات وعصير', cost: 13 }, { type: 'lunch', name: 'وجبة غداء من المطعم المفضل', cost: 30 }, { type: 'dinner', name: 'سلطة تونة باردة', cost: 13 }],
+              [{ type: 'breakfast', name: 'جرانولا وحليب وموز', cost: 12 }, { type: 'lunch', name: 'وجبة جاهزة (فيليه سمك)', cost: 24 }, { type: 'dinner', name: 'أجبان فاخرة وفواكه', cost: 13 }],
+              [{ type: 'breakfast', name: 'مخبوزات طازجة وقهوة', cost: 15 }, { type: 'lunch', name: 'وجبة جاهزة (ستيك لحم وأرز)', cost: 25 }, { type: 'dinner', name: 'زبادي يوناني وتمر', cost: 11 }],
+              [{ type: 'breakfast', name: 'ساندوتش ديك رومي وعصير طازج', cost: 14 }, { type: 'lunch', name: 'وجبة جاهزة (دجاج بالكاري)', cost: 23 }, { type: 'dinner', name: 'سلطة جاهزة وتوست', cost: 12 }],
+              [{ type: 'breakfast', name: 'فطور مقهى وقهوة صباحية', cost: 18 }, { type: 'lunch', name: 'وجبة غداء مشويات/مندي', cost: 32 }, { type: 'dinner', name: 'فواكه ومكسرات وحليب', cost: 12 }]
+            ]
+          }
+        ]
+      }
+    };
+
+    // ==================== الدوال المساعدة للتواريخ والحالة الابتدائية ====================
+    function todayISO() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    function futureDateISO(daysAhead) {
+      const d = new Date();
+      d.setDate(d.getDate() + Number(daysAhead || 0));
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    function getTodayDayKey() {
+      const jsDay = new Date().getDay();
+      const match = WEEK_DAYS.find(d => d.jsDay === jsDay);
+      return match ? match.key : 'sat';
+    }
+
+    function createEmptyMeals() {
+      return { sat: [], sun: [], mon: [], tue: [], wed: [], thu: [], fri: [] };
+    }
+
+    function getInitialState() {
+      return {
+        onboarded: false,
+        profile: {
+          name: '',
+          salary: 6000,
+          payday: 27,
+          remittanceTargetSar: 2000,
+          currency: 'YER',
+          customCurrencyCode: '',
+          customRates: {
+            YER: 530,
+            EGP: 13.10,
+            SDG: 160,
+            JOD: 0.189,
+            SYP: 3900,
+            INR: 22.40,
+            PKR: 74.20,
+            CUSTOM: 1
+          },
+          cookingMode: 'cook',
+          weeklyFoodBudget: 250
+        },
+        fixedObligations: [
+          { id: 'fx_rent', label: 'إيجار السكن', amount: 1500 },
+          { id: 'fx_net', label: 'الكهرباء والإنترنت والجوال', amount: 350 }
+        ],
+        transactions: [],
+        distribution: [
+          { id: 'd_family', label: 'مصروف الأهل', amount: 1500 },
+          { id: 'd_save', label: 'ادخار ومستقبل', amount: 500 }
+        ],
+        obligations: [
+          { id: 'ob_iqama', title: 'تجديد الإقامة / الرسوم', amount: 1500, dueDate: futureDateISO(45), completed: false },
+          { id: 'ob_ticket', title: 'مخصص تذكرة السفر', amount: 1200, dueDate: futureDateISO(90), completed: false }
+        ],
+        meals: createEmptyMeals(),
+        groceries: [],
+        lastSmartPlanMeta: null
+      };
+    }
+
+    let state = getInitialState();
+    let wizardStep = 1;
+    let wizardFixedDraft = [];
+    let wizardCookingMode = 'cook';
+    let selectedDayKey = getTodayDayKey();
+    let activeFoodSubTab = 'meals';
+    let selectedExpenseCategory = 'food';
+    let smartPlanVariantIndex = 0;
+    let lastSmartPlanMeta = null;
+    let toastTimer = null;
+
+    // ==================== التخزين المحلي ====================
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          const base = getInitialState();
+          state = {
+            ...base,
+            ...parsed,
+            profile: {
+              ...base.profile,
+              ...(parsed.profile || {}),
+              customRates: { ...base.profile.customRates, ...((parsed.profile && parsed.profile.customRates) || {}) }
+            },
+            meals: { ...createEmptyMeals(), ...(parsed.meals || {}) }
+          };
+          lastSmartPlanMeta = state.lastSmartPlanMeta || null;
+        }
+      } catch (e) {
+        state = getInitialState();
+        lastSmartPlanMeta = null;
+      }
+    }
+
+    function saveState() {
+      try {
+        state.lastSmartPlanMeta = lastSmartPlanMeta;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {}
+    }
+
+    function updateLocalStorageInfo() {
+      const el = document.getElementById('local-storage-size');
+      if (!el) return;
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY) || '';
+        const bytes = new Blob([raw]).size;
+        const kb = (bytes / 1024).toFixed(1);
+        el.textContent = `${kb} KB • ${state.transactions.length} عملية`;
+      } catch (e) {
+        el.textContent = 'محفوظ محلياً ✓';
+      }
+    }
+
+    // تصدير نسخة احتياطية كاملة كملف JSON على جهاز المستخدم
+    function exportLocalBackup() {
+      try {
+        saveState();
+        const dataStr = JSON.stringify(state, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `hisbat-mughtarib-backup-${todayISO()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('تم حفظ النسخة الاحتياطية على جهازك ✓');
+      } catch (e) {
+        showToast('تعذر تصدير النسخة الاحتياطية');
+      }
+    }
+
+    // استعادة نسخة احتياطية من ملف JSON محفوظ على جهاز المستخدم
+    function importLocalBackup(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(String(reader.result || ''));
+          if (!parsed || typeof parsed !== 'object' || !parsed.profile) {
+            showToast('الملف المختار غير صالح');
+            return;
+          }
+          const base = getInitialState();
+          state = {
+            ...base,
+            ...parsed,
+            onboarded: true,
+            profile: {
+              ...base.profile,
+              ...(parsed.profile || {}),
+              customRates: { ...base.profile.customRates, ...((parsed.profile && parsed.profile.customRates) || {}) }
+            },
+            meals: { ...createEmptyMeals(), ...(parsed.meals || {}) }
+          };
+          lastSmartPlanMeta = state.lastSmartPlanMeta || null;
+          saveState();
+          document.getElementById('onboarding-screen').classList.add('hidden');
+          closeModal('modal-settings');
+          renderAll();
+          showToast('تمت استعادة بياناتك من جهازك بنجاح ✓');
+        } catch (e) {
+          showToast('تعذر قراءة ملف النسخة الاحتياطية');
+        } finally {
+          event.target.value = '';
+        }
+      };
+      reader.readAsText(file, 'utf-8');
+    }
+
+    function formatNum(n) {
+      return Number(n || 0).toLocaleString('en-US', { maximumFractionDigits: 2 });
+    }
+
+    function getActiveCurrencyCode() {
+      if (state.profile.currency === 'CUSTOM') {
+        return (state.profile.customCurrencyCode || 'CUSTOM').trim() || 'CUSTOM';
+      }
+      return state.profile.currency;
+    }
+
+    function getActiveExchangeRate() {
+      const key = state.profile.currency;
+      return Number(state.profile.customRates[key] ?? DEFAULT_CURRENCIES[key]?.rate ?? 1);
+    }
+
+    function showToast(msg) {
+      const box = document.getElementById('toast-box');
+      document.getElementById('toast-msg').textContent = msg;
+      box.classList.remove('hidden');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => box.classList.add('hidden'), 2600);
+    }
+
+    // ==================== معالج التسجيل الأولي (4 خطوات) ====================
+    function openOnboarding() {
+      wizardStep = 1;
+      wizardFixedDraft = state.fixedObligations.map(item => ({ ...item }));
+      wizardCookingMode = state.profile.cookingMode || 'cook';
+
+      document.getElementById('wiz-name').value = state.profile.name || '';
+      document.getElementById('wiz-salary').value = state.profile.salary || 6000;
+      document.getElementById('wiz-payday').value = state.profile.payday || 27;
+      document.getElementById('wiz-remit-target').value = state.profile.remittanceTargetSar || 2000;
+      document.getElementById('wiz-currency').value = state.profile.currency || 'YER';
+      document.getElementById('wiz-rate').value = getActiveExchangeRate();
+      document.getElementById('wiz-food-budget').value = state.profile.weeklyFoodBudget || 250;
+
+      handleWizardCurrencyChange();
+      renderWizardFixedList();
+      selectWizardCookingMode(wizardCookingMode);
+      updateWizardUI();
+      document.getElementById('onboarding-screen').classList.remove('hidden');
+    }
+
+    function updateWizardUI() {
+      document.getElementById('ob-step-badge').textContent = `${wizardStep} / 4`;
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById(`ob-step-${i}`).classList.toggle('hidden', i !== wizardStep);
+        const bar = document.getElementById(`ob-prog-${i}`);
+        bar.className = i <= wizardStep
+          ? 'h-1.5 rounded-full bg-amber-400 transition-all'
+          : 'h-1.5 rounded-full bg-white/25 transition-all';
+      }
+      document.getElementById('ob-prev-btn').classList.toggle('hidden', wizardStep === 1);
+      document.getElementById('ob-next-btn').textContent = wizardStep === 4 ? 'ابدأ استخدام حِسبة مغترب' : 'التالي';
+    }
+
+    function handleWizardCurrencyChange() {
+      const code = document.getElementById('wiz-currency').value;
+      const customWrap = document.getElementById('wiz-custom-currency-wrap');
+      customWrap.classList.toggle('hidden', code !== 'CUSTOM');
+      const rate = DEFAULT_CURRENCIES[code]?.rate ?? 1;
+      document.getElementById('wiz-rate').value = rate;
+      updateWizardRemitPreview();
+    }
+
+    function updateWizardRemitPreview() {
+      const target = Number(document.getElementById('wiz-remit-target').value || 0);
+      const rate = Number(document.getElementById('wiz-rate').value || 0);
+      const sel = document.getElementById('wiz-currency').value;
+      const label = sel === 'CUSTOM'
+        ? (document.getElementById('wiz-custom-currency-code').value.trim() || 'عملة')
+        : sel;
+      document.getElementById('wiz-remit-preview').textContent = `${formatNum(Math.round(target * rate))} ${label}`;
+    }
+
+    function renderWizardFixedList() {
+      const list = document.getElementById('wiz-fixed-list');
+      const total = wizardFixedDraft.reduce((s, x) => s + Number(x.amount || 0), 0);
+      document.getElementById('wiz-fixed-total').textContent = `${formatNum(total)} ر.س`;
+
+      if (!wizardFixedDraft.length) {
+        list.innerHTML = `<p class="text-center text-xs text-stone-400 py-3">لا توجد التزامات ثابتة، يمكنك إضافة ما تريد أدناه.</p>`;
+        return;
+      }
+
+      list.innerHTML = wizardFixedDraft.map((item, idx) => `
+        <div class="flex items-center gap-2 bg-[#F6F7F5] p-2.5 rounded-2xl border border-stone-200/70">
+          <input type="text" value="${escapeHtml(item.label)}" onchange="updateWizardFixed(${idx}, 'label', this.value)"
+                 class="flex-1 bg-transparent text-xs font-bold text-stone-800 focus:outline-none" />
+          <input type="number" min="0" value="${item.amount}" oninput="updateWizardFixed(${idx}, 'amount', this.value)"
+                 class="thmanyah-num w-20 rounded-xl bg-white border border-stone-200 px-2 py-1.5 text-xs font-black text-[#0F6A4F] text-center focus:outline-none" />
+          <button type="button" onclick="removeWizardFixed(${idx})" class="p-1.5 text-stone-400 hover:text-rose-600">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function updateWizardFixed(idx, field, val) {
+      if (!wizardFixedDraft[idx]) return;
+      wizardFixedDraft[idx][field] = field === 'amount' ? Number(val || 0) : val.trim();
+      const total = wizardFixedDraft.reduce((s, x) => s + Number(x.amount || 0), 0);
+      document.getElementById('wiz-fixed-total').textContent = `${formatNum(total)} ر.س`;
+    }
+
+    function removeWizardFixed(idx) {
+      wizardFixedDraft.splice(idx, 1);
+      renderWizardFixedList();
+    }
+
+    function addWizardFixedItem() {
+      const nameEl = document.getElementById('wiz-new-fixed-name');
+      const amtEl = document.getElementById('wiz-new-fixed-amount');
+      const label = nameEl.value.trim();
+      const amount = Number(amtEl.value || 0);
+      if (!label) {
+        showToast('أدخل اسم الالتزام أولاً');
+        return;
+      }
+      wizardFixedDraft.push({ id: 'fx_' + Date.now(), label, amount: Math.max(0, amount) });
+      nameEl.value = '';
+      amtEl.value = '';
+      renderWizardFixedList();
+    }
+
+    function selectWizardCookingMode(mode) {
+      wizardCookingMode = mode;
+      const cookBtn = document.getElementById('wiz-mode-cook');
+      const noCookBtn = document.getElementById('wiz-mode-nocook');
+      if (mode === 'cook') {
+        cookBtn.className = 'p-4 rounded-3xl border-2 text-right transition flex flex-col gap-2 bg-[#E7F3EE] border-[#0F6A4F]';
+        noCookBtn.className = 'p-4 rounded-3xl border-2 text-right transition flex flex-col gap-2 bg-white border-stone-200';
+      } else {
+        noCookBtn.className = 'p-4 rounded-3xl border-2 text-right transition flex flex-col gap-2 bg-amber-50 border-[#D97706]';
+        cookBtn.className = 'p-4 rounded-3xl border-2 text-right transition flex flex-col gap-2 bg-white border-stone-200';
+      }
+    }
+
+    function prevWizardStep() {
+      if (wizardStep > 1) {
+        wizardStep--;
+        updateWizardUI();
+      }
+    }
+
+    function nextWizardStep() {
+      if (wizardStep === 1) {
+        const name = document.getElementById('wiz-name').value.trim();
+        const salary = Number(document.getElementById('wiz-salary').value);
+        if (!name) {
+          showToast('اكتب اسمك أولاً لنخصص التطبيق لك');
+          document.getElementById('wiz-name').focus();
+          return;
+        }
+        if (!salary || salary <= 0) {
+          showToast('أدخل الراتب الشهري بشكل صحيح');
+          return;
+        }
+      }
+
+      if (wizardStep < 4) {
+        wizardStep++;
+        updateWizardUI();
+        return;
+      }
+
+      // إتمام التسجيل وحفظ جميع التخصيصات
+      const currency = document.getElementById('wiz-currency').value;
+      const rate = Number(document.getElementById('wiz-rate').value || 1);
+      state.profile.name = document.getElementById('wiz-name').value.trim();
+      state.profile.salary = Number(document.getElementById('wiz-salary').value || 6000);
+      state.profile.payday = Math.min(31, Math.max(1, Number(document.getElementById('wiz-payday').value || 27)));
+      state.profile.remittanceTargetSar = Math.max(0, Number(document.getElementById('wiz-remit-target').value || 0));
+      state.profile.currency = currency;
+      if (currency === 'CUSTOM') {
+        state.profile.customCurrencyCode = document.getElementById('wiz-custom-currency-code').value.trim() || 'USD';
+      }
+      state.profile.customRates[currency] = rate;
+      state.profile.cookingMode = wizardCookingMode;
+      state.profile.weeklyFoodBudget = Math.max(0, Number(document.getElementById('wiz-food-budget').value || 250));
+      state.fixedObligations = wizardFixedDraft.filter(x => x.label);
+      state.onboarded = true;
+
+      // تجهيز قائمة مشتريات أسبوعية أولية مناسبة لاختيار المستخدم
+      if (state.groceries.length === 0) {
+        state.groceries = SUGGESTED_GROCERIES_BY_MODE[wizardCookingMode].map((item, i) => ({
+          id: 'g_' + Date.now() + '_' + i,
+          name: item.name,
+          qty: item.qty,
+          price: item.price,
+          bought: false,
+          logged: false
+        }));
+      }
+
+      saveState();
+      document.getElementById('onboarding-screen').classList.add('hidden');
+      renderAll();
+      showToast(`أهلاً بك يا ${state.profile.name}! تم تجهيز حسابك`);
+    }
+
+    // ==================== الحسابات المساعدة ====================
+    function getDaysUntilNextPayday() {
+      const now = new Date();
+      const payday = Math.min(31, Math.max(1, Number(state.profile.payday || 27)));
+      let target = new Date(now.getFullYear(), now.getMonth(), payday);
+      if (now.getDate() >= payday) {
+        target = new Date(now.getFullYear(), now.getMonth() + 1, payday);
+      }
+      return Math.max(1, Math.ceil((target - now) / (1000 * 60 * 60 * 24)));
+    }
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[m]));
+    }
+
+    // ==================== تحديث الواجهة بالكامل ====================
+    function renderAll() {
+      renderHeader();
+      renderHome();
+      renderFoodSection();
+      renderRemittance();
+      renderObligations();
+    }
+
+    function renderHeader() {
+      const name = state.profile.name || 'صديقي';
+      document.getElementById('header-greeting').textContent = `أهلاً، ${name}`;
+      const dateStr = new Date().toLocaleDateString('ar-SA', { weekday: 'long', day: 'numeric', month: 'long' });
+      document.getElementById('header-date-label').textContent = dateStr;
+    }
+
+    function renderHome() {
+      const salary = Number(state.profile.salary || 0);
+      const totalSpent = state.transactions.reduce((acc, t) => acc + Number(t.amount || 0), 0);
+      const remaining = Math.max(0, salary - totalSpent);
+      const spentPercent = salary > 0 ? Math.min(100, Math.round((totalSpent / salary) * 100)) : 0;
+
+      const fixedTotal = state.fixedObligations.reduce((acc, f) => acc + Number(f.amount || 0), 0);
+      const housingSpent = state.transactions
+        .filter(t => t.category === 'housing')
+        .reduce((acc, t) => acc + Number(t.amount || 0), 0);
+      const remainingFixedReserve = Math.max(0, fixedTotal - housingSpent);
+
+      const alreadyRemitted = state.transactions
+        .filter(t => t.category === 'remittance')
+        .reduce((acc, t) => acc + Number(t.amount || 0), 0);
+      const targetRemit = Number(state.profile.remittanceTargetSar || 0);
+      const pendingRemit = Math.max(0, targetRemit - alreadyRemitted);
+
+      const daysLeft = getDaysUntilNextPayday();
+      const disposablePool = Math.max(0, remaining - pendingRemit - remainingFixedReserve);
+      const dailyAllowance = Math.floor(disposablePool / daysLeft);
+
+      document.getElementById('home-total-salary').textContent = formatNum(salary);
+      document.getElementById('home-remaining-salary').textContent = formatNum(remaining);
+      document.getElementById('home-spent-percent').textContent = `${spentPercent}%`;
+      document.getElementById('home-total-spent').textContent = formatNum(totalSpent);
+      document.getElementById('home-progress-bar').style.width = `${spentPercent}%`;
+      document.getElementById('home-daily-allowance').textContent = formatNum(dailyAllowance);
+      document.getElementById('home-days-left').textContent = `متبقي ${daysLeft} يوماً للراتب`;
+      document.getElementById('home-fixed-total').textContent = formatNum(fixedTotal);
+
+      // بطاقة التحويل
+      const code = getActiveCurrencyCode();
+      const rate = getActiveExchangeRate();
+      const remitPct = targetRemit > 0 ? Math.min(100, Math.round((alreadyRemitted / targetRemit) * 100)) : 0;
+      document.getElementById('home-remit-status').textContent = `${remitPct}%`;
+      document.getElementById('home-remit-sar').textContent = formatNum(targetRemit);
+      document.getElementById('home-remit-converted').textContent = `≈ ${formatNum(Math.round(targetRemit * rate))} ${code}`;
+
+      // بطاقة الأكل الأسبوعية
+      const isCook = state.profile.cookingMode === 'cook';
+      document.getElementById('home-food-mode-icon').textContent = isCook ? '🍳' : '🥪';
+      document.getElementById('home-food-mode-badge').textContent = isCook ? 'بطبخ' : 'بدون طبخ';
+
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      const weeklyFoodSpent = state.transactions
+        .filter(t => (t.category === 'food' || t.category === 'coffee') && new Date(t.date) >= sevenDaysAgo)
+        .reduce((acc, t) => acc + Number(t.amount || 0), 0);
+      const foodBudget = Number(state.profile.weeklyFoodBudget || 250);
+      const foodPct = foodBudget > 0 ? Math.min(100, Math.round((weeklyFoodSpent / foodBudget) * 100)) : 0;
+      document.getElementById('home-food-spent').textContent = formatNum(weeklyFoodSpent);
+      document.getElementById('home-food-budget').textContent = formatNum(foodBudget);
+      const foodBar = document.getElementById('home-food-bar');
+      foodBar.style.width = `${foodPct}%`;
+      foodBar.className = `h-full rounded-full transition-all ${foodPct >= 90 ? 'bg-rose-500' : 'bg-amber-500'}`;
+
+      // أقرب التزام مهم
+      const upcoming = state.obligations
+        .filter(o => !o.completed)
+        .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))[0];
+      if (upcoming) {
+        const diffDays = Math.ceil((new Date(upcoming.dueDate) - new Date()) / (1000 * 60 * 60 * 24));
+        document.getElementById('home-next-obligation-title').textContent = `${upcoming.title} (${formatNum(upcoming.amount)} ر.س)`;
+        document.getElementById('home-next-obligation-days').textContent = diffDays > 0 ? `بعد ${diffDays} يوم` : 'مستحق الآن';
+      } else {
+        document.getElementById('home-next-obligation-title').textContent = 'جميع التزاماتك مكتملة 🎉';
+        document.getElementById('home-next-obligation-days').textContent = 'ممتاز';
+      }
+
+      // سجل آخر العمليات
+      document.getElementById('home-tx-count').textContent = `${state.transactions.length} عمليات`;
+      const txList = document.getElementById('home-transactions-list');
+      if (!state.transactions.length) {
+        txList.innerHTML = `<p class="text-center text-xs text-stone-400 py-6">لا توجد مصاريف مسجلة بعد. اضغط على (+) لتسجيل أول مصروف.</p>`;
+      } else {
+        txList.innerHTML = state.transactions.slice(0, 15).map(tx => {
+          const meta = CATEGORY_META[tx.category] || CATEGORY_META.other;
+          return `
+            <div class="flex items-center justify-between gap-2 p-3 rounded-2xl bg-[#F6F7F5] border border-stone-200/60">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-xl ${meta.bg} flex items-center justify-center text-lg shrink-0">${meta.icon}</div>
+                <div class="min-w-0">
+                  <p class="text-xs font-extrabold text-stone-800 truncate">${escapeHtml(tx.note || meta.label)}</p>
+                  <p class="text-[10px] text-stone-500">${meta.label} • <span class="thmanyah-num">${tx.date}</span></p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="thmanyah-num text-xs font-black text-stone-900">-${formatNum(tx.amount)} ر.س</span>
+                <button onclick="deleteTransaction('${tx.id}')" class="p-1.5 rounded-lg text-stone-400 hover:text-rose-600 hover:bg-rose-50 transition" title="حذف">✕</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    // ==================== قسم الأكل والمقاضي (وجبات اليوم + مشتريات الأسبوع) ====================
+    function getBudgetTierInfo(budget) {
+      const b = Number(budget || 0);
+      if (b <= 160) {
+        return { key: 'economy', label: 'اقتصادية', badgeClass: 'bg-teal-100 text-teal-900' };
+      }
+      if (b <= 280) {
+        return { key: 'balanced', label: 'متوازنة', badgeClass: 'bg-emerald-100 text-[#0F6A4F]' };
+      }
+      return { key: 'comfortable', label: 'مريحة', badgeClass: 'bg-amber-100 text-amber-900' };
+    }
+
+    function getWeeklyFoodSpent() {
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      return state.transactions
+        .filter(t => (t.category === 'food' || t.category === 'coffee') && new Date(t.date) >= sevenDaysAgo)
+        .reduce((acc, t) => acc + Number(t.amount || 0), 0);
+    }
+
+    // توليد خطة وجبات ومقاضي متكاملة تتناسب مع الميزانية الأسبوعية بدقة
+    function generateSmartPlan(isAlternative = false) {
+      const mode = state.profile.cookingMode || 'cook';
+      const budget = Math.max(50, Number(state.profile.weeklyFoodBudget || 250));
+      const tier = getBudgetTierInfo(budget);
+      const variants = SMART_PLANS_DB[mode][tier.key];
+
+      if (isAlternative) {
+        smartPlanVariantIndex = (smartPlanVariantIndex + 1) % variants.length;
+      } else {
+        smartPlanVariantIndex = 0;
+      }
+
+      const template = variants[smartPlanVariantIndex];
+      const rawGroceriesTotal = template.groceries.reduce((s, g) => s + g.price, 0);
+
+      // ضبط الأسعار التقديرية بذكاء إذا كانت الميزانية أقل من إجمالي القالب الأساسي
+      const grocScale = rawGroceriesTotal > budget ? (budget * 0.94) / rawGroceriesTotal : 1;
+
+      const generatedGroceries = template.groceries.map((item, idx) => ({
+        id: 'sg_' + Date.now() + '_' + idx,
+        name: item.name,
+        qty: item.qty,
+        price: Math.max(3, Math.round(item.price * grocScale)),
+        bought: false,
+        logged: false
+      }));
+
+      // ضبط تكلفة الوجبات السبعة لتطابق أو تقل عن الميزانية الأسبوعية
+      const rawMealsTotal = template.mealsByDay.reduce((sum, day) => sum + day.reduce((s, m) => s + m.cost, 0), 0);
+      const mealScale = rawMealsTotal > budget ? (budget * 0.96) / rawMealsTotal : 1;
+
+      const newMeals = createEmptyMeals();
+      WEEK_DAYS.forEach((dayObj, dayIdx) => {
+        const dayTemplate = template.mealsByDay[dayIdx] || template.mealsByDay[0];
+        newMeals[dayObj.key] = dayTemplate.map((m, mIdx) => ({
+          id: 'sm_' + Date.now() + '_' + dayIdx + '_' + mIdx,
+          type: m.type,
+          name: m.name,
+          cost: Math.max(2, Math.round(m.cost * mealScale)),
+          logged: false
+        }));
+      });
+
+      state.meals = newMeals;
+      state.groceries = generatedGroceries;
+
+      const finalGroceriesTotal = generatedGroceries.reduce((s, g) => s + g.price, 0);
+      const finalMealsTotal = WEEK_DAYS.reduce((sum, d) => sum + newMeals[d.key].reduce((s, m) => s + m.cost, 0), 0);
+
+      lastSmartPlanMeta = {
+        title: template.title,
+        variantNum: smartPlanVariantIndex + 1,
+        groceriesTotal: finalGroceriesTotal,
+        mealsTotal: finalMealsTotal,
+        budget
+      };
+
+      saveState();
+      renderFoodSection();
+      showToast(isAlternative ? `تم تبديل الاقتراح إلى خطة #${smartPlanVariantIndex + 1}` : 'تم توليد خطة الوجبات والمقاضي حسب ميزانيتك ✨');
+    }
+
+    function setCookingMode(mode) {
+      state.profile.cookingMode = mode;
+      lastSmartPlanMeta = null;
+      saveState();
+      renderHome();
+      renderFoodSection();
+      showToast(mode === 'cook' ? 'تم التحويل إلى نظام: بطبخ 🍳 — اضغط اقتراح لتحديث الخطة' : 'تم التحويل إلى نظام: بدون طبخ 🥪 — اضغط اقتراح لتحديث الخطة');
+    }
+
+    function switchFoodSubTab(sub) {
+      activeFoodSubTab = sub;
+      document.getElementById('food-panel-meals').classList.toggle('hidden', sub !== 'meals');
+      document.getElementById('food-panel-groceries').classList.toggle('hidden', sub !== 'groceries');
+
+      const mealsBtn = document.getElementById('food-subtab-meals');
+      const grocBtn = document.getElementById('food-subtab-groceries');
+      if (sub === 'meals') {
+        mealsBtn.className = 'py-2.5 rounded-xl text-xs font-extrabold bg-[#E7F3EE] text-[#0F6A4F] transition';
+        grocBtn.className = 'py-2.5 rounded-xl text-xs font-bold text-stone-500 hover:bg-stone-50 transition';
+      } else {
+        grocBtn.className = 'py-2.5 rounded-xl text-xs font-extrabold bg-[#E7F3EE] text-[#0F6A4F] transition';
+        mealsBtn.className = 'py-2.5 rounded-xl text-xs font-bold text-stone-500 hover:bg-stone-50 transition';
+      }
+    }
+
+    function selectMealDay(dayKey) {
+      selectedDayKey = dayKey;
+      renderMealsPanel();
+    }
+
+    function renderFoodSection() {
+      const mode = state.profile.cookingMode || 'cook';
+      const budget = Number(state.profile.weeklyFoodBudget || 250);
+      const spent = getWeeklyFoodSpent();
+      const remaining = Math.max(0, budget - spent);
+      const pct = budget > 0 ? Math.min(100, Math.round((spent / budget) * 100)) : 0;
+      const tier = getBudgetTierInfo(budget);
+
+      // شارة تصنيف الميزانية وإحصائياتها
+      const tierBadge = document.getElementById('food-tier-badge');
+      tierBadge.textContent = `ميزانية ${tier.label}`;
+      tierBadge.className = `text-[10px] font-extrabold px-2.5 py-0.5 rounded-full ${tier.badgeClass}`;
+
+      document.getElementById('food-budget-limit').textContent = `${formatNum(budget)} ر.س`;
+      document.getElementById('food-budget-spent').textContent = `${formatNum(spent)} ر.س`;
+      document.getElementById('food-budget-remaining').textContent = `${formatNum(remaining)} ر.س`;
+      document.getElementById('food-budget-pct').textContent = `${pct}%`;
+
+      const bar = document.getElementById('food-budget-bar');
+      bar.style.width = `${pct}%`;
+      bar.className = `h-full rounded-full transition-all duration-300 ${pct >= 90 ? 'bg-rose-500' : (pct >= 70 ? 'bg-amber-500' : 'bg-[#0F6A4F]')}`;
+
+      // أزرار التبديل بطبخ / بدون طبخ
+      const cookBtn = document.getElementById('food-mode-btn-cook');
+      const noCookBtn = document.getElementById('food-mode-btn-nocook');
+      if (mode === 'cook') {
+        cookBtn.className = 'py-2.5 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 bg-[#0F6A4F] text-white shadow-xs';
+        noCookBtn.className = 'py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-stone-600';
+      } else {
+        noCookBtn.className = 'py-2.5 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 bg-[#D97706] text-white shadow-xs';
+        cookBtn.className = 'py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-stone-600';
+      }
+
+      // نصيحة التوفير الذكية عند انخفاض الميزانية
+      const tipWrap = document.getElementById('food-low-budget-tip');
+      const tipText = document.getElementById('food-low-budget-tip-text');
+      if (mode === 'nocook' && budget <= 160) {
+        tipWrap.classList.remove('hidden');
+        tipText.textContent = ' ميزانيتك أسبوعياً اقتصادية مع نظام "بدون طبخ"؛ التحول للطبخ المنزلي سيوفر عليك حتى 35%، أو ركّز على البروتين الاقتصادي مثل التونة والبيض والفول والزبادي.';
+      } else if (mode === 'cook' && budget <= 125) {
+        tipWrap.classList.remove('hidden');
+        tipText.textContent = ' ميزانيتك ضيقة هذا الأسبوع؛ ركّز على البروتين الاقتصادي (البيض، العدس، الفول، الدجاج الكامل) واشترِ الأرز والخضار الأساسية بكميات موزونة لتقليل الهدر.';
+      } else {
+        tipWrap.classList.add('hidden');
+      }
+
+      // ملخص الخطة الذكية الحالية إن وُجدت
+      const summaryBox = document.getElementById('smart-plan-summary');
+      const variantBadge = document.getElementById('smart-plan-variant-badge');
+      const subtitleEl = document.getElementById('smart-plan-subtitle');
+
+      if (lastSmartPlanMeta) {
+        summaryBox.classList.remove('hidden');
+        variantBadge.classList.remove('hidden');
+        variantBadge.textContent = `خطة ${lastSmartPlanMeta.variantNum}`;
+        subtitleEl.textContent = lastSmartPlanMeta.title;
+
+        const diff = budget - lastSmartPlanMeta.groceriesTotal;
+        const compText = diff >= 0
+          ? `إجمالي المقاضي ${formatNum(lastSmartPlanMeta.groceriesTotal)} ر.س — يوفر لك ${formatNum(diff)} ر.س من ميزانيتك`
+          : `إجمالي المقاضي ${formatNum(lastSmartPlanMeta.groceriesTotal)} ر.س — يتجاوز ميزانيتك بـ ${formatNum(Math.abs(diff))} ر.س`;
+        document.getElementById('smart-plan-comparison-text').textContent = compText;
+        document.getElementById('smart-plan-meals-cost-text').textContent = `تكلفة الوجبات التقديرية للأسبوع: ${formatNum(lastSmartPlanMeta.mealsTotal)} ر.س (21 وجبة)`;
+      } else {
+        summaryBox.classList.add('hidden');
+        variantBadge.classList.add('hidden');
+        subtitleEl.textContent = `نظام ${mode === 'cook' ? 'بطبخ 🍳' : 'بدون طبخ 🥪'} • ميزانية ${tier.label} (${formatNum(budget)} ر.س)`;
+      }
+
+      document.getElementById('groc-count-badge').textContent = state.groceries.length;
+      renderMealsPanel();
+      renderGroceriesPanel();
+    }
+
+    function renderMealsPanel() {
+      const todayKey = getTodayDayKey();
+      const dayObj = WEEK_DAYS.find(d => d.key === selectedDayKey) || WEEK_DAYS[0];
+      const mode = state.profile.cookingMode || 'cook';
+
+      // شريط الأيام السبعة
+      document.getElementById('days-selector').innerHTML = WEEK_DAYS.map(d => {
+        const isSelected = d.key === selectedDayKey;
+        const isToday = d.key === todayKey;
+        const count = (state.meals[d.key] || []).length;
+        return `
+          <button type="button" onclick="selectMealDay('${d.key}')"
+                  class="shrink-0 px-3.5 py-2.5 rounded-2xl border text-center transition flex flex-col items-center min-w-[68px] ${
+                    isSelected
+                      ? 'bg-[#0F6A4F] text-white border-[#0F6A4F] shadow-sm'
+                      : 'bg-white text-stone-700 border-stone-200/80'
+                  }">
+            <span class="text-xs font-extrabold">${d.label}</span>
+            <span class="text-[9px] mt-0.5 ${isSelected ? 'text-amber-300' : 'text-stone-400'}">
+              ${isToday ? 'اليوم' : (count > 0 ? `${count} وجبات` : '—')}
+            </span>
+          </button>
+        `;
+      }).join('');
+
+      // إحصائيات التكلفة
+      const dayMeals = state.meals[selectedDayKey] || [];
+      const dayTotal = dayMeals.reduce((s, m) => s + Number(m.cost || 0), 0);
+      const weekTotal = WEEK_DAYS.reduce((sum, d) => {
+        return sum + (state.meals[d.key] || []).reduce((s, m) => s + Number(m.cost || 0), 0);
+      }, 0);
+
+      document.getElementById('selected-day-name').textContent = dayObj.label;
+      document.getElementById('selected-day-total').textContent = `${formatNum(dayTotal)} ر.س`;
+      document.getElementById('week-meals-total').textContent = `${formatNum(weekTotal)} ر.س`;
+      document.getElementById('quick-add-day-label').textContent = dayObj.label;
+      document.getElementById('meals-list-day-title').textContent = dayObj.label;
+      document.getElementById('quick-add-mode-hint').textContent = mode === 'cook' ? 'اقتراحات بطبخ 🍳' : 'اقتراحات بدون طبخ 🥪';
+
+      // شرائح الإضافة السريعة
+      const suggestions = QUICK_MEALS_BY_MODE[mode] || [];
+      document.getElementById('meal-quick-chips').innerHTML = suggestions.map((item, idx) => `
+        <button type="button" onclick="quickAddMeal(${idx})"
+                class="px-3 py-1.5 rounded-xl bg-[#F6F7F5] hover:bg-[#E7F3EE] border border-stone-200 text-[11px] font-bold text-stone-800 active:scale-95 transition flex items-center gap-1.5">
+          <span>+</span>
+          <span>${escapeHtml(item.name)}</span>
+          <span class="thmanyah-num text-[#0F6A4F] font-extrabold">(${item.cost} ر.س)</span>
+        </button>
+      `).join('');
+
+      // قائمة وجبات اليوم المختار
+      const listEl = document.getElementById('day-meals-list');
+      if (!dayMeals.length) {
+        listEl.innerHTML = `<p class="text-center text-xs text-stone-400 py-6">لا توجد وجبات مضافة ليوم ${dayObj.label}. اختر من الاقتراحات السريعة أو أضف وجبتك.</p>`;
+      } else {
+        listEl.innerHTML = dayMeals.map(meal => {
+          const meta = MEAL_TYPE_META[meal.type] || MEAL_TYPE_META.lunch;
+          return `
+            <div class="p-3 rounded-2xl bg-[#F6F7F5] border border-stone-200/70 flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-9 h-9 rounded-xl bg-white border border-stone-200/70 flex items-center justify-center text-base shrink-0">${meta.icon}</div>
+                <div class="min-w-0">
+                  <p class="text-xs font-extrabold text-stone-900 truncate">${escapeHtml(meal.name)}</p>
+                  <p class="text-[10px] text-stone-500">${meta.label} • <strong class="thmanyah-num text-[#0F6A4F]">${formatNum(meal.cost)} ر.س</strong></p>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                ${meal.logged
+                  ? `<span class="text-[10px] font-extrabold bg-[#E7F3EE] text-[#0F6A4F] px-2.5 py-1 rounded-xl">تم الخصم ✓</span>`
+                  : `<button type="button" onclick="logMealAsExpense('${meal.id}')" class="text-[10px] font-extrabold bg-amber-100 hover:bg-amber-200 text-amber-900 px-2.5 py-1.5 rounded-xl transition">تسجيل كمصروف</button>`
+                }
+                <button type="button" onclick="deleteMeal('${meal.id}')" class="p-1.5 text-stone-400 hover:text-rose-600 transition">✕</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function quickAddMeal(idx) {
+      const mode = state.profile.cookingMode || 'cook';
+      const item = QUICK_MEALS_BY_MODE[mode][idx];
+      if (!item) return;
+      state.meals[selectedDayKey].push({
+        id: 'm_' + Date.now() + '_' + Math.random().toString(36).slice(2, 5),
+        type: item.type,
+        name: item.name,
+        cost: item.cost,
+        logged: false
+      });
+      saveState();
+      renderMealsPanel();
+      showToast(`تمت إضافة "${item.name}"`);
+    }
+
+    function addCustomMeal(e) {
+      e.preventDefault();
+      const type = document.getElementById('meal-type-input').value;
+      const name = document.getElementById('meal-name-input').value.trim();
+      const cost = Number(document.getElementById('meal-cost-input').value || 0);
+      if (!name) return;
+
+      state.meals[selectedDayKey].push({
+        id: 'm_' + Date.now(),
+        type,
+        name,
+        cost: Math.max(0, cost),
+        logged: false
+      });
+      document.getElementById('meal-name-input').value = '';
+      document.getElementById('meal-cost-input').value = '';
+      saveState();
+      renderMealsPanel();
+      showToast('تمت إضافة الوجبة للجدول');
+    }
+
+    function logMealAsExpense(mealId) {
+      const meal = (state.meals[selectedDayKey] || []).find(m => m.id === mealId);
+      if (!meal || meal.logged) return;
+      meal.logged = true;
+      state.transactions.unshift({
+        id: 'tx_m_' + Date.now(),
+        category: meal.type === 'snack' ? 'coffee' : 'food',
+        amount: Number(meal.cost || 0),
+        note: `وجبة: ${meal.name}`,
+        date: todayISO()
+      });
+      saveState();
+      renderAll();
+      showToast(`تم خصم ${formatNum(meal.cost)} ر.س من الميزانية`);
+    }
+
+    function deleteMeal(mealId) {
+      state.meals[selectedDayKey] = (state.meals[selectedDayKey] || []).filter(m => m.id !== mealId);
+      saveState();
+      renderMealsPanel();
+    }
+
+    // ==================== مشتريات الأسبوع ====================
+    function renderGroceriesPanel() {
+      const budget = Number(state.profile.weeklyFoodBudget || 250);
+      const totalAll = state.groceries.reduce((s, g) => s + Number(g.price || 0), 0);
+      const totalBought = state.groceries.filter(g => g.bought).reduce((s, g) => s + Number(g.price || 0), 0);
+      document.getElementById('groc-total-all').textContent = `${formatNum(totalAll)} ر.س`;
+      document.getElementById('groc-total-bought').textContent = `${formatNum(totalBought)} ر.س`;
+      document.getElementById('groc-count-badge').textContent = state.groceries.length;
+
+      // مقارنة مباشرة بين إجمالي قائمة المقاضي والميزانية الأسبوعية
+      const diffBanner = document.getElementById('groc-budget-diff-banner');
+      const diff = budget - totalAll;
+      if (state.groceries.length === 0) {
+        diffBanner.className = 'rounded-2xl px-3.5 py-2.5 text-xs font-bold bg-stone-100 text-stone-600 border border-stone-200';
+        diffBanner.textContent = 'أضف أصنافك أو اضغط "✨ اقترح خطة وجبات ومقاضي" لتجهيز قائمة متوافقة مع ميزانيتك.';
+      } else if (diff >= 0) {
+        diffBanner.className = 'thmanyah-num rounded-2xl px-3.5 py-2.5 text-xs font-extrabold bg-[#E7F3EE] text-[#0A4D39] border border-emerald-200';
+        diffBanner.textContent = `إجمالي المقاضي ${formatNum(totalAll)} ر.س — يوفر لك ${formatNum(diff)} ر.س من ميزانيتك الأسبوعية ✓`;
+      } else {
+        diffBanner.className = 'thmanyah-num rounded-2xl px-3.5 py-2.5 text-xs font-extrabold bg-rose-50 text-rose-800 border border-rose-200';
+        diffBanner.textContent = `إجمالي المقاضي ${formatNum(totalAll)} ر.س — يتجاوز ميزانيتك بـ ${formatNum(Math.abs(diff))} ر.س (يمكنك تعديل الأسعار أو حذف صنف)`;
+      }
+
+      const listEl = document.getElementById('groceries-list');
+      if (!state.groceries.length) {
+        listEl.innerHTML = `<p class="text-center text-xs text-stone-400 py-6">القائمة فارغة. اضغط على "تحديث حسب ميزانيتي" أو أضف أصنافك.</p>`;
+        return;
+      }
+
+      listEl.innerHTML = state.groceries.map(item => `
+        <div class="p-3 rounded-2xl border transition flex items-center justify-between gap-2 ${
+          item.bought ? 'bg-[#E7F3EE]/50 border-emerald-200/80' : 'bg-[#F6F7F5] border-stone-200/70'
+        }">
+          <div class="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer" onclick="toggleGroceryBought('${item.id}')">
+            <div class="w-5 h-5 rounded-lg border-2 flex items-center justify-center shrink-0 text-xs font-black ${
+              item.bought ? 'bg-[#0F6A4F] border-[#0F6A4F] text-white' : 'bg-white border-stone-300'
+            }">${item.bought ? '✓' : ''}</div>
+            <div class="min-w-0">
+              <p class="text-xs font-extrabold truncate ${item.bought ? 'line-through text-stone-400' : 'text-stone-900'}">${escapeHtml(item.name)}</p>
+              <p class="text-[10px] text-stone-500">
+                ${item.qty ? escapeHtml(item.qty) + ' • ' : ''}
+                ${item.logged ? '<span class="text-[#0F6A4F] font-bold">مخصوم من الميزانية</span>' : 'غير مخصوم بعد'}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <div class="flex items-center bg-white border border-stone-200 rounded-xl px-1.5 py-1">
+              <input type="number" min="0" step="0.5" value="${item.price}"
+                     onchange="updateGroceryPrice('${item.id}', this.value)"
+                     aria-label="سعر الصنف"
+                     class="thmanyah-num w-12 text-center text-xs font-black text-stone-900 bg-transparent focus:outline-none" />
+              <span class="text-[10px] font-bold text-stone-400">ر.س</span>
+            </div>
+            <button type="button" onclick="deleteGroceryItem('${item.id}')" class="p-1 text-stone-400 hover:text-rose-600">✕</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateGroceryPrice(id, newPrice) {
+      const item = state.groceries.find(g => g.id === id);
+      if (item) {
+        item.price = Math.max(0, Number(newPrice || 0));
+        saveState();
+        renderGroceriesPanel();
+      }
+    }
+
+    function addGroceryItem(e) {
+      e.preventDefault();
+      const nameEl = document.getElementById('groc-name-input');
+      const qtyEl = document.getElementById('groc-qty-input');
+      const priceEl = document.getElementById('groc-price-input');
+      const name = nameEl.value.trim();
+      const qty = qtyEl.value.trim();
+      const price = Math.max(0, Number(priceEl.value || 0));
+      if (!name) return;
+
+      state.groceries.unshift({
+        id: 'g_' + Date.now(),
+        name,
+        qty,
+        price,
+        bought: false,
+        logged: false
+      });
+      nameEl.value = '';
+      qtyEl.value = '';
+      priceEl.value = '';
+      saveState();
+      renderGroceriesPanel();
+      showToast(`تمت إضافة "${name}" للقائمة`);
+    }
+
+    function toggleGroceryBought(id) {
+      const item = state.groceries.find(g => g.id === id);
+      if (item) {
+        item.bought = !item.bought;
+        saveState();
+        renderGroceriesPanel();
+      }
+    }
+
+    function deleteGroceryItem(id) {
+      state.groceries = state.groceries.filter(g => g.id !== id);
+      saveState();
+      renderGroceriesPanel();
+    }
+
+    function clearBoughtGroceries() {
+      const before = state.groceries.length;
+      state.groceries = state.groceries.filter(g => !g.bought);
+      if (state.groceries.length < before) {
+        saveState();
+        renderGroceriesPanel();
+        showToast('تم مسح الأصناف المشتراة');
+      }
+    }
+
+    function deductBoughtGroceries() {
+      const toLog = state.groceries.filter(g => g.bought && !g.logged);
+      if (!toLog.length) {
+        showToast('حدّد الأصناف التي اشتريتها أولاً بعلامة (✓)');
+        return;
+      }
+      const total = toLog.reduce((s, g) => s + Number(g.price || 0), 0);
+      toLog.forEach(g => { g.logged = true; });
+      state.transactions.unshift({
+        id: 'tx_g_' + Date.now(),
+        category: 'food',
+        amount: total,
+        note: `مشتريات الأسبوع (${toLog.length} أصناف)`,
+        date: todayISO()
+      });
+      saveState();
+      renderAll();
+      showToast(`تم خصم ${formatNum(total)} ر.س من ميزانيتك`);
+    }
+
+    // ==================== التحويل للبلاد ====================
+    function renderRemittance() {
+      const currencyKey = state.profile.currency;
+      const code = getActiveCurrencyCode();
+      const rate = getActiveExchangeRate();
+      const amount = Number(state.profile.remittanceTargetSar || 0);
+
+      document.getElementById('remit-currency-select').value = currencyKey;
+      document.getElementById('remit-custom-code-wrap').classList.toggle('hidden', currencyKey !== 'CUSTOM');
+      document.getElementById('remit-custom-code-input').value = state.profile.customCurrencyCode || '';
+      document.getElementById('remit-amount-input').value = amount;
+      document.getElementById('remit-rate-input').value = rate;
+      document.getElementById('remit-result-val').textContent = formatNum(Math.round(amount * rate));
+      document.getElementById('remit-result-code').textContent = code;
+      document.getElementById('remit-rate-badge').textContent = `${formatNum(rate)} ${code}`;
+
+      const distTotal = state.distribution.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+      document.getElementById('remit-dist-total').textContent = `${formatNum(distTotal)} ر.س`;
+
+      const distList = document.getElementById('remit-distribution-list');
+      if (!state.distribution.length) {
+        distList.innerHTML = `<p class="text-center text-xs text-stone-400 py-4">أضف بنود توزيع الحوالة أدناه</p>`;
+      } else {
+        distList.innerHTML = state.distribution.map(item => `
+          <div class="flex items-center justify-between p-3 rounded-2xl bg-[#F6F7F5] border border-stone-200/60">
+            <span class="text-xs font-bold text-stone-800">${escapeHtml(item.label)}</span>
+            <div class="flex items-center gap-2.5">
+              <span class="thmanyah-num text-xs font-black text-[#0F6A4F]">${formatNum(item.amount)} ر.س</span>
+              <button onclick="deleteDistributionItem('${item.id}')" class="p-1 text-stone-400 hover:text-rose-600">✕</button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function handleRemitCurrencyChange() {
+      state.profile.currency = document.getElementById('remit-currency-select').value;
+      saveState();
+      renderAll();
+    }
+
+    function handleCustomCurrencyCodeChange() {
+      state.profile.customCurrencyCode = document.getElementById('remit-custom-code-input').value.trim();
+      saveState();
+      renderHome();
+      document.getElementById('remit-result-code').textContent = getActiveCurrencyCode();
+      document.getElementById('remit-rate-badge').textContent = `${formatNum(getActiveExchangeRate())} ${getActiveCurrencyCode()}`;
+    }
+
+    function handleRemitAmountChange() {
+      state.profile.remittanceTargetSar = Math.max(0, Number(document.getElementById('remit-amount-input').value || 0));
+      saveState();
+      renderHome();
+      document.getElementById('remit-result-val').textContent = formatNum(Math.round(state.profile.remittanceTargetSar * getActiveExchangeRate()));
+    }
+
+    function handleRemitRateChange() {
+      const val = Math.max(0, Number(document.getElementById('remit-rate-input').value || 0));
+      state.profile.customRates[state.profile.currency] = val;
+      saveState();
+      renderHome();
+      document.getElementById('remit-result-val').textContent = formatNum(Math.round(state.profile.remittanceTargetSar * val));
+      document.getElementById('remit-rate-badge').textContent = `${formatNum(val)} ${getActiveCurrencyCode()}`;
+    }
+
+    function confirmRemittanceNow() {
+      const amount = Number(state.profile.remittanceTargetSar || 0);
+      if (amount <= 0) {
+        showToast('أدخل مبلغ التحويل أولاً');
+        return;
+      }
+      const code = getActiveCurrencyCode();
+      const converted = Math.round(amount * getActiveExchangeRate());
+      state.transactions.unshift({
+        id: 'rem_' + Date.now(),
+        category: 'remittance',
+        amount,
+        note: `تحويل للبلاد (${formatNum(converted)} ${code})`,
+        date: todayISO()
+      });
+      saveState();
+      renderAll();
+      switchTab('home');
+      showToast(`تم تسجيل تحويل ${formatNum(amount)} ر.س بنجاح`);
+    }
+
+    function addDistributionItem(e) {
+      e.preventDefault();
+      const label = document.getElementById('dist-label-input').value.trim();
+      const amount = Number(document.getElementById('dist-amount-input').value || 0);
+      if (!label || amount <= 0) return;
+      state.distribution.push({ id: 'd_' + Date.now(), label, amount });
+      document.getElementById('dist-label-input').value = '';
+      document.getElementById('dist-amount-input').value = '';
+      saveState();
+      renderRemittance();
+      showToast('تمت إضافة البند');
+    }
+
+    function deleteDistributionItem(id) {
+      state.distribution = state.distribution.filter(i => i.id !== id);
+      saveState();
+      renderRemittance();
+    }
+
+    // ==================== رادار المهمات والالتزامات ====================
+    function renderObligations() {
+      const list = document.getElementById('obligations-list');
+      if (!state.obligations.length) {
+        list.innerHTML = `<p class="text-center text-xs text-stone-400 py-8">لا توجد التزامات مسجلة حالياً.</p>`;
+        return;
+      }
+      const sorted = [...state.obligations].sort((a, b) => {
+        if (a.completed !== b.completed) return a.completed ? 1 : -1;
+        return new Date(a.dueDate) - new Date(b.dueDate);
+      });
+
+      list.innerHTML = sorted.map(ob => {
+        const diffDays = Math.ceil((new Date(ob.dueDate) - new Date()) / (1000 * 60 * 60 * 24));
+        const badgeText = ob.completed ? 'مكتمل ✓' : (diffDays > 0 ? `متبقي ${diffDays} يوم` : 'مستحق الآن');
+        const badgeStyle = ob.completed
+          ? 'bg-[#E7F3EE] text-[#0F6A4F]'
+          : (diffDays <= 14 ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-900');
+
+        return `
+          <div class="p-4 rounded-2xl border ${ob.completed ? 'bg-stone-50 border-stone-200/60 opacity-75' : 'bg-[#F6F7F5] border-stone-200'} flex items-center justify-between gap-2">
+            <div class="flex items-start gap-3 min-w-0">
+              <button onclick="toggleObligationComplete('${ob.id}')"
+                      class="mt-0.5 w-6 h-6 rounded-lg border-2 flex items-center justify-center shrink-0 text-xs font-black transition ${ob.completed ? 'bg-[#0F6A4F] border-[#0F6A4F] text-white' : 'border-stone-300 bg-white'}">
+                ${ob.completed ? '✓' : ''}
+              </button>
+              <div class="min-w-0">
+                <p class="text-xs font-extrabold ${ob.completed ? 'line-through text-stone-400' : 'text-stone-900'}">${escapeHtml(ob.title)}</p>
+                <p class="thmanyah-num text-[11px] font-bold text-[#0F6A4F] mt-0.5">${formatNum(ob.amount)} ر.س • <span class="text-stone-400 font-medium">${ob.dueDate}</span></p>
+              </div>
+            </div>
+            <div class="flex items-center gap-1 shrink-0">
+              <span class="thmanyah-num text-[10px] font-extrabold px-2 py-1 rounded-xl ${badgeStyle}">${badgeText}</span>
+              <button onclick="openObligationModal('${ob.id}')" class="p-1.5 text-stone-400 hover:text-[#0F6A4F]" title="تعديل">✎</button>
+              <button onclick="deleteObligation('${ob.id}')" class="p-1.5 text-stone-400 hover:text-rose-600" title="حذف">✕</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openObligationModal(editId = '') {
+      const ob = editId ? state.obligations.find(o => o.id === editId) : null;
+      document.getElementById('ob-edit-id').value = ob ? ob.id : '';
+      document.getElementById('ob-modal-title').textContent = ob ? 'تعديل الالتزام' : 'إضافة التزام مهم';
+      document.getElementById('ob-title-input').value = ob ? ob.title : '';
+      document.getElementById('ob-amount-input').value = ob ? ob.amount : '';
+      document.getElementById('ob-date-input').value = ob ? ob.dueDate : futureDateISO(30);
+      document.getElementById('modal-obligation').classList.remove('hidden');
+    }
+
+    function submitObligation(e) {
+      e.preventDefault();
+      const editId = document.getElementById('ob-edit-id').value;
+      const title = document.getElementById('ob-title-input').value.trim();
+      const amount = Number(document.getElementById('ob-amount-input').value || 0);
+      const dueDate = document.getElementById('ob-date-input').value;
+      if (!title || !dueDate) return;
+
+      if (editId) {
+        const target = state.obligations.find(o => o.id === editId);
+        if (target) {
+          target.title = title;
+          target.amount = amount;
+          target.dueDate = dueDate;
+        }
+      } else {
+        state.obligations.push({ id: 'ob_' + Date.now(), title, amount, dueDate, completed: false });
+      }
+      saveState();
+      closeModal('modal-obligation');
+      renderAll();
+      showToast(editId ? 'تم تعديل الالتزام' : 'تمت إضافة الالتزام للرادار');
+    }
+
+    function toggleObligationComplete(id) {
+      const ob = state.obligations.find(o => o.id === id);
+      if (ob) {
+        ob.completed = !ob.completed;
+        saveState();
+        renderAll();
+      }
+    }
+
+    function deleteObligation(id) {
+      state.obligations = state.obligations.filter(o => o.id !== id);
+      saveState();
+      renderAll();
+      showToast('تم حذف الالتزام');
+    }
+
+    // ==================== المصاريف السريعة (+) ====================
+    function openExpenseModal() {
+      document.getElementById('exp-amount-input').value = '';
+      document.getElementById('exp-note-input').value = '';
+      document.getElementById('modal-expense').classList.remove('hidden');
+      setTimeout(() => document.getElementById('exp-amount-input').focus(), 100);
+    }
+
+    function selectExpenseCategory(cat) {
+      selectedExpenseCategory = cat;
+      document.querySelectorAll('.cat-chip').forEach(btn => {
+        btn.className = btn.dataset.cat === cat
+          ? 'cat-chip p-2.5 rounded-2xl border text-center transition bg-[#0F6A4F] text-white border-[#0F6A4F]'
+          : 'cat-chip p-2.5 rounded-2xl border text-center transition bg-white text-stone-700 border-stone-200';
+      });
+    }
+
+    function submitExpense(e) {
+      e.preventDefault();
+      const amount = Number(document.getElementById('exp-amount-input').value);
+      const note = document.getElementById('exp-note-input').value.trim();
+      if (!amount || amount <= 0) return;
+
+      state.transactions.unshift({
+        id: 'tx_' + Date.now(),
+        category: selectedExpenseCategory,
+        amount,
+        note: note || CATEGORY_META[selectedExpenseCategory].label,
+        date: todayISO()
+      });
+      saveState();
+      closeModal('modal-expense');
+      renderAll();
+      showToast('تم تسجيل المصروف بنجاح');
+    }
+
+    function deleteTransaction(id) {
+      state.transactions = state.transactions.filter(t => t.id !== id);
+      saveState();
+      renderAll();
+      showToast('تم حذف العملية');
+    }
+
+    // ==================== نافذة التخصيص والإعدادات ====================
+    function openSettingsModal() {
+      document.getElementById('set-name').value = state.profile.name || '';
+      document.getElementById('set-salary').value = state.profile.salary || 6000;
+      document.getElementById('set-payday').value = state.profile.payday || 27;
+      document.getElementById('set-remit-target').value = state.profile.remittanceTargetSar || 0;
+      document.getElementById('set-food-budget').value = state.profile.weeklyFoodBudget || 250;
+      document.getElementById('set-cooking-mode').value = state.profile.cookingMode || 'cook';
+      showResetConfirm(false);
+      renderSettingsFixedList();
+      updateLocalStorageInfo();
+      document.getElementById('modal-settings').classList.remove('hidden');
+    }
+
+    function renderSettingsFixedList() {
+      const list = document.getElementById('set-fixed-list');
+      if (!state.fixedObligations.length) {
+        list.innerHTML = `<p class="text-center text-xs text-stone-400 py-2">لا توجد التزامات ثابتة</p>`;
+        return;
+      }
+      list.innerHTML = state.fixedObligations.map((item, idx) => `
+        <div class="flex items-center gap-2 bg-[#F6F7F5] p-2 rounded-xl border border-stone-200/70">
+          <input type="text" value="${escapeHtml(item.label)}" onchange="updateSettingsFixed(${idx}, 'label', this.value)"
+                 class="flex-1 bg-transparent text-xs font-bold text-stone-800 focus:outline-none" />
+          <input type="number" min="0" value="${item.amount}" oninput="updateSettingsFixed(${idx}, 'amount', this.value)"
+                 class="thmanyah-num w-20 rounded-lg bg-white border border-stone-200 px-2 py-1 text-xs font-black text-[#0F6A4F] text-center focus:outline-none" />
+          <button type="button" onclick="removeSettingsFixed(${idx})" class="p-1 text-stone-400 hover:text-rose-600">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function updateSettingsFixed(idx, field, val) {
+      if (!state.fixedObligations[idx]) return;
+      state.fixedObligations[idx][field] = field === 'amount' ? Math.max(0, Number(val || 0)) : val.trim();
+    }
+
+    function removeSettingsFixed(idx) {
+      state.fixedObligations.splice(idx, 1);
+      renderSettingsFixedList();
+    }
+
+    function addSettingsFixedItem() {
+      const nameEl = document.getElementById('set-new-fixed-name');
+      const amtEl = document.getElementById('set-new-fixed-amount');
+      const label = nameEl.value.trim();
+      const amount = Math.max(0, Number(amtEl.value || 0));
+      if (!label) return;
+      state.fixedObligations.push({ id: 'fx_' + Date.now(), label, amount });
+      nameEl.value = '';
+      amtEl.value = '';
+      renderSettingsFixedList();
+    }
+
+    function saveSettingsForm(e) {
+      e.preventDefault();
+      state.profile.name = document.getElementById('set-name').value.trim();
+      state.profile.salary = Math.max(100, Number(document.getElementById('set-salary').value || 6000));
+      state.profile.payday = Math.min(31, Math.max(1, Number(document.getElementById('set-payday').value || 27)));
+      state.profile.remittanceTargetSar = Math.max(0, Number(document.getElementById('set-remit-target').value || 0));
+      state.profile.weeklyFoodBudget = Math.max(0, Number(document.getElementById('set-food-budget').value || 250));
+      state.profile.cookingMode = document.getElementById('set-cooking-mode').value;
+      state.fixedObligations = state.fixedObligations.filter(x => x.label);
+
+      saveState();
+      closeModal('modal-settings');
+      renderAll();
+      showToast('تم حفظ جميع تعديلاتك');
+    }
+
+    function showResetConfirm(show) {
+      document.getElementById('reset-trigger-wrap').classList.toggle('hidden', show);
+      document.getElementById('reset-confirm-wrap').classList.toggle('hidden', !show);
+    }
+
+    function confirmResetApp() {
+      localStorage.removeItem(STORAGE_KEY);
+      state = getInitialState();
+      closeModal('modal-settings');
+      openOnboarding();
+      showToast('تمت إعادة ضبط التطبيق');
+    }
+
+    // ==================== التنقل والنوافذ ====================
+    function switchTab(tabName) {
+      ['home', 'food', 'remittance', 'important'].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tabName);
+        const btn = document.getElementById(`nav-${t}`);
+        btn.className = t === tabName
+          ? 'flex flex-col items-center gap-1 py-1.5 rounded-2xl text-[#0F6A4F] bg-[#E7F3EE] font-extrabold transition'
+          : 'flex flex-col items-center gap-1 py-1.5 rounded-2xl text-stone-400 font-bold transition';
+      });
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    // ==================== التشغيل الأولي ====================
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      renderAll();
+      if (!state.onboarded) {
+        openOnboarding();
+      }
+    });
+  </script>
+</body>
+</html>
